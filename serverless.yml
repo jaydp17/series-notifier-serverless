@@ -9,18 +9,18 @@ provider:
 
 # you can add packaging information here
 package:
-#  include:
-#    - include-me.js
-#    - include-me-dir/**
+  include:
+    - build/** # contains transpiled code
+    - src/node_modules/** # production dependencies
   exclude:
     - .idea/**
     - .vscode/**
     - .git/**
-    - node_modules/**
+    - node_modules/** # contains devDependencies
 
 functions:
   messenger:
-    handler: src/index.messenger
+    handler: build/index.messenger
     events:
       - http:
           path: webhook

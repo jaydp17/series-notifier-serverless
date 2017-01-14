@@ -1,4 +1,5 @@
 .vscode
 .idea
 .serverless
+build
 node_modules

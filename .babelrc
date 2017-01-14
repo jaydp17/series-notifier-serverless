@@ -1,0 +1,17 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "node": 4.3
+        }
+      }
+    ]
+  ],
+  "sourceMaps": true,
+  "retainLines": true,
+  "plugins": [
+    "add-module-exports"
+  ]
+}
