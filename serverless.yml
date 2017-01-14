@@ -19,7 +19,6 @@ provider:
 package:
   include:
     - build/** # contains transpiled code
-    - src/node_modules/** # production dependencies
   exclude:
     - .idea/**
     - .vscode/**

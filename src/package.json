@@ -7,5 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jaydeep Solanki <jaydp17@gmail.com> (https://jaydp.com)",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "dependencies": {
+    "bluebird": "^3.4.7",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1",
+    "source-map-support": "0.4.8"
+  }
 }

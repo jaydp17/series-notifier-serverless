@@ -10,8 +10,10 @@
     ]
   ],
   "sourceMaps": true,
-  "retainLines": true,
   "plugins": [
     "add-module-exports"
+  ],
+  "ignore": [
+    "node_modules/**"
   ]
 }
