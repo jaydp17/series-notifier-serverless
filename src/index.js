@@ -1,13 +1,13 @@
-export const messenger = (event, context, callback) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Go Serverless v1.0! Your function executed successfully!',
-      input: event,
-    }),
-  };
+import './utils/environment';
+import messengerAuth from './messenger-auth';
 
-  callback(null, response);
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
+export const messenger = (event, context, callback) => {
+  // TOKEN verification
+  if (event.httpMethod === 'GET') {
+    return messengerAuth(event.queryStringParameters, callback);
+  }
+
+  if (event.httpMethod === 'POST') {
+    callback(null, { statusCode: 200 });
+  }
 };

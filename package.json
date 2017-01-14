@@ -5,7 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "build": "rm -rf build; babel src -d build --copy-files --source-maps",
+    "predeploy": "yarn build",
     "deploy": "sls deploy function -f messenger",
+    "predeploy:all": "yarn build",
     "deploy:all": "sls deploy --verbose",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

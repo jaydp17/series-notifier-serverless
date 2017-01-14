@@ -5,7 +5,15 @@ provider:
   runtime: nodejs4.3
   stage: dev
   region: us-east-1
+  variables: ${file(secret-${self:provider.stage}.yml)}
   deploymentBucket: snbot-sls-deploy
+  environment:
+    FB_PAGE_TOKEN: ${self:provider.variables.FB_PAGE_TOKEN}
+    FB_VERIFY_TOKEN: ${self:provider.variables.FB_VERIFY_TOKEN}
+    FB_USERNAME: ${self:provider.variables.FB_USERNAME}
+    TVDB_API_KEY: ${self:provider.variables.TVDB_API_KEY}
+    TRAKT_API_KEY: ${self:provider.variables.TRAKT_API_KEY}
+    WITAI_TOKEN: ${self:provider.variables.WITAI_TOKEN}
 
 # you can add packaging information here
 package:

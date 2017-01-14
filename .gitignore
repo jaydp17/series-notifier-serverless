@@ -3,3 +3,5 @@
 .serverless
 build
 node_modules
+secret-dev.yml
+secret-production.yml
