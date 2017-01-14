@@ -1,4 +1,9 @@
+// required for souce map support in CloudWatch logs
 import 'source-map-support/register';
+
+// required for async/await with babel
+import 'babel-polyfill';
+
 import Promise from 'bluebird';
 
 import './utils/environment';
