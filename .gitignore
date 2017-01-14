@@ -1,3 +1,4 @@
 .vscode
 .idea
+.serverless
 node_modules

@@ -1,0 +1,30 @@
+service: snbot
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  stage: dev
+  region: us-east-1
+  deploymentBucket: snbot-sls-deploy
+
+# you can add packaging information here
+package:
+#  include:
+#    - include-me.js
+#    - include-me-dir/**
+  exclude:
+    - .idea/**
+    - .vscode/**
+    - .git/**
+    - node_modules/**
+
+functions:
+  messenger:
+    handler: src/index.messenger
+    events:
+      - http:
+          path: webhook
+          method: get
+      - http:
+          path: webhook
+          method: post
