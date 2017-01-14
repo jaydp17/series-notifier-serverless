@@ -6,3 +6,4 @@ build
 node_modules
 secret-dev.yml
 secret-production.yml
+src/test.js
