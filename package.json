@@ -1,0 +1,22 @@
+{
+  "name": "series-notifier-serverless",
+  "version": "1.0.0",
+  "description": "A facebook messenger bot that notifies you when you favorite series airs a new episode",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaydp17/series-notifier-serverless.git"
+  },
+  "author": "Jaydeep Solanki <jaydp17@gmail.com> (https://jaydp.com)",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/jaydp17/series-notifier-serverless/issues"
+  },
+  "homepage": "https://github.com/jaydp17/series-notifier-serverless#readme",
+  "devDependencies": {
+    "serverless": "^1.5.0"
+  }
+}
