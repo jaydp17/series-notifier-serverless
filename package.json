@@ -9,6 +9,8 @@
     "deploy": "sls deploy function -f messenger",
     "predeploy:all": "yarn build",
     "deploy:all": "sls deploy --verbose",
+    "preinvoke": "yarn build",
+    "invoke": "sls invoke local -f messenger -p event.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -7,3 +7,4 @@ node_modules
 secret-dev.yml
 secret-production.yml
 src/test.js
+event.json
