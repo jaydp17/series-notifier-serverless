@@ -11,6 +11,7 @@
   "dependencies": {
     "babel-polyfill": "6.20.0",
     "bluebird": "^3.4.7",
+    "node-tvdb": "2.0.20",
     "node-wit": "4.2.0",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
