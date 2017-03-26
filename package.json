@@ -4,9 +4,9 @@
   "description": "A facebook messenger bot that notifies you when you favorite series airs a new episode",
   "main": "src/index.js",
   "scripts": {
-    "build": "./shell-scripts/build.sh",
-    "predeploy": "yarn build",
-    "deploy": "sls deploy function -f messenger",
+    "build": "tsc",
+    "predeploy:function": "yarn build",
+    "deploy:function": "sls deploy function -f",
     "predeploy:all": "yarn build",
     "deploy:all": "sls deploy --verbose",
     "preinvoke": "yarn build",
@@ -24,9 +24,12 @@
   },
   "homepage": "https://github.com/jaydp17/series-notifier-serverless#readme",
   "devDependencies": {
+    "@types/node": "^6.0.66",
     "babel-cli": "^6.18.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-env": "^1.1.8",
-    "serverless": "^1.5.0"
+    "prettier": "^0.22.0",
+    "serverless": "^1.9.0",
+    "typescript": "2.2.1"
   }
 }
