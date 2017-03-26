@@ -4,7 +4,7 @@
   "description": "A facebook messenger bot that notifies you when you favorite series airs a new episode",
   "main": "src/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf build && tsc",
     "predeploy:function": "yarn build",
     "deploy:function": "sls deploy function -f",
     "predeploy:all": "yarn build",
@@ -29,6 +29,7 @@
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-env": "^1.1.8",
     "prettier": "^0.22.0",
+    "rimraf": "^2.6.1",
     "serverless": "^1.9.0",
     "typescript": "2.2.1"
   }
