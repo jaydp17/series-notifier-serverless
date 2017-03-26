@@ -1,4 +1,4 @@
-import { Callback } from './common-types';
+import { Callback } from '../../common/common-types';
 
 /**
  * Used to authenticate the webhook
