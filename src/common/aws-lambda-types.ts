@@ -1,3 +1,7 @@
+/**
+ * Contains types that are related to AWS Lambda
+ */
+
 export type LambdaEvent = {
   httpMethod: string;
   body: string;

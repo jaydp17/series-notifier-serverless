@@ -1,18 +1,25 @@
+/**
+ * The main file that starts the function
+ */
+
 import { verifyToken } from './utils/environment';
-import { LambdaEvent, LambdaCallback } from '../common/aws-lambda-types';
+
+import { LambdaCallback, LambdaEvent } from '../common/aws-lambda-types';
 import { Callback } from '../common/common-types';
 import { AnyFacebookMessage } from '../common/messenger-types';
 
 import { messengerAuth } from './utils/messenger.api';
 
-export const handler = (event: LambdaEvent, context, callback: LambdaCallback) => {
+export function handler(event: LambdaEvent, context: {}, callback: LambdaCallback): void {
 
   // TOKEN verification
   if (event.httpMethod === 'GET') {
     if (!event.queryStringParameters) {
-      return callback(null, { statusCode: 200, body: 'Bro 😎' });
+      callback(null, { statusCode: 200, body: 'Bro 😎' });
+      return;
     }
-    return messengerAuth(event.queryStringParameters, verifyToken, callback);
+    messengerAuth(event.queryStringParameters, verifyToken, callback);
+    return;
   }
 
   // Actual Message
@@ -21,11 +28,13 @@ export const handler = (event: LambdaEvent, context, callback: LambdaCallback) =
 
     const { object: objectType } = body;
     if (objectType !== 'page') {
-      return callback(null, { statusCode: 403, body: 'Invalid Object Type' });
+      callback(null, { statusCode: 403, body: 'Invalid Object Type' });
+      return;
     }
     // right now this only sends 200 OK
-    return callback(null, { statusCode: 200 });
+    callback(null, { statusCode: 200 });
+    return;
   }
 
-  return callback(null, { statusCode: 403, body: `Invalid httpMethod: ${event.httpMethod}` });
+  callback(null, { statusCode: 403, body: `Invalid httpMethod: ${event.httpMethod}` });
 }

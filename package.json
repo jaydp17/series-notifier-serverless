@@ -11,6 +11,7 @@
     "deploy:all": "sls deploy --verbose",
     "preinvoke": "yarn build",
     "invoke": "sls invoke local -f messenger -p event.json",
+    "lint": "tslint --project tslint.json --type-check src/**/*.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -31,6 +32,8 @@
     "prettier": "^0.22.0",
     "rimraf": "^2.6.1",
     "serverless": "^1.9.0",
+    "tslint": "^4.5.1",
+    "tslint-microsoft-contrib": "^4.0.1",
     "typescript": "2.2.1"
   }
 }
