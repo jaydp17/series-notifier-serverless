@@ -1,6 +1,9 @@
 const path = require('path');
 const { CheckerPlugin } = require('awesome-typescript-loader');
 
+const env = process.env.NODE_ENV || 'development';
+const isDebug = env === 'development';
+
 module.exports = {
   entry: {
     messengerEntryFunction: './src/messenger-entry-function/index.ts',
@@ -9,7 +12,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
   },
-  devtool: 'inline-source-map',
+  devtool: isDebug ? 'eval' : 'source-map',
   output: {
     filename: '[name].js',
     libraryTarget: 'commonjs',
@@ -20,10 +23,12 @@ module.exports = {
   },
   target: 'node',
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.ts$/,
-        loader: 'awesome-typescript-loader',
+        exclude: /node_modules/,
+        // here TypeScript compiles to ESNext and babel transforms to node v6.10
+        use: ['babel-loader', 'awesome-typescript-loader'],
       },
     ],
   },
