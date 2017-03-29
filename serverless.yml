@@ -15,6 +15,18 @@ provider:
     TVDB_API_KEY: ${self:provider.variables.TVDB_API_KEY}
     TRAKT_API_KEY: ${self:provider.variables.TRAKT_API_KEY}
     WITAI_TOKEN: ${self:provider.variables.WITAI_TOKEN}
+  iamRoleStatements:
+    -  Effect: "Allow"
+       Action:
+         - "lambda:InvokeFunction"
+       Resource:
+         Fn::Join:
+           - ":"
+           - - "arn:aws:lambda"
+             - Ref: 'AWS::Region'
+             - Ref: 'AWS::AccountId'
+             - "function"
+             - "${self:service}-${self:provider.stage}-*"
 
 # you can add packaging information here
 package:
