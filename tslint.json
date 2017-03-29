@@ -4,6 +4,26 @@
     "export-name": false,
     "no-relative-imports": false,
     "no-unsafe-any": false,
-    "strict-boolean-expressions": false
+    "strict-boolean-expressions": false,
+    "typedef": [
+      true,
+      "call-signature",
+      "parameter",
+      "member-variable-declaration"
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "always",
+        "singleline": "never"
+      }
+    ],
+    "arrow-parens": [
+      true,
+      "ban-single-arg-parens"
+    ],
+    "arrow-return-shorthand": [
+      true
+    ]
   }
 }
