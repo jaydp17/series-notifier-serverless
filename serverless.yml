@@ -30,17 +30,16 @@ provider:
 
 # you can add packaging information here
 package:
-  include:
-    - build/** # contains transpiled code
+  individually: true
   exclude:
-    - .idea/**
-    - .vscode/**
-    - .git/**
-    - node_modules/** # contains devDependencies
+    - "*/**"
 
 functions:
   messengerEntryPoint:
-    handler: build/messenger-entry-function/index.handler
+    handler: build/messengerEntryFunction.handler
+    package:
+      include:
+        - build/messengerEntryFunction.js
     events:
       - http:
           path: webhook
@@ -48,5 +47,9 @@ functions:
       - http:
           path: webhook
           method: post
+
   processQuery:
-    handler: build/process-query-function/index.handler
+    handler: build/processQueryFunction.handler
+    package:
+      include:
+        - build/processQueryFunction.js
