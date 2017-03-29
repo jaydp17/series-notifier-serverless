@@ -48,3 +48,5 @@ functions:
       - http:
           path: webhook
           method: post
+  processQuery:
+    handler: build/process-query-function/index.handler

@@ -2,12 +2,12 @@
  * The main file that starts the function
  */
 
-import { verifyToken } from './utils/environment';
+import { verifyToken } from '../common/environment';
 
 import { LambdaCallback, LambdaEvent } from '../common/aws-lambda-types';
 import { Callback } from '../common/common-types';
+import { invokeProcessQuery } from '../common/lambda-utils';
 import { AnyFacebookMessage } from '../common/messenger-types';
-
 import { messengerAuth } from './utils/messenger.api';
 
 export function handler(event: LambdaEvent, context: {}, callback: LambdaCallback): void {
@@ -15,7 +15,9 @@ export function handler(event: LambdaEvent, context: {}, callback: LambdaCallbac
   // TOKEN verification
   if (event.httpMethod === 'GET') {
     if (!event.queryStringParameters) {
-      callback(null, { statusCode: 200, body: 'Bro 😎' });
+      invokeProcessQuery({ hello: 'bro' })
+        .then(console.log)
+        .then(() => callback(null, { statusCode: 200, body: 'Bro 😎' }));
       return;
     }
     messengerAuth(event.queryStringParameters, verifyToken, callback);

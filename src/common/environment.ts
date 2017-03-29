@@ -2,6 +2,21 @@
  * Contains all the environment vailables
  */
 
+/**
+ * It's the NODE_ENV
+ */
+export const env: string = process.env.NODE_ENV || 'development';
+
+/**
+ * The Stage which this function is running in
+ */
+export const stage: string = env === 'production' ? 'production' : 'dev';
+
+/**
+ * Name of the service, it's not gonna change
+ */
+export const serviceName: string = 'snbot';
+
 export const pageToken: string = process.env.FB_PAGE_TOKEN;
 if (!pageToken) {
   throw new Error('FB_PAGE_TOKEN not found in env vars');
