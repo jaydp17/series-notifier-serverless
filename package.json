@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "rimraf build && webpack",
+    "webpack:stats": "rimraf build && NODE_ENV=production webpack -p --profile --json > webpack-stats.json",
     "predeploy:function": "yarn build",
     "deploy:function": "sls deploy function -f",
     "predeploy:all": "yarn build",
@@ -25,6 +26,7 @@
   },
   "homepage": "https://github.com/jaydp17/series-notifier-serverless#readme",
   "devDependencies": {
+    "@types/bluebird": "3.5.0",
     "@types/node": "^6.0.66",
     "awesome-typescript-loader": "^3.1.2",
     "babel-cli": "^6.18.0",
@@ -39,5 +41,9 @@
     "tslint-microsoft-contrib": "^4.0.1",
     "typescript": "2.2.1",
     "webpack": "^2.3.2"
+  },
+  "dependencies": {
+    "axios": "^0.16.0",
+    "bluebird": "3.5.0"
   }
 }

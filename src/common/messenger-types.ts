@@ -18,15 +18,23 @@ export type TextMessage = {
   entry: ITextMessageEntry[];
 };
 
-interface ITextMessageEntry extends IEntry {
+export interface ITextMessageEntry extends IEntry {
   messaging: ITextMessageMessaging[];
 }
 
-interface ITextMessageMessaging extends IMesssaging {
+export interface ITextMessageMessaging extends IMesssaging {
   message: {
     text: string;
     is_echo: boolean;
   };
 }
 
+export interface ISendTextMsgPayload {
+  text: string;
+}
+
+export type AnyMessagingObject = ITextMessageMessaging;
+
 export type AnyFacebookMessage = TextMessage;
+
+export type AnySendMessagePayload = ISendTextMsgPayload;

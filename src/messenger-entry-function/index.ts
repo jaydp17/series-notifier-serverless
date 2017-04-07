@@ -2,15 +2,17 @@
  * The main file that starts the function
  */
 
+import * as Promise from 'bluebird';
+
 import { verifyToken } from '../common/environment';
 
-import { LambdaCallback, LambdaEvent } from '../common/aws-lambda-types';
+import { LambdaEvent, LambdaHttpCallback } from '../common/aws-lambda-types';
 import { Callback } from '../common/common-types';
 import { invokeProcessQuery } from '../common/lambda-utils';
-import { AnyFacebookMessage } from '../common/messenger-types';
-import { messengerAuth } from './utils/messenger.api';
+import { AnyFacebookMessage, ITextMessageEntry, ITextMessageMessaging } from '../common/messenger-types';
+import { messengerAuth } from '../common/messenger.api';
 
-export function handler(event: LambdaEvent, context: {}, callback: LambdaCallback): void {
+export function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCallback): void {
 
   // TOKEN verification
   if (event.httpMethod === 'GET') {
@@ -33,8 +35,19 @@ export function handler(event: LambdaEvent, context: {}, callback: LambdaCallbac
       callback(null, { statusCode: 403, body: 'Invalid Object Type' });
       return;
     }
-    // right now this only sends 200 OK
-    callback(null, { statusCode: 200 });
+
+    // get the messaging objects out
+    Promise.resolve(body.entry)
+      .map((entry: ITextMessageEntry) => entry.messaging)
+      .reduce((acc: ITextMessageMessaging[], messaging: ITextMessageMessaging[]) => [...acc, ...messaging])
+      .map((messaging: ITextMessageMessaging) => invokeProcessQuery(messaging))
+
+      // send 200 OK, after delegating the tasks
+      .then(() => callback(null, { statusCode: 200 }))
+
+      // incase there's some error, return it back
+      .catch(err => callback(err));
+
     return;
   }
 
