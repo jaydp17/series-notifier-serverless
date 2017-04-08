@@ -1,5 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Entry Function rejects non page Type events from FB Messenger 1`] = `
+Array [
+  null,
+  Object {
+    "body": "Invalid Object Type",
+    "statusCode": 403,
+  },
+]
+`;
+
+exports[`Entry Function returns 403 on non GET/POST requests 1`] = `
+Array [
+  null,
+  Object {
+    "body": "Invalid httpMethod: PUT",
+    "statusCode": 403,
+  },
+]
+`;
+
 exports[`Entry Function should return ping on GET req w/o queryStringParameters 1`] = `
 Array [
   null,

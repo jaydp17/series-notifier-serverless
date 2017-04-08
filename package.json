@@ -13,7 +13,7 @@
     "preinvoke": "yarn build",
     "invoke": "sls invoke local -f messenger -p event.json",
     "lint": "tslint src/**/*.ts",
-    "test": "NODE_ENV=test jest --config=jest.config.json"
+    "test": "NODE_ENV=test jest --config=jest.config.json --no-cache"
   },
   "repository": {
     "type": "git",
@@ -32,14 +32,16 @@
     "awesome-typescript-loader": "^3.1.2",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.24.0",
+    "babel-jest": "^19.0.0",
     "babel-loader": "^6.4.1",
     "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.2.2",
+    "deep-freeze": "^0.0.1",
     "jest": "^19.0.2",
     "prettier": "^0.22.0",
     "rimraf": "^2.6.1",
     "serverless": "^1.10.0",
-    "ts-jest": "^19.0.8",
     "tslint": "^4.5.1",
     "tslint-microsoft-contrib": "^4.0.1",
     "typescript": "2.2.1",
