@@ -18,31 +18,31 @@ export const stage: string = env === 'production' ? 'production' : 'dev';
 export const serviceName: string = 'snbot';
 
 export const pageToken: string = process.env.FB_PAGE_TOKEN;
-if (!pageToken) {
+if (!pageToken && env !== 'test') {
   throw new Error('FB_PAGE_TOKEN not found in env vars');
 }
 
 export const verifyToken: string = process.env.FB_VERIFY_TOKEN;
-if (!verifyToken) {
+if (!verifyToken && env !== 'test') {
   throw new Error('FB_VERIFY_TOKEN not found in env vars');
 }
 
 export const botUsername: string = process.env.FB_USERNAME;
-if (!botUsername) {
+if (!botUsername && env !== 'test') {
   throw new Error('FB_USERNAME not found in env vars');
 }
 
 export const tvdbApiKey: string = process.env.TVDB_API_KEY;
-if (!tvdbApiKey) {
+if (!tvdbApiKey && env !== 'test') {
   throw new Error('TVDB_API_KEY not found in env vars');
 }
 
 export const traktApiKey: string = process.env.TRAKT_API_KEY;
-if (!traktApiKey) {
+if (!traktApiKey && env !== 'test') {
   throw new Error('TRAKT_API_KEY not found in env vars');
 }
 
 export const witAIToken: string = process.env.WITAI_TOKEN;
-if (!witAIToken) {
+if (!witAIToken && env !== 'test') {
   throw new Error('WITAI_TOKEN not found in env vars');
 }

@@ -17,9 +17,7 @@ export function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCal
   // TOKEN verification
   if (event.httpMethod === 'GET') {
     if (!event.queryStringParameters) {
-      invokeProcessQuery({ hello: 'bro' })
-        .then(console.log)
-        .then(() => callback(null, { statusCode: 200, body: 'Bro 😎' }));
+      callback(null, { statusCode: 200, body: 'ping' });
       return;
     }
     messengerAuth(event.queryStringParameters, verifyToken, callback);

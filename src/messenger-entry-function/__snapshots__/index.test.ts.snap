@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Entry Function should return ping on GET req w/o queryStringParameters 1`] = `
+Array [
+  null,
+  Object {
+    "body": "ping",
+    "statusCode": 200,
+  },
+]
+`;

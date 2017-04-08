@@ -9,3 +9,4 @@ secret-production.yml
 src/test.js
 event.json
 webpack-stats.json
+coverage

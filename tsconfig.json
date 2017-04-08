@@ -7,7 +7,9 @@
     "strictNullChecks": true,
     "outDir": "build",
     "types": [
-      "node"
+      "node",
+      "jest",
+      "bluebird"
     ]
   },
   "exclude": [
