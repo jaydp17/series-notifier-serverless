@@ -11,6 +11,7 @@ interface IMesssaging {
   sender: { id: string; };
   recipient: { id: string; };
   timestamp: number;
+  [key: string]: any; //tslint:disable-line:no-any
 }
 
 export type TextMessage = {
@@ -29,12 +30,23 @@ export interface ITextMessageMessaging extends IMesssaging {
   };
 }
 
+export interface IDeliveryMessageMessaging extends IMesssaging {
+  delivery: {
+    mids: string[];
+  };
+}
+
 export interface ISendTextMsgPayload {
   text: string;
 }
 
-export type AnyMessagingObject = ITextMessageMessaging;
+export type AnyMessagingObject = ITextMessageMessaging | IDeliveryMessageMessaging;
 
 export type AnyFacebookMessage = TextMessage;
 
 export type AnySendMessagePayload = ISendTextMsgPayload;
+
+// Type Guards
+export function isTextMessagingObj(obj: AnyMessagingObject): obj is ITextMessageMessaging {
+  return (<ITextMessageMessaging>obj).message != null;
+}

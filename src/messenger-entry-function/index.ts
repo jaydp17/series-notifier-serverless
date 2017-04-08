@@ -6,10 +6,14 @@ import * as Promise from 'bluebird';
 
 import { verifyToken } from '../common/environment';
 
+// types
 import { LambdaEvent, LambdaHttpCallback } from '../common/aws-lambda-types';
 import { Callback } from '../common/common-types';
+import {
+  AnyFacebookMessage, AnyMessagingObject, isTextMessagingObj, ITextMessageEntry, ITextMessageMessaging,
+} from '../common/messenger-types';
+
 import { invokeProcessQuery } from '../common/lambda-utils';
-import { AnyFacebookMessage, ITextMessageEntry, ITextMessageMessaging } from '../common/messenger-types';
 import { messengerAuth } from '../common/messenger.api';
 
 export function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCallback): void {
@@ -38,6 +42,7 @@ export function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCal
     Promise.resolve(body.entry)
       .map((entry: ITextMessageEntry) => entry.messaging)
       .reduce((acc: ITextMessageMessaging[], messaging: ITextMessageMessaging[]) => [...acc, ...messaging])
+      .filter((messaging: AnyMessagingObject) => isTextMessagingObj(messaging))
       .map((messaging: ITextMessageMessaging) => invokeProcessQuery(messaging))
 
       // send 200 OK, after delegating the tasks
