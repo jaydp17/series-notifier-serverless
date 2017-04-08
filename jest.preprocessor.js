@@ -20,11 +20,7 @@ module.exports = {
           target: tsc.ScriptTarget.ESNext,
           moduleResolution: tsc.ModuleResolutionKind.Node,
           allowSyntheticDefaultImports: true,
-          jsx: tsc.JsxEmit.Preserve,
-          sourceMap: true,
-          outDir: './dist/',
         },
-        exclude: ['node_modules'],
         fileName: path,
       });
       src = src.outputText;
