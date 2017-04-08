@@ -37,6 +37,7 @@ package:
 functions:
   messengerEntryPoint:
     handler: build/messengerEntryFunction.handler
+    description: The main entry point for FB Messenger, whatever a user sends to the Messenger, it is forwarded here by the Messenger Platform
     package:
       include:
         - build/messengerEntryFunction.js
@@ -50,12 +51,14 @@ functions:
 
   messengerReply:
     handler: build/messengerReplyFunction.handler
+    description: Whenver the bot wants to reply something, this function converts it into messenger friendly format and sends
     package:
       include:
         - build/messengerReplyFunction.js
 
   processQuery:
     handler: build/processQueryFunction.handler
+    description: The actual brain of the Series Notifier bot
     package:
       include:
         - build/processQueryFunction.js
