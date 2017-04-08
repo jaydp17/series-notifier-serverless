@@ -9,6 +9,7 @@ import { verifyToken } from '../common/environment';
 // types
 import { LambdaEvent, LambdaHttpCallback } from '../common/aws-lambda-types';
 import { Callback } from '../common/common-types';
+import { IMessage, Platform } from '../common/internal-message-types';
 import {
   AnyFacebookMessage, AnyMessagingObject, isTextMessagingObj, ITextMessageEntry, ITextMessageMessaging,
 } from '../common/messenger-types';
@@ -42,8 +43,15 @@ export function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCal
     Promise.resolve(body.entry)
       .map((entry: ITextMessageEntry) => entry.messaging)
       .reduce((acc: ITextMessageMessaging[], messaging: ITextMessageMessaging[]) => [...acc, ...messaging])
-      .filter((messaging: AnyMessagingObject) => isTextMessagingObj(messaging))
-      .map((messaging: ITextMessageMessaging) => invokeProcessQuery(messaging))
+      .filter((messaging: AnyMessagingObject) => filterTextMessages(messaging))
+      .map((messaging: ITextMessageMessaging) => {
+        const message: IMessage = {
+          text: messaging.message.text,
+          platform: Platform.Messenger,
+          metaData: messaging,
+        };
+        return invokeProcessQuery(message);
+      })
 
       // send 200 OK, after delegating the tasks
       .then(() => callback(null, { statusCode: 200 }))
@@ -55,4 +63,8 @@ export function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCal
   }
 
   callback(null, { statusCode: 403, body: `Invalid httpMethod: ${event.httpMethod}` });
+}
+
+export function filterTextMessages(messaging: AnyMessagingObject): boolean {
+  return isTextMessagingObj(messaging) && !messaging.message.is_echo;
 }

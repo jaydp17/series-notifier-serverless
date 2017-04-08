@@ -5,6 +5,7 @@
 import { Lambda } from 'aws-sdk';
 
 import { processQuery } from './function-names';
+import { IMessage } from './internal-message-types';
 
 const lambda = new Lambda();
 
@@ -16,4 +17,4 @@ export const invokeFunction = (functionName: string, payload: {}, invocationType
   }).promise();
 };
 
-export const invokeProcessQuery = data => invokeFunction(processQuery, data);
+export const invokeProcessQuery = (data: IMessage) => invokeFunction(processQuery, data);
