@@ -8,6 +8,7 @@ module.exports = {
   entry: {
     messengerEntryFunction: './src/messenger-entry-function/index.ts',
     processQueryFunction: './src/process-query-function/index.ts',
+    messengerReplyFunction: './src/messenger-reply-function/index.ts',
   },
   resolve: {
     extensions: ['.ts', '.js'],

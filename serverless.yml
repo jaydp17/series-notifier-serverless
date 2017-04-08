@@ -48,6 +48,12 @@ functions:
           path: webhook
           method: post
 
+  messengerReply:
+    handler: build/messengerReplyFunction.handler
+    package:
+      include:
+        - build/messengerReplyFunction.js
+
   processQuery:
     handler: build/processQueryFunction.handler
     package:

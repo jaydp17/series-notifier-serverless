@@ -4,7 +4,7 @@
 
 import { Lambda } from 'aws-sdk';
 
-import { processQuery } from './function-names';
+import { messengerReply, processQuery } from './function-names';
 import { IMessage } from './internal-message-types';
 
 const lambda = new Lambda();
@@ -18,3 +18,10 @@ export const invokeFunction = (functionName: string, payload: {}, invocationType
 };
 
 export const invokeProcessQuery = (data: IMessage) => invokeFunction(processQuery, data);
+
+/**
+ * Invokes the function that replies FB Messenger back
+ */
+export function invokeMessengerReply(event: IMessage): Promise<Lambda.InvocationResponse> {
+  return invokeFunction(messengerReply, event);
+}

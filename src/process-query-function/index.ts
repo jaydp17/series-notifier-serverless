@@ -3,6 +3,7 @@
  */
 
 import { inspect } from 'util';
+import { invokeMessengerReply, invokeProcessQuery } from '../common/lambda-utils';
 import * as MessengerAPI from '../common/messenger.api';
 
 // types
@@ -15,13 +16,10 @@ export function handler(event: IMessage, context: {}, callback: LambdaCallback):
 
   const { text, platform } = event;
 
-  let promise: Promise<void>;
+  let promise: Promise<any>; // tslint:disable-line:no-any
   switch (platform) {
     case Platform.Messenger: {
-      const metaData: ITextMessageMessaging = (<ITextMessageMessaging>event.metaData);
-      const senderId = metaData.sender.id;
-      promise = MessengerAPI.sendMessage(senderId, { text })
-        .then(() => callback(null, { statusCode: 200, body: 'done!' }));
+      promise = invokeMessengerReply(event);
       break;
     }
     default:
