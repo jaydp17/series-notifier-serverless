@@ -2,8 +2,6 @@
  * The main file that starts the function
  */
 
-import * as Promise from 'bluebird';
-
 import { verifyToken } from '../common/environment';
 
 // types
@@ -40,9 +38,9 @@ export function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCal
     }
 
     // get the messaging objects out
-    Promise.resolve(body.entry)
-      .map((entry: ITextMessageEntry) => entry.messaging)
-      .reduce((acc: ITextMessageMessaging[], messaging: ITextMessageMessaging[]) => [...acc, ...messaging])
+    const promises = body.entry
+      .map(entry => entry.messaging)
+      .reduce((acc, messaging) => [...acc, ...messaging])
       .filter((messaging: AnyMessagingObject) => filterTextMessages(messaging))
       .map((messaging: ITextMessageMessaging) => {
         const message: IMessage = {
@@ -51,11 +49,11 @@ export function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCal
           metaData: messaging,
         };
         return invokeProcessQuery(message);
-      })
+      });
 
+    Promise.all(promises)
       // send 200 OK, after delegating the tasks
       .then(() => callback(null, { statusCode: 200 }))
-
       // incase there's some error, return it back
       .catch(err => callback(err));
 
