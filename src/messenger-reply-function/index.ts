@@ -3,28 +3,41 @@
  * and sends it back to the source (in this case FB Messenger)
  */
 
+import { get, isEmpty } from 'lodash';
+import { inspect } from 'util';
 import * as MessengerAPI from '../common/messenger.api';
+import { genericTemplate } from './messenger.formatter';
 
 // types
 import { LambdaCallback } from '../common/aws-lambda-types';
-import { IMessage, Platform } from '../common/internal-message-types';
+import * as InternalTypes from '../common/internal-message-types';
 import { ITextMessageMessaging } from '../common/messenger-types';
 
-export function handler(event: IMessage, context: {}, callback: LambdaCallback): void {
-  const { text, platform } = event;
+const { ReplyKind } = InternalTypes;
 
-  // make sure this message is for FB Messenger only
-  if (platform !== Platform.Messenger) {
-    callback(new Error(`Incorrect platform: ${platform}`));
-    return;
+export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, callback: LambdaCallback): Promise<void> {
+
+  const metaData: ITextMessageMessaging = (<ITextMessageMessaging>reply.metaData);
+  const senderId: string = get(metaData, 'sender.id', '');
+
+  // if there's no senderId don't do anything
+  if (isEmpty(senderId)) {
+    const errorMessage = `No senderId in metaData: ${inspect(reply, { depth: 100 })}`;
+    // console.error(errorMessage);
+    return callback(new Error(errorMessage));
   }
 
-  const metaData: ITextMessageMessaging = (<ITextMessageMessaging>event.metaData);
-  const senderId = metaData.sender.id;
-  MessengerAPI.sendMessage(senderId, { text })
-    .then(() => callback(null, { statusCode: 200, body: 'done!' }))
-    .catch(err => {
-      console.error('err', err);
-      callback(err);
-    });
+  switch (reply.kind) {
+    case ReplyKind.SearchResults: {
+      const message = genericTemplate(reply.shows);
+      await MessengerAPI.sendMessage(senderId, message);
+      break;
+    }
+    default:
+      const errorMessage = `Not supported Kind: ${reply.kind}`;
+      console.error(errorMessage);
+      return callback(new Error(errorMessage));
+  }
+
+  callback(null, { status: true });
 }

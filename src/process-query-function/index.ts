@@ -6,45 +6,55 @@ import { inspect } from 'util';
 import { invokeMessengerReply, invokeProcessQuery } from '../common/lambda-utils';
 import * as MessengerAPI from '../common/messenger.api';
 import * as TraktAPI from './apis/trakt.api';
+import * as SearchController from './controllers/search.controller';
 
 // types
 import { LambdaCallback, LambdaEvent } from '../common/aws-lambda-types';
-import { IMessage, Platform } from '../common/internal-message-types';
+import * as InternalTypes from '../common/internal-message-types';
 import { AnyMessagingObject, ITextMessageMessaging } from '../common/messenger-types';
 
-async function process(text: string): Promise<string> {
-  const searchResults = await TraktAPI.searchShow(text);
-  return searchResults
-    .map(result => result.show.title)
-    .join(', ');
-}
+const { ActionTypes, ReplyKind, Platform } = InternalTypes;
 
-export async function handler(event: IMessage, context: {}, callback: LambdaCallback): Promise<void> {
-  console.log('entry', event); // tslint:disable-line:no-console
+export async function handler(action: InternalTypes.AnyAction, context: {}, callback: LambdaCallback): Promise<void> {
+  console.log('entry', action); // tslint:disable-line:no-console
 
-  const { text, platform } = event;
+  let reply: InternalTypes.ISearchResultsReply;
 
-  const result = await process(text);
-
-  let promise: Promise<any>; // tslint:disable-line:no-any
-  switch (platform) {
-    case Platform.Messenger: {
-      promise = invokeMessengerReply({ ...event, text: result });
+  // compute the reply
+  switch (action.type) {
+    case ActionTypes.Search: {
+      const shows = await SearchController.search(action.text);
+      reply = {
+        kind: ReplyKind.SearchResults,
+        shows,
+        metaData: action.metaData,
+      };
       break;
     }
     default:
-      console.error(`Platform: ${platform} isn't supported yet`);
-      callback(new Error(`un supported platform : ${platform}`));
+      console.error(`ActionType not supported: ${action.type}`);
+      callback(new Error(`ActionType not supported: ${action.type}`));
       return;
   }
 
-  if (promise) {
-    promise.catch(err => {
-      console.error('error log', inspect(err, false, 100, false));
-      callback(err);
-    });
+  // in case for some reason reply wasn't computed
+  // and it reached here
+  if (!reply) {
+    console.error('No reply computed, action:', inspect(action, false, 100, false));
+    callback(new Error(`No reply computed, action: ${inspect(action, false, 100, false)}`));
     return;
   }
 
-  callback(null, { unreachable: true });
+  switch (action.platform) {
+    case Platform.Messenger: {
+      await invokeMessengerReply(reply);
+      break;
+    }
+    default:
+      console.error(`Platform: ${action.platform} isn't supported yet`);
+      callback(new Error(`un supported platform : ${action.platform}`));
+      return;
+  }
+
+  callback(null, { success: true });
 }

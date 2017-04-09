@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Callback } from './common-types';
 import { GRAPH_API_URL } from './constants';
 import { pageToken, verifyToken } from './environment';
-import { AnySendMessagePayload } from './messenger-types';
+import { AnySendMessage } from './messenger-types';
 
 /**
  * Used to authenticate the webhook
@@ -22,7 +22,7 @@ export function messengerAuth(query: {}, verifyToken: string, callback: Callback
  * @param senderId Id of the user to send this message to
  * @param Messenger message object
  */
-export const sendMessage = (senderId: string, msgObj: AnySendMessagePayload) => {
+export const sendMessage = (senderId: string, msgObj: AnySendMessage) => {
   const options = {
     method: 'POST',
     url: `${GRAPH_API_URL}/me/messages`,

@@ -1,5 +1,6 @@
 const path = require('path');
 const { CheckerPlugin } = require('awesome-typescript-loader');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const env = process.env.NODE_ENV || 'development';
 const isDebug = env === 'development';
@@ -33,5 +34,5 @@ module.exports = {
       },
     ],
   },
-  plugins: [new CheckerPlugin()],
+  plugins: [new CheckerPlugin(), new LodashModuleReplacementPlugin({ paths: true })],
 };

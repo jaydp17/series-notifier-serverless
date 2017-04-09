@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "es2015",
     "target": "ESNext",
+    "moduleResolution": "node",
     "noImplicitAny": false,
     "sourceMap": false,
     "strictNullChecks": true,
