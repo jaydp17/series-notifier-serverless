@@ -49,6 +49,7 @@ export interface ISendTextMessage {
 export type GenericTemplateElement = {
   title: string;
   subtitle: string;
+  image_url?: string;
 };
 
 /**

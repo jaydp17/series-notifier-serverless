@@ -31,8 +31,11 @@ export async function findShow(imdbId: string): Promise<IFindResult> {
 /**
  * Gets the BackDropUrl of a Tv Show, given the imdb id
  */
-export async function getBackDropImageUrl(imdbId: string): Promise<string> {
+export async function getBackDropImageUrl(imdbId: string): Promise<string | undefined> {
   const data = await findShow(imdbId);
   const tvResult = data.tv_results[0];
+  if (!tvResult || !tvResult.backdrop_path) {
+    return undefined;
+  }
   return `${IMAGE_PREFIX_URL}/${tvResult.backdrop_path}`;
 }

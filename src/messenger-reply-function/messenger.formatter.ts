@@ -13,6 +13,7 @@ function genericElement(show: InternalTypes.ITvShow): MessengerTypes.GenericTemp
   return {
     title: show.title,
     subtitle: show.genres.join(', '),
+    image_url: show.backDropUrl,
   };
 }
 

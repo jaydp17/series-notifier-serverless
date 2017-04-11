@@ -111,4 +111,5 @@ export interface ITvShow {
   imdbId: string;
   overview: string;
   genres: string[];
+  backDropUrl?: string;
 }
