@@ -46,3 +46,13 @@ export const witAIToken: string = process.env.WITAI_TOKEN;
 if (!witAIToken && env !== 'test') {
   throw new Error('WITAI_TOKEN not found in env vars');
 }
+
+export const fanArtApiKey: string = process.env.FAN_ART_API_KEY;
+if (!fanArtApiKey && env !== 'test') {
+  throw new Error('FAN_ART_API_KEY not found in env vars');
+}
+
+export const theMovieDbApiKey: string = process.env.THE_MOVIE_DB_API_KEY;
+if (!theMovieDbApiKey && env !== 'test') {
+  throw new Error('THE_MOVIE_DB_API_KEY not found in env vars');
+}
