@@ -3,7 +3,6 @@
 exports[`TraktAPI search flash 1`] = `
 Array [
   Object {
-    "score": 1038.9548,
     "show": Object {
       "aired_episodes": 64,
       "airs": Object {
@@ -83,7 +82,6 @@ Array [
     "type": "show",
   },
   Object {
-    "score": 23.684973,
     "show": Object {
       "aired_episodes": 22,
       "airs": Object {
@@ -138,7 +136,6 @@ Array [
     "type": "show",
   },
   Object {
-    "score": 8.775088,
     "show": Object {
       "aired_episodes": 22,
       "airs": Object {
@@ -187,7 +184,6 @@ Array [
     "type": "show",
   },
   Object {
-    "score": 5.4358954,
     "show": Object {
       "aired_episodes": 1,
       "airs": Object {
@@ -229,7 +225,6 @@ Array [
     "type": "show",
   },
   Object {
-    "score": 1.6061245,
     "show": Object {
       "aired_episodes": 29,
       "airs": Object {
@@ -293,7 +288,6 @@ Array [
     "type": "show",
   },
   Object {
-    "score": 0.6079643,
     "show": Object {
       "aired_episodes": 227,
       "airs": Object {
@@ -341,7 +335,6 @@ Array [
     "type": "show",
   },
   Object {
-    "score": 0.32615376,
     "show": Object {
       "aired_episodes": 32,
       "airs": Object {
@@ -384,7 +377,6 @@ Array [
     "type": "show",
   },
   Object {
-    "score": 0.3106226,
     "show": Object {
       "aired_episodes": 40,
       "airs": Object {
@@ -421,7 +413,6 @@ Array [
     "type": "show",
   },
   Object {
-    "score": 0.3106226,
     "show": Object {
       "aired_episodes": 16,
       "airs": Object {
@@ -460,7 +451,6 @@ Array [
     "type": "show",
   },
   Object {
-    "score": 0.2593188,
     "show": Object {
       "aired_episodes": 62,
       "airs": Object {

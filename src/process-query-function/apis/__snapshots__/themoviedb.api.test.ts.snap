@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TheMovieDbAPI finds a show 1`] = `
+Object {
+  "movie_results": Array [],
+  "person_results": Array [],
+  "tv_episode_results": Array [],
+  "tv_results": Array [
+    Object {
+      "backdrop_path": "/mmxxEpTqVdwBlu5Pii7tbedBkPC.jpg",
+      "first_air_date": "2014-10-07",
+      "genre_ids": Array [
+        18,
+        10765,
+      ],
+      "id": 60735,
+      "name": "The Flash",
+      "origin_country": Array [
+        "US",
+      ],
+      "original_language": "en",
+      "original_name": "The Flash",
+      "overview": "After a particle accelerator causes a freak storm, CSI Investigator Barry Allen is struck by lightning and falls into a coma. Months later he awakens with the power of super speed, granting him the ability to move through Central City like an unseen guardian angel. Though initially excited by his newfound powers, Barry is shocked to discover he is not the only \\"meta-human\\" who was created in the wake of the accelerator explosion -- and not everyone is using their new powers for good. Barry partners with S.T.A.R. Labs and dedicates his life to protect the innocent. For now, only a few close friends and associates know that Barry is literally the fastest man alive, but it won't be long before the world learns what Barry Allen has become...The Flash.",
+      "popularity": 25.996128,
+      "poster_path": "/lUFK7ElGCk9kVEryDJHICeNdmd1.jpg",
+      "vote_average": 6.7,
+      "vote_count": 1040,
+    },
+  ],
+  "tv_season_results": Array [],
+}
+`;
+
+exports[`TheMovieDbAPI finds backdrop ImageUrl 1`] = `"https://image.tmdb.org/t/p/w780//mmxxEpTqVdwBlu5Pii7tbedBkPC.jpg"`;
