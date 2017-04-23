@@ -24,6 +24,18 @@
     ],
     "arrow-return-shorthand": [
       true
+    ],
+    "mocha-no-side-effect-code": [
+      true,
+      {
+        "ignore": "^deepFreeze\\(.*"
+      }
+    ],
+    "function-name": [
+      true,
+      {
+        "function-regex": "^[a-z_][\\w\\d]+$"
+      }
     ]
   }
 }

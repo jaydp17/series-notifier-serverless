@@ -31,14 +31,17 @@ export async function search(query: string): Promise<InternalTypes.ITvShow[]> {
   const promises = runningShows
     .map(show => TraktAPI.convertToITvShow(show))
     .filter(show => show.imdbId) // keep only those series who have a valid imdb id
-    .map(show => attachBackDrop(show));
+    .map(show => _attachBackDrop(show));
   const shows = await Promise.all(promises);
 
   // remove series who don't have a backdrop
   return shows.filter(show => !!show.backDropUrl);
 }
 
-async function attachBackDrop(show: InternalTypes.ITvShow): Promise<InternalTypes.ITvShow> {
+/**
+ * @private
+ */
+export async function _attachBackDrop(show: InternalTypes.ITvShow): Promise<InternalTypes.ITvShow> {
   const backDropUrl = await TheMovieDbAPI.getBackDropImageUrl(show.imdbId);
   return { ...show, backDropUrl };
 }

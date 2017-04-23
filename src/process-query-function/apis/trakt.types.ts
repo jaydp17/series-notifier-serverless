@@ -23,7 +23,7 @@ export interface ITraktShowFull {
   ids: ITraktIds;
   overview: string;
   first_aired: string;
-  trailer: string;
+  trailer?: string;
   status: string;
   rating: number;
   genres: string[];
