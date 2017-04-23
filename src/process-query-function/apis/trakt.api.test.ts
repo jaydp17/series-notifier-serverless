@@ -4,7 +4,9 @@
 
 import * as TraktAPI from './trakt.api';
 
-test('asdf', async () => {
-  const result = await TraktAPI.searchShow('flash');
-  console.log('result', result);
+describe('TraktAPI', () => {
+  it('search flash', async () => {
+    const result = await TraktAPI.searchShow('flash');
+    expect(result).toMatchSnapshot();
+  });
 });

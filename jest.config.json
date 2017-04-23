@@ -1,8 +1,9 @@
 {
   "transform": {
-    ".ts$": "<rootDir>/jest.preprocessor.js"
+    ".ts$": "<rootDir>/test/jest.preprocessor.js"
   },
   "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+  "setupTestFrameworkScriptFile": "<rootDir>/test/test.setup.js",
   "moduleFileExtensions": [
     "ts",
     "tsx",
