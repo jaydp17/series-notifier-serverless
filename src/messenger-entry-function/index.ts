@@ -2,6 +2,7 @@
  * The main file that starts the function
  */
 
+import { platformNames } from '../common/constants';
 import { verifyToken } from '../common/environment';
 import { invokeProcessQuery } from '../common/lambda-utils';
 import { messengerAuth } from '../common/messenger.api';
@@ -43,7 +44,7 @@ export function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCal
         const message: ISearchAction = {
           type: ActionTypes.Search,
           text: messaging.message.text,
-          platform: Platform.Messenger,
+          platform: platformNames.FBMessenger,
           metaData: messaging,
         };
         return invokeProcessQuery(message);

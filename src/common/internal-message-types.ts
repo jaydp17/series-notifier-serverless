@@ -1,4 +1,4 @@
-import { PLATFORM } from './constants';
+import { platformNames } from './constants';
 /**
  * Contains types related to messages transfered between lambas
  */
@@ -9,14 +9,14 @@ import { PLATFORM } from './constants';
 export type Platform = 'FBMessenger' | 'AmazonAlexa' | 'GoogleHome';
 
 export function isPlatform(platform: string): platform is Platform {
-  return Object.values(PLATFORM).includes(platform);
+  return Object.values(<{ [key: string]: string }>platformNames).includes(platform);
 }
 
 /**
  * The processing function requires an action with an action type
  * This is the action type for it
  */
-export const enum ActionTypes {
+export enum ActionTypes {
   Search,
   Subscribe,
   UnSubscribe,
@@ -66,7 +66,7 @@ export interface IMessage {
 /**
  * Enum to classify the kind of reply
  */
-export const enum ReplyKind {
+export enum ReplyKind {
   Text,
   SearchResults,
   TrendnigShows,

@@ -3,6 +3,7 @@
  */
 
 import { inspect } from 'util';
+import { platformNames } from '../common/constants';
 import { invokeMessengerReply, invokeProcessQuery } from '../common/lambda-utils';
 import * as MessengerAPI from '../common/messenger.api';
 import * as TraktAPI from './apis/trakt.api';
@@ -13,7 +14,7 @@ import { LambdaCallback, LambdaEvent } from '../common/aws-lambda-types';
 import * as InternalTypes from '../common/internal-message-types';
 import { AnyMessagingObject, ITextMessageMessaging } from '../common/messenger-types';
 
-const { ActionTypes, ReplyKind, Platform } = InternalTypes;
+const { ActionTypes, ReplyKind } = InternalTypes;
 
 export async function handler(action: InternalTypes.AnyAction, context: {}, callback: LambdaCallback): Promise<void> {
   console.log('entry', action); // tslint:disable-line:no-console
@@ -46,7 +47,7 @@ export async function handler(action: InternalTypes.AnyAction, context: {}, call
   }
 
   switch (action.platform) {
-    case Platform.Messenger: {
+    case platformNames.FBMessenger: {
       await invokeMessengerReply(reply);
       break;
     }
