@@ -13,7 +13,7 @@
       "bluebird"
     ],
     "lib": [
-      "es2017"
+      "esnext"
     ]
   },
   "exclude": [
