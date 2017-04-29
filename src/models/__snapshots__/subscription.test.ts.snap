@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Subscription Model create subscription creates a new subscription 1`] = `
+Array [
+  Object {
+    "Item": Object {
+      "imdbId": "t23456",
+      "socialId": "FBMessenger::123",
+    },
+    "TableName": "Subscriptions",
+  },
+]
+`;
+
+exports[`Subscription Model deletes a subscription 1`] = `
+Array [
+  Object {
+    "Key": Object {
+      "imdbId": "t123123",
+      "socialId": "FBMessenger::123",
+    },
+    "TableName": "Subscriptions",
+  },
+]
+`;
+
+exports[`Subscription Model get all Subscribed shows gets subscribed shows 1`] = `
+Array [
+  Object {
+    "ExpressionAttributeValues": Object {
+      ":socialId": "FBMessenger::123",
+    },
+    "IndexName": "socialId-index",
+    "KeyConditionExpression": "socialId = :socialId",
+    "TableName": "Subscriptions",
+  },
+]
+`;
+
+exports[`Subscription Model gets users who subscribed 1`] = `
+Array [
+  Object {
+    "ExpressionAttributeValues": Object {
+      ":imdbId": "t123123",
+    },
+    "KeyConditionExpression": "imdbId = :imdbId",
+    "TableName": "Subscriptions",
+  },
+]
+`;

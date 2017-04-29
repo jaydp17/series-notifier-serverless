@@ -11,3 +11,10 @@ if (env === 'development') {
 }
 export const dynamodb = new DynamoDB(dynamoDbOptions);
 export const dynamoDocClient = new DynamoDB.DocumentClient(dynamoDbOptions);
+
+export default {
+  get: params => dynamoDocClient.get(params).promise(),
+  put: params => dynamoDocClient.put(params).promise(),
+  query: params => dynamoDocClient.query(params).promise(),
+  delete: params => dynamoDocClient.delete(params).promise(),
+};

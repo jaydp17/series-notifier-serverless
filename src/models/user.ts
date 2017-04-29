@@ -4,7 +4,7 @@
 
 import { DynamoDB } from 'aws-sdk';
 import { prettyPrint } from '../common/common-utils';
-import { dynamoDocClient } from '../common/dynamodb';
+import dynamodb from '../common/dynamodb';
 import { isPlatform } from '../common/internal-message-types';
 import tables from '../common/tables';
 
@@ -13,20 +13,23 @@ const TableName = tables.names.users; // tslint:disable-line:variable-name
 /**
  * Validates whether a given social Id is valid or not
  */
-export function validateSocialId(socialId: string) {
+export function isValidSocialId(socialId?: string | null): boolean {
+  if (!socialId) {
+    return false;
+  }
   const [platform, externalId] = socialId.split('::');
-  return isPlatform(platform) && externalId;
+  return isPlatform(platform) && !!externalId;
 }
 
 export function createUser(socialId: string) {
-  if (!validateSocialId(socialId)) {
+  if (!isValidSocialId(socialId)) {
     throw new Error(`Invalid socialId: ${socialId}`);
   }
   const params: DynamoDB.DocumentClient.PutItemInput = {
     TableName,
     Item: { socialId },
   };
-  return dynamoDocClient.put(params).promise();
+  return dynamodb.put(params);
 }
 
 export function getUser(socialId: string) {
@@ -34,5 +37,5 @@ export function getUser(socialId: string) {
     TableName,
     Key: { socialId },
   };
-  return dynamoDocClient.get(params).promise();
+  return dynamodb.get(params);
 }
