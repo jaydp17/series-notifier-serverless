@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. test/parse_yaml.sh
+. shell-scripts/parse_yaml.sh
 
 if [ ! -f secret-dev.yml ]; then
   echo -e "${RED}Error: no secret-dev.yml file found!"

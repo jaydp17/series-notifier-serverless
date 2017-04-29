@@ -14,7 +14,8 @@
     "invoke": "sls invoke local -f messenger -p event.json",
     "lint": "tslint src/**/*.ts",
     "test:unit": "NODE_ENV=test jest --config=jest.config.json --no-cache '^((?!(api\\.test\\.(ts|js))).)*$'",
-    "test:api": "./test/test-api.sh"
+    "test:api": "./shell-scripts/test-api.sh",
+    "ts-run": "./shell-scripts/ts-run.sh"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "@types/lodash": "^4.14.62",
     "@types/node": "^6.0.66",
     "awesome-typescript-loader": "^3.1.2",
+    "aws-sdk": "^2.48.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-jest": "^19.0.0",
@@ -46,6 +48,7 @@
     "prettier": "^0.22.0",
     "rimraf": "^2.6.1",
     "serverless": "^1.10.2",
+    "ts-node": "^3.0.2",
     "tslint": "^4.5.1",
     "tslint-microsoft-contrib": "^4.0.1",
     "typescript": "^2.2.2",
