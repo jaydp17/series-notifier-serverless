@@ -1,3 +1,4 @@
+import { PLATFORM } from './constants';
 /**
  * Contains types related to messages transfered between lambas
  */
@@ -5,10 +6,10 @@
 /**
  * Represents the platforms from which a message can come & go
  */
-export const enum Platform {
-  Messenger,
-  AmazonAlexa,
-  GoogleHome,
+export type Platform = 'FBMessenger' | 'AmazonAlexa' | 'GoogleHome';
+
+export function isPlatform(platform: string): platform is Platform {
+  return Object.values(PLATFORM).includes(platform);
 }
 
 /**

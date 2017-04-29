@@ -11,6 +11,9 @@
       "node",
       "jest",
       "bluebird"
+    ],
+    "lib": [
+      "es2017"
     ]
   },
   "exclude": [

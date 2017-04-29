@@ -7,7 +7,6 @@
     "strict-boolean-expressions": false,
     "typedef": [
       true,
-      "call-signature",
       "parameter",
       "member-variable-declaration"
     ],
@@ -36,6 +35,7 @@
       {
         "function-regex": "^[a-z_][\\w\\d]+$"
       }
-    ]
+    ],
+    "no-default-export": false
   }
 }
