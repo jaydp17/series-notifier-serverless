@@ -8,7 +8,9 @@ provider:
   memorySize: 256
   variables: ${file(secret-${self:provider.stage}.yml)}
   deploymentBucket: snbot-sls-deploy
+  timeout: 6 # 6 seconds
   environment:
+    NODE_ENV: ${self:provider.variables.NODE_ENV}
     FB_PAGE_TOKEN: ${self:provider.variables.FB_PAGE_TOKEN}
     FB_VERIFY_TOKEN: ${self:provider.variables.FB_VERIFY_TOKEN}
     FB_USERNAME: ${self:provider.variables.FB_USERNAME}
@@ -29,6 +31,21 @@ provider:
              - Ref: 'AWS::AccountId'
              - "function"
              - "${self:service}-${self:provider.stage}-*"
+    -  Effect: "Allow"
+       Action:
+         - dynamodb:Query
+         - dynamodb:Scan
+         - dynamodb:GetItem
+         - dynamodb:PutItem
+         - dynamodb:UpdateItem
+         - dynamodb:DeleteItem
+       Resource:
+         Fn::Join:
+           - ":"
+           - - "arn:aws:dynamodb"
+             - Ref: 'AWS::Region'
+             - Ref: 'AWS::AccountId'
+             - "table/*"
 
 # you can add packaging information here
 package:

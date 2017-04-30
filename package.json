@@ -10,12 +10,15 @@
     "deploy:function": "sls deploy function -f",
     "predeploy:all": "yarn build",
     "deploy:all": "sls deploy --verbose",
-    "preinvoke": "yarn build",
-    "invoke": "sls invoke local -f messenger -p event.json",
+    "invoke": "sls invoke -p event.json -f",
+    "preinvoke:local": "yarn build",
+    "invoke:local": "SERVERLESS_LOCAL=1 sls invoke local -p event.json -f",
     "lint": "tslint src/**/*.ts",
     "test:unit": "NODE_ENV=test jest --config=jest.config.json --no-cache '^((?!(api\\.test\\.(ts|js))).)*$'",
     "test:api": "./shell-scripts/test-api.sh",
-    "ts-run": "./shell-scripts/ts-run.sh"
+    "ts-run": "./shell-scripts/ts-run.sh",
+    "tables:create": "SERVERLESS_LOCAL=1 npm run ts-run src/bin/create-tables.ts",
+    "tables:delete": "SERVERLESS_LOCAL=1 npm run ts-run src/bin/delete-tables.ts"
   },
   "repository": {
     "type": "git",
