@@ -11,10 +11,15 @@ import { messengerAuth } from '../common/messenger.api';
 
 // types
 import { LambdaEvent, LambdaHttpCallback } from '../common/aws-lambda-types';
+import * as InternalTypes from '../common/internal-message-types';
+import * as MessengerTypes from '../common/messenger-types';
 
 // other imports
 import deepFreeze from 'deep-freeze';
-import { handler } from './index';
+import { platformNames } from '../common/constants';
+import { ActionTypes } from '../common/internal-message-types';
+import * as indexFile from './index';
+import { getFacebookMessage, getMessageTexts } from './index.data';
 
 describe('Entry Function', () => {
 
@@ -42,7 +47,7 @@ describe('Entry Function', () => {
       body: '',
     };
 
-    handler(event, {}, jest.fn());
+    indexFile.handler(event, {}, jest.fn());
     expect(messengerAuth).toBeCalled();
   });
 
@@ -56,7 +61,7 @@ describe('Entry Function', () => {
 
     // execute
     const callback = jest.fn();
-    handler(event, {}, callback);
+    indexFile.handler(event, {}, callback);
 
     // test
     expect(callback).toBeCalled();
@@ -75,7 +80,7 @@ describe('Entry Function', () => {
 
     // execute
     const callback = jest.fn();
-    handler(event, {}, callback);
+    indexFile.handler(event, {}, callback);
 
     // test
     expect(callback).toBeCalled();
@@ -94,7 +99,7 @@ describe('Entry Function', () => {
 
     // execute
     const callback = jest.fn();
-    handler(event, {}, callback);
+    indexFile.handler(event, {}, callback);
 
     // test
     expect(callback).toBeCalled();
@@ -102,4 +107,81 @@ describe('Entry Function', () => {
     expect((<jest.Mock<{}>>messengerAuth).mock.calls.length).toEqual(0);
     expect((<jest.Mock<{}>>invokeProcessQuery).mock.calls.length).toEqual(0);
   });
+
+  it('filters text messages', () => {
+    const cases = [{
+      input: {},
+      result: false,
+    }, {
+      input: { message: {} },
+      result: true,
+    }, {
+      input: { message: { is_echo: true } },
+      result: false,
+    }, {
+      input: { message: { is_echo: false } },
+      result: true,
+    }];
+
+    for (const { input, result: expectedResult } of cases) {
+      const result = indexFile.filterTextMessages(<MessengerTypes.AnyMessagingObject>input);
+      expect(result).toEqual(expectedResult);
+    }
+  });
+
+  it('tests processPostBody with 1 message', () => {
+    const postBody = getFacebookMessage();
+    const texts = getMessageTexts(postBody);
+    indexFile.processPostBody(postBody);
+
+    // test
+    const invokeProcessQueryCalls = (<jest.Mock<{}>>invokeProcessQuery).mock.calls;
+    expect(invokeProcessQueryCalls.length).toEqual(texts.length);
+    (invokeProcessQueryCalls).forEach(([param], index) => validateParam(param, texts[index]));
+  });
+
+  it('tests processPostBody with 2 entries 1 messaging', () => {
+    const postBody = getFacebookMessage({ entries: 2 });
+    const texts = getMessageTexts(postBody);
+    indexFile.processPostBody(postBody);
+
+    // test
+    const invokeProcessQueryCalls = (<jest.Mock<{}>>invokeProcessQuery).mock.calls;
+    expect(invokeProcessQueryCalls.length).toEqual(texts.length);
+    (invokeProcessQueryCalls).forEach(([param], index) => validateParam(param, texts[index]));
+  });
+
+  it('tests processPostBody with 2 entries 2 messaging', () => {
+    const postBody = getFacebookMessage({ entries: 2, messagings: 2 });
+    const texts = getMessageTexts(postBody);
+    indexFile.processPostBody(postBody);
+
+    // test
+    const invokeProcessQueryCalls = (<jest.Mock<{}>>invokeProcessQuery).mock.calls;
+    expect(invokeProcessQueryCalls.length).toEqual(texts.length);
+    (invokeProcessQueryCalls).forEach(([param], index) => validateParam(param, texts[index]));
+  });
+
+  it('returns statusCode: 200 if eveything goes well', async () => {
+    const postBody = getFacebookMessage();
+    // const texts = getMessageTexts(postBody);
+    // indexFile.processPostBody(postBody);
+    const event: LambdaEvent = {
+      httpMethod: 'POST',
+      body: JSON.stringify(postBody),
+      queryStringParameters: null,
+    };
+
+    const callback = jest.fn();
+    await indexFile.handler(event, {}, callback);
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith(null, { statusCode: 200 });
+  });
 });
+
+function validateParam(param: InternalTypes.ISearchAction, text: string) {
+  expect(param.type).toEqual(ActionTypes.Search);
+  expect(param.text).toEqual(text);
+  expect(param.platform).toEqual(platformNames.FBMessenger);
+  expect(param.metaData).toHaveProperty('fbMessenger');
+}

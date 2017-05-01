@@ -13,16 +13,31 @@ import { Callback } from '../common/common-types';
 import { ActionTypes, AnyAction, IMessage, ISearchAction, Platform } from '../common/internal-message-types';
 import * as MessengerTypes from '../common/messenger-types';
 
-export function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCallback): void {
+export function processPostBody(body: MessengerTypes.AnyFacebookMessage) {
+  // get the messaging objects out
+  return body.entry
+    .map(entry => entry.messaging)
+    .reduce((acc, messaging) => [...acc, ...messaging])
+    .filter((messaging: MessengerTypes.AnyMessagingObject) => filterTextMessages(messaging))
+    .map((messaging: MessengerTypes.ITextMessageMessaging) => {
+      const message: ISearchAction = {
+        type: ActionTypes.Search,
+        text: messaging.message.text,
+        platform: platformNames.FBMessenger,
+        metaData: { fbMessenger: messaging },
+      };
+      return invokeProcessQuery(message);
+    });
+}
+
+export async function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCallback): Promise<void> {
 
   // TOKEN verification
   if (event.httpMethod === 'GET') {
     if (!event.queryStringParameters) {
-      callback(null, { statusCode: 200, body: 'ping' });
-      return;
+      return callback(null, { statusCode: 200, body: 'ping' });
     }
-    messengerAuth(event.queryStringParameters, verifyToken, callback);
-    return;
+    return messengerAuth(event.queryStringParameters, verifyToken, callback);
   }
 
   // Actual Message
@@ -31,35 +46,18 @@ export function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCal
 
     const { object: objectType } = body;
     if (objectType !== 'page') {
-      callback(null, { statusCode: 403, body: 'Invalid Object Type' });
-      return;
+      return callback(null, { statusCode: 403, body: 'Invalid Object Type' });
     }
+    const promises = processPostBody(body);
 
-    // get the messaging objects out
-    const promises = body.entry
-      .map(entry => entry.messaging)
-      .reduce((acc, messaging) => [...acc, ...messaging])
-      .filter((messaging: MessengerTypes.AnyMessagingObject) => filterTextMessages(messaging))
-      .map((messaging: MessengerTypes.ITextMessageMessaging) => {
-        const message: ISearchAction = {
-          type: ActionTypes.Search,
-          text: messaging.message.text,
-          platform: platformNames.FBMessenger,
-          metaData: { fbMessenger: messaging },
-        };
-        return invokeProcessQuery(message);
-      });
-
-    Promise.all(promises)
+    return Promise.all(promises)
       // send 200 OK, after delegating the tasks
       .then(() => callback(null, { statusCode: 200 }))
       // incase there's some error, return it back
       .catch(err => callback(err));
-
-    return;
   }
 
-  callback(null, { statusCode: 403, body: `Invalid httpMethod: ${event.httpMethod}` });
+  return callback(null, { statusCode: 403, body: `Invalid httpMethod: ${event.httpMethod}` });
 }
 
 export function filterTextMessages(messaging: MessengerTypes.AnyMessagingObject): boolean {
