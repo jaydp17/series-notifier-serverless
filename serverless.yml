@@ -8,7 +8,7 @@ provider:
   memorySize: 256
   variables: ${file(secret-${self:provider.stage}.yml)}
   deploymentBucket: snbot-sls-deploy
-  timeout: 6 # 6 seconds
+  timeout: 60 # 60 seconds
   environment:
     NODE_ENV: ${self:provider.variables.NODE_ENV}
     FB_PAGE_TOKEN: ${self:provider.variables.FB_PAGE_TOKEN}
