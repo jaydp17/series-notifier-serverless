@@ -84,16 +84,3 @@ export async function episodeSummary(imdbId: string, seasonNum: number, episodeN
   return res.data;
 }
 
-/**
- * Converts ITraktShowFull to the internal show type ITvShow
- */
-export function convertToITvShow(show: TraktType.ITraktShowFull): ITvShow {
-  return {
-    title: show.title,
-    year: show.year,
-    tvdbId: show.ids.tvdb,
-    imdbId: show.ids.imdb,
-    overview: show.overview,
-    genres: show.genres,
-  };
-}

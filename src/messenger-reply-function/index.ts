@@ -3,21 +3,26 @@
  * and sends it back to the source (in this case FB Messenger)
  */
 
+import 'babel-polyfill';
 import { get, isEmpty } from 'lodash';
 import { inspect } from 'util';
 import * as MessengerAPI from '../common/messenger.api';
-import { genericTemplate } from './messenger.formatter';
+import { GenericTemplate } from './messenger.formatter';
 
 // types
 import { LambdaCallback } from '../common/aws-lambda-types';
 import * as InternalTypes from '../common/internal-message-types';
-import { ITextMessageMessaging } from '../common/messenger-types';
+import * as MessengerTypes from '../common/messenger-types';
 
 const { ReplyKind } = InternalTypes;
 
 export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, callback: LambdaCallback): Promise<void> {
 
-  const metaData: ITextMessageMessaging = (<ITextMessageMessaging>reply.metaData);
+  const metaData = reply.metaData.fbMessenger;
+  if (!metaData) {
+    return callback(new Error('No metaData'));
+  }
+
   const senderId: string = get(metaData, 'sender.id', '');
 
   // if there's no senderId don't do anything
@@ -29,7 +34,7 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
 
   switch (reply.kind) {
     case ReplyKind.SearchResults: {
-      const message = genericTemplate(reply.shows);
+      const message = GenericTemplate.generate(reply.shows);
       await MessengerAPI.sendMessage(senderId, message);
       break;
     }

@@ -7,7 +7,7 @@ interface IEntry {
   time: number;
 }
 
-interface IMesssaging {
+export interface IMesssaging {
   sender: { id: string; };
   recipient: { id: string; };
   timestamp: number;
@@ -43,13 +43,30 @@ export interface ISendTextMessage {
   text: string;
 }
 
+export namespace GenericTemplate {
+  export type WebUrlButton = {
+    type: 'web_url'; // tslint:disable-line:no-reserved-keywords
+    url: string;
+    title: string;
+  };
+
+  export type PostBackButton = {
+    type: 'postback'; // tslint:disable-line:no-reserved-keywords
+    title: string;
+    payload: string;
+  };
+
+  export type Button = WebUrlButton | PostBackButton;
+}
+
 /**
  * An element in the generic Template
  */
 export type GenericTemplateElement = {
   title: string;
   subtitle: string;
-  image_url?: string;
+  image_url: string | null | undefined;
+  buttons: GenericTemplate.Button[];
 };
 
 /**

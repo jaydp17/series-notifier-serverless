@@ -2,10 +2,13 @@
  * The main file that starts the Process Query function
  */
 
+import 'babel-polyfill';
 import { inspect } from 'util';
+import { prettyPrint } from '../common/common-utils';
 import { platformNames } from '../common/constants';
 import { invokeMessengerReply, invokeProcessQuery } from '../common/lambda-utils';
 import * as MessengerAPI from '../common/messenger.api';
+import * as ActionHelper from './action-helper';
 import * as TraktAPI from './apis/trakt.api';
 import * as SearchController from './controllers/search.controller';
 
@@ -17,14 +20,16 @@ import { AnyMessagingObject, ITextMessageMessaging } from '../common/messenger-t
 const { ActionTypes, ReplyKind } = InternalTypes;
 
 export async function handler(action: InternalTypes.AnyAction, context: {}, callback: LambdaCallback): Promise<void> {
-  console.log('entry', action); // tslint:disable-line:no-console
+  console.log('entry'); // tslint:disable-line:no-console
+  prettyPrint(action);
 
+  const socialId = ActionHelper.getSocialId(action);
   let reply: InternalTypes.ISearchResultsReply;
 
   // compute the reply
   switch (action.type) {
     case ActionTypes.Search: {
-      const shows = await SearchController.search(action.text);
+      const shows = await SearchController.search(action.text, socialId);
       reply = {
         kind: ReplyKind.SearchResults,
         shows,

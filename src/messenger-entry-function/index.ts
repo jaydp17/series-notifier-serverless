@@ -1,7 +1,7 @@
 /**
  * The main file that starts the function
  */
-
+import 'babel-polyfill';
 import { platformNames } from '../common/constants';
 import { verifyToken } from '../common/environment';
 import { invokeProcessQuery } from '../common/lambda-utils';
@@ -45,7 +45,7 @@ export function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCal
           type: ActionTypes.Search,
           text: messaging.message.text,
           platform: platformNames.FBMessenger,
-          metaData: messaging,
+          metaData: { fbMessenger: messaging },
         };
         return invokeProcessQuery(message);
       });

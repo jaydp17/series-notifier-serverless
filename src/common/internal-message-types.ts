@@ -1,7 +1,9 @@
-import { platformNames } from './constants';
 /**
  * Contains types related to messages transfered between lambas
  */
+
+import * as MessengerTypes from '../common/messenger-types';
+import { platformNames } from './constants';
 
 /**
  * Represents the platforms from which a message can come & go
@@ -24,13 +26,20 @@ export enum ActionTypes {
 }
 
 /**
+ * The metaData object that's passed around across functions
+ */
+export interface IMetaData {
+  fbMessenger?: MessengerTypes.AnyMessagingObject;
+}
+
+/**
  * The processing function requires an action to work on
  * It's similar to what Action/ActionTypes do in redux
  */
 interface IAction {
   type: ActionTypes; // tslint:disable-line:no-reserved-keywords
   platform: Platform;
-  metaData: {};
+  metaData: IMetaData;
 }
 
 /**
@@ -78,7 +87,7 @@ export enum ReplyKind {
  */
 export interface IReply {
   kind: ReplyKind;
-  metaData: {};
+  metaData: IMetaData;
 }
 
 /**
@@ -112,5 +121,6 @@ export interface ITvShow {
   imdbId: string;
   overview: string;
   genres: string[];
-  backDropUrl?: string;
+  backDropUrl?: string | null;
+  isSubscribed: boolean;
 }
