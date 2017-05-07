@@ -42,15 +42,10 @@ describe('Subscription Model', () => {
 
   describe('get all Subscribed shows', () => {
     it('throws error on invalid socialId', async () => {
-      // TODO: refactor this when jest 20.0.0+ comes out
-      // use expect().rejects
       const socialId = 'asdf';
-      try {
-        await SubscriptionModel.getSubscribedShows(socialId);
-        return Promise.reject(new Error('should have failed'));
-      } catch (err) {
-        expect(err.message).toContain('Invalid socialId');
-      }
+      await expect(SubscriptionModel.getSubscribedShows(socialId)).rejects.toEqual(
+        new Error(`Invalid socialId: ${socialId}`),
+      );
     });
 
     it('gets subscribed shows', async () => {
