@@ -2,8 +2,9 @@
  * An interface to TraktTV
  */
 
-import axios, { AxiosPromise, AxiosRequestConfig } from 'axios';
+import { AxiosPromise, AxiosRequestConfig } from 'axios';
 import { inspect } from 'util';
+import axios from '../../common/axios';
 import { traktApiKey } from '../../common/environment';
 
 // types
@@ -83,4 +84,3 @@ export async function episodeSummary(imdbId: string, seasonNum: number, episodeN
   const res = await axios(options);
   return res.data;
 }
-

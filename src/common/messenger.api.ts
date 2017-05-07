@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from './axios';
 
 import { Callback } from './common-types';
 import { GRAPH_API_URL } from './constants';

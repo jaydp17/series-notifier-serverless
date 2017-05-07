@@ -2,7 +2,8 @@
  * An interface to deal with the movie db
  */
 
-import axios, { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig } from 'axios';
+import axios from '../../common/axios';
 import { theMovieDbApiKey } from '../../common/environment';
 
 // types
