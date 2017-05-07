@@ -6,6 +6,7 @@
 import 'babel-polyfill';
 import { get, isEmpty } from 'lodash';
 import { inspect } from 'util';
+import { getError, prettyPrint } from '../common/common-utils';
 import * as MessengerAPI from '../common/messenger.api';
 import { GenericTemplate } from './messenger.formatter';
 
@@ -17,6 +18,7 @@ import * as MessengerTypes from '../common/messenger-types';
 const { ReplyKind } = InternalTypes;
 
 export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, callback: LambdaCallback): Promise<void> {
+  console.log('input', JSON.stringify(reply)); // tslint:disable-line:no-console
 
   const metaData = reply.metaData.fbMessenger;
   if (!metaData) {
@@ -32,17 +34,21 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
     return callback(new Error(errorMessage));
   }
 
-  switch (reply.kind) {
-    case ReplyKind.SearchResults: {
-      const message = GenericTemplate.generate(reply.shows);
-      await MessengerAPI.sendMessage(senderId, message);
-      break;
+  try {
+    switch (reply.kind) {
+      case ReplyKind.SearchResults: {
+        const message = GenericTemplate.generate(reply.shows);
+        await MessengerAPI.sendMessage(senderId, message);
+        break;
+      }
+      default:
+        const errorMessage = `Not supported Kind: ${reply.kind}`;
+        console.error(errorMessage);
+        return callback(new Error(errorMessage));
     }
-    default:
-      const errorMessage = `Not supported Kind: ${reply.kind}`;
-      console.error(errorMessage);
-      return callback(new Error(errorMessage));
+    callback(null, { status: true });
+  } catch (err) {
+    const error = getError(err);
+    callback(error);
   }
-
-  callback(null, { status: true });
 }

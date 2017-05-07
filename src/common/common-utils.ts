@@ -2,11 +2,25 @@
  * Contains utility functions
  */
 
+import { AxiosError } from 'axios';
 import { inspect } from 'util';
 
 /**
  * Pretty prints an object
  */
 export function prettyPrint(obj: any): void { // tslint:disable-line:no-any
-  console.log(inspect(obj, false, 20, true)); // tslint:disable-line:no-console
+  const color = !!process.env.SERVERLESS_LOCAL;
+  console.log(inspect(obj, false, 20, color)); // tslint:disable-line:no-console
+}
+
+/**
+ * An error could be a regular Error object or AxiosError
+ * This method gets the actual error out if it's an AxisoError
+ */
+export function getError(error: Error | AxiosError): Error {
+  const response = (<AxiosError>error).response;
+  if (response) {
+    return response.data;
+  }
+  return error;
 }
