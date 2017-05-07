@@ -87,6 +87,17 @@ export type AnyMessagingObject = ITextMessageMessaging | IDeliveryMessageMessagi
 export type AnyFacebookMessage = TextMessage;
 
 /**
+ * The data that will be send in the payload of a postback Button
+ */
+export type TvShowPayLoad = {
+  title: string;
+  year: number;
+  tvdbId: number;
+  imdbId: string;
+  backDropUrl: string | null | undefined;
+};
+
+/**
  * Generic send message type
  */
 export type AnySendMessage = ISendTextMessage | ISendGenericTemplateMessage;

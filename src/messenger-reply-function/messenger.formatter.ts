@@ -11,7 +11,7 @@ export namespace GenericTemplate {
     return {
       type: 'postback',
       title: show.isSubscribed ? 'Un-Subscribe' : 'Subscribe',
-      payload: JSON.stringify(show),
+      payload: JSON.stringify(convertToTvShowPayload(show)),
     };
   }
 
@@ -20,11 +20,7 @@ export namespace GenericTemplate {
    */
   export function getElement(show: InternalTypes.ITvShow): MessengerTypes.GenericTemplateElement {
     const buttons: MessengerTypes.GenericTemplate.Button[] = [
-      {
-        type: 'postback',
-        title: show.isSubscribed ? 'Un-Subscribe' : 'Subscribe',
-        payload: JSON.stringify(show),
-      },
+      getSubscribeButton(show),
     ];
     return {
       title: show.title,
@@ -48,4 +44,15 @@ export namespace GenericTemplate {
       },
     };
   }
+}
+
+
+export function convertToTvShowPayload(show: InternalTypes.ITvShow): MessengerTypes.TvShowPayLoad {
+  return {
+    title: show.title,
+    year: show.year,
+    tvdbId: show.tvdbId,
+    imdbId: show.imdbId,
+    backDropUrl: show.backDropUrl,
+  };
 }
