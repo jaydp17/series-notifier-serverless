@@ -2,6 +2,7 @@
  * Utility functions to help with actions
  */
 
+import { capitalize } from 'lodash';
 import { platformNames } from '../common/constants';
 
 // types
@@ -34,5 +35,15 @@ export function convertToITvShow(show: TraktTypes.ITraktShowFull, isSubscribed: 
     overview: show.overview,
     genres: show.genres,
     isSubscribed,
+  };
+}
+
+/**
+ * Capitalizes the Genres array
+ */
+export function capitalizeGeneres(show: InternalTypes.ITvShow): InternalTypes.ITvShow {
+  return {
+    ...show,
+    genres: show.genres.map(genre => capitalize(genre)),
   };
 }

@@ -3,7 +3,7 @@
  */
 
 import * as SubscriptionModel from '../../models/subscription';
-import { convertToITvShow } from '../action-helper';
+import { capitalizeGeneres, convertToITvShow } from '../action-helper';
 import * as TheMovieDbAPI from '../apis/themoviedb.api';
 import * as TraktAPI from '../apis/trakt.api';
 
@@ -46,7 +46,8 @@ export async function search(query: string, socialId: string): Promise<InternalT
   return validRunningShows
     .map(show => ({ ...show, backDropUrl: backDropUrlMap[show.imdbId] }))
     .filter(show => !!show.backDropUrl) // keep shows with backdrop only
-    .map(show => ({ ...show, isSubscribed: subscribedImdbIds.includes(show.imdbId) }));
+    .map(show => ({ ...show, isSubscribed: subscribedImdbIds.includes(show.imdbId) }))
+    .map(show => capitalizeGeneres(show));
 }
 /**
  * @private
