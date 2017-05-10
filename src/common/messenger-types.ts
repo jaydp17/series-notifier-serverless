@@ -14,13 +14,16 @@ export interface IMesssaging {
   [key: string]: any; //tslint:disable-line:no-any
 }
 
-export type TextMessage = {
-  object: string;
-  entry: ITextMessageEntry[];
+export type FBWebHookMessage = {
+  object: 'page';
+  entry: [{
+    messaging: AnyMessagingObject[];
+  }];
 };
 
-export interface ITextMessageEntry extends IEntry {
-  messaging: ITextMessageMessaging[];
+export type PostBackMessage = {
+  object: string;
+  entry: IPostBackMessaging[];
 }
 
 export interface ITextMessageMessaging extends IMesssaging {
@@ -33,6 +36,12 @@ export interface ITextMessageMessaging extends IMesssaging {
 export interface IDeliveryMessageMessaging extends IMesssaging {
   delivery: {
     mids: string[];
+  };
+}
+
+export interface IPostBackMessaging extends IMesssaging {
+  postback: {
+    payload: string | undefined | null;
   };
 }
 
@@ -82,9 +91,7 @@ export interface ISendGenericTemplateMessage {
   };
 }
 
-export type AnyMessagingObject = ITextMessageMessaging | IDeliveryMessageMessaging;
-
-export type AnyFacebookMessage = TextMessage;
+export type AnyMessagingObject = ITextMessageMessaging | IDeliveryMessageMessaging | IPostBackMessaging;
 
 /**
  * The data that will be send in the payload of a postback Button
@@ -105,4 +112,8 @@ export type AnySendMessage = ISendTextMessage | ISendGenericTemplateMessage;
 // Type Guards
 export function isTextMessagingObj(obj: AnyMessagingObject): obj is ITextMessageMessaging {
   return (<ITextMessageMessaging>obj).message != null;
+}
+
+export function isPostBackMessagingObj(obj: AnyMessagingObject): obj is IPostBackMessaging {
+  return (<IPostBackMessaging>obj).postback != null;
 }
