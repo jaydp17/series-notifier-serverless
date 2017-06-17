@@ -17,24 +17,21 @@ import * as MessengerTypes from '../common/messenger-types';
 
 export function processPostBody(body: MessengerTypes.FBWebHookMessage) {
   // get the messaging objects out
-  const messagingObjs = body.entry
-    .map(entry => entry.messaging)
-    .reduce((acc, messaging) => [...acc, ...messaging]);
+  const messagingObjs = body.entry.map(entry => entry.messaging).reduce((acc, messaging) => [...acc, ...messaging]);
 
-  const postBackMessaging = (<MessengerTypes.IPostBackMessaging[]>messagingObjs)
-    .filter(messaging => MessengerTypes.isPostBackMessagingObj(messaging));
+  const postBackMessaging = (<MessengerTypes.IPostBackMessaging[]>messagingObjs).filter(messaging =>
+    MessengerTypes.isPostBackMessagingObj(messaging),
+  );
 
-  const textMessaging = (<MessengerTypes.ITextMessageMessaging[]>messagingObjs)
-    .filter(messaging => filterTextMessages(messaging));
+  const textMessaging = (<MessengerTypes.ITextMessageMessaging[]>messagingObjs).filter(messaging =>
+    filterTextMessages(messaging),
+  );
 
-  return Promise.all([
-    processMessage(textMessaging),
-    processPostBack(postBackMessaging),
-  ]);
+  return Promise.all([processMessage(textMessaging), processPostBack(postBackMessaging)]);
 }
 
 export async function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCallback): Promise<void> {
-  console.log('input', JSON.stringify(event));
+  console.log('input', JSON.stringify(event)); // tslint:disable-line no-console
   // TOKEN verification
   if (event.httpMethod === 'GET') {
     if (!event.queryStringParameters) {
@@ -52,11 +49,13 @@ export async function handler(event: LambdaEvent, context: {}, callback: LambdaH
       return callback(null, { statusCode: 403, body: 'Invalid Object Type' });
     }
 
-    return processPostBody(body)
-      // send 200 OK, after delegating the tasks
-      .then(() => callback(null, { statusCode: 200 }))
-      // incase there's some error, return it back
-      .catch(err => callback(err));
+    return (
+      processPostBody(body)
+        // send 200 OK, after delegating the tasks
+        .then(() => callback(null, { statusCode: 200 }))
+        // incase there's some error, return it back
+        .catch(err => callback(err))
+    );
   }
 
   return callback(null, { statusCode: 403, body: `Invalid httpMethod: ${event.httpMethod}` });

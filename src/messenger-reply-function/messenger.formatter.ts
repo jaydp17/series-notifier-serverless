@@ -4,14 +4,16 @@
 
 // types
 import * as InternalTypes from '../common/internal-message-types';
+import * as MessengerActionTypes from '../common/messenger-actions-types';
 import * as MessengerTypes from '../common/messenger-types';
 
 export namespace GenericTemplate {
   export function getSubscribeButton(show: InternalTypes.ITvShow): MessengerTypes.GenericTemplate.PostBackButton {
+    const action = show.isSubscribed ? MessengerActionTypes.unSubscribe : MessengerActionTypes.subscribe;
     return {
       type: 'postback',
-      title: show.isSubscribed ? 'Un-Subscribe' : 'Subscribe',
-      payload: JSON.stringify(convertToTvShowPayload(show)),
+      title: action.label,
+      payload: JSON.stringify(convertToTvShowPayload(show, action.type)),
     };
   }
 
@@ -19,9 +21,7 @@ export namespace GenericTemplate {
    * Generates a single element in the generic template
    */
   export function getElement(show: InternalTypes.ITvShow): MessengerTypes.GenericTemplateElement {
-    const buttons: MessengerTypes.GenericTemplate.Button[] = [
-      getSubscribeButton(show),
-    ];
+    const buttons: MessengerTypes.GenericTemplate.Button[] = [getSubscribeButton(show)];
     return {
       title: show.title,
       subtitle: show.genres.join(', '),
@@ -46,13 +46,10 @@ export namespace GenericTemplate {
   }
 }
 
-
-export function convertToTvShowPayload(show: InternalTypes.ITvShow): MessengerTypes.TvShowPayLoad {
+export function convertToTvShowPayload(show: InternalTypes.ITvShow, actionType: string): MessengerTypes.TvShowPayLoad {
   return {
-    title: show.title,
-    year: show.year,
+    action: actionType,
     tvdbId: show.tvdbId,
     imdbId: show.imdbId,
-    backDropUrl: show.backDropUrl,
   };
 }

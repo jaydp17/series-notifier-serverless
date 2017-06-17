@@ -11,6 +11,7 @@ import * as MessengerAPI from '../common/messenger.api';
 import * as ActionHelper from './action-helper';
 import * as TraktAPI from './apis/trakt.api';
 import * as SearchController from './controllers/search.controller';
+import * as TrendingController from './controllers/trending.controller';
 
 // types
 import { LambdaCallback, LambdaEvent } from '../common/aws-lambda-types';
@@ -24,7 +25,7 @@ export async function handler(action: InternalTypes.AnyAction, context: {}, call
   prettyPrint(action);
 
   const socialId = ActionHelper.getSocialId(action);
-  let reply: InternalTypes.ISearchResultsReply;
+  let reply: InternalTypes.AnyReplyKind;
 
   // compute the reply
   switch (action.type) {
@@ -37,10 +38,19 @@ export async function handler(action: InternalTypes.AnyAction, context: {}, call
       };
       break;
     }
+    case ActionTypes.ShowTrending: {
+      const shows = await TrendingController.getTrending();
+      reply = {
+        kind: ReplyKind.TrendingShows,
+        shows,
+        metaData: action.metaData,
+      };
+      break;
+    }
     default:
-      console.error(`ActionType not supported: ${action.type}`);
-      callback(new Error(`ActionType not supported: ${action.type}`));
-      return;
+      const message = `Unknows Action: ${action}`;
+      console.error(message);
+      return callback(new Error(message));
   }
 
   // in case for some reason reply wasn't computed

@@ -36,7 +36,8 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
 
   try {
     switch (reply.kind) {
-      case ReplyKind.SearchResults: {
+      case ReplyKind.SearchResults:
+      case ReplyKind.TrendingShows: {
         const message = GenericTemplate.generate(reply.shows);
         await MessengerAPI.sendMessage(senderId, message);
         break;

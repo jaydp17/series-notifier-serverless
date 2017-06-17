@@ -78,7 +78,7 @@ export interface IMessage {
 export enum ReplyKind {
   Text,
   SearchResults,
-  TrendnigShows,
+  TrendingShows,
 }
 
 /**
@@ -107,9 +107,17 @@ export interface ISearchResultsReply extends IReply {
 }
 
 /**
+ * A reply for Show Trending
+ */
+export interface ITrendingShowsReply extends IReply {
+  kind: ReplyKind.TrendingShows;
+  shows: ITvShow[];
+}
+
+/**
  * Generic reply type
  */
-export type AnyReplyKind = ITextReply | ISearchResultsReply;
+export type AnyReplyKind = ITextReply | ISearchResultsReply | ITrendingShowsReply;
 
 /**
  * Internal representation of a TV Show

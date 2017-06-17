@@ -98,11 +98,9 @@ export type AnyMessagingObject = ITextMessageMessaging | IDeliveryMessageMessagi
  * The data that will be send in the payload of a postback Button
  */
 export type TvShowPayLoad = {
-  title: string;
-  year: number;
+  action: string;
   tvdbId: number;
   imdbId: string;
-  backDropUrl: string | null | undefined;
 };
 
 /**

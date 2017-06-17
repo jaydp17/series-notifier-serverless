@@ -4,7 +4,7 @@
 
 import axios, { AxiosResponse } from 'axios';
 
-function requestInterceptor(config) {
+function requestInterceptor(config: {}) {
   return { ...config, startTime: Date.now() };
 }
 

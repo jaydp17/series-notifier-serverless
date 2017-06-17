@@ -31,7 +31,7 @@ export async function searchShow(query: string): Promise<TraktType.ITraktSearchR
 /**
  * Searches a TV Show using IMDB id
  */
-export async function searchByImdbId(imdbId: string): Promise<TraktType.ITraktShowFull | undefined> {
+export async function searchByImdbId(imdbId: string): Promise<TraktType.ITraktSearchResult | undefined> {
   const options = {
     method: 'GET',
     url: `${BASE_URL}/search/imdb/${imdbId}`,
@@ -74,7 +74,11 @@ export async function nextEpisode(imdbId: string): Promise<TraktType.ITraktEpiso
 /**
  * Gets the summary of an episode
  */
-export async function episodeSummary(imdbId: string, seasonNum: number, episodeNum: number): Promise<TraktType.ITraktEpisodeFull> {
+export async function episodeSummary(
+  imdbId: string,
+  seasonNum: number,
+  episodeNum: number,
+): Promise<TraktType.ITraktEpisodeFull> {
   const options = {
     method: 'GET',
     url: `${BASE_URL}/shows/${imdbId}/seasons/${seasonNum}/episodes/${episodeNum}`,
