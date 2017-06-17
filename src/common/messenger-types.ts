@@ -8,23 +8,24 @@ interface IEntry {
 }
 
 export interface IMesssaging {
-  sender: { id: string; };
-  recipient: { id: string; };
+  sender: { id: string };
+  recipient: { id: string };
   timestamp: number;
   [key: string]: any; //tslint:disable-line:no-any
 }
 
 export type FBWebHookMessage = {
   object: 'page';
-  entry: [{
-    messaging: AnyMessagingObject[];
-  }];
+  entry: FBWebHookMessageEntry[];
+};
+export type FBWebHookMessageEntry = {
+  messaging: AnyMessagingObject[];
 };
 
 export type PostBackMessage = {
   object: string;
   entry: IPostBackMessaging[];
-}
+};
 
 export interface ITextMessageMessaging extends IMesssaging {
   message: {

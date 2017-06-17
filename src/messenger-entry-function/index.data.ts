@@ -6,9 +6,9 @@ import * as faker from 'faker';
 import * as MessengerTypes from '../common/messenger-types';
 
 export function getFacebookMessage(
-  { entries = 1, messagings = 1 }: { entries?: number, messagings?: number } = {},
-): MessengerTypes.AnyFacebookMessage {
-  const entry: MessengerTypes.ITextMessageEntry[] = [];
+  { entries = 1, messagings = 1 }: { entries?: number; messagings?: number } = {},
+): MessengerTypes.FBWebHookMessage {
+  const entry: MessengerTypes.FBWebHookMessageEntry[] = [];
   for (let i = 0; i < entries; i += 1) {
     entry.push(_getEntryObject({ messagings }));
   }
@@ -30,7 +30,7 @@ export function _getEntryObject({ messagings = 1 }: { messagings: number }) {
   };
 }
 
-export function _getMessagingObject() {
+export function _getMessagingObject(): MessengerTypes.ITextMessageMessaging {
   return {
     sender: { id: `${faker.random.number()}` },
     recipient: { id: `${faker.random.number()}` },
@@ -46,7 +46,7 @@ export function _getMessageObject() {
   };
 }
 
-export function getMessageTexts(postBody: MessengerTypes.AnyFacebookMessage): string[] {
+export function getMessageTexts(postBody: MessengerTypes.FBWebHookMessage): string[] {
   const texts: string[] = [];
   for (const entry of postBody.entry) {
     for (const messaging of entry.messaging) {
