@@ -3,6 +3,7 @@
  */
 import 'babel-polyfill';
 import { platformNames } from '../common/constants';
+import { env } from '../common/environment';
 import { verifyToken } from '../common/environment';
 import { invokeProcessQuery } from '../common/lambda-utils';
 import { messengerAuth } from '../common/messenger.api';
@@ -31,7 +32,10 @@ export function processPostBody(body: MessengerTypes.FBWebHookMessage) {
 }
 
 export async function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCallback): Promise<void> {
-  console.log('input', JSON.stringify(event)); // tslint:disable-line no-console
+  if (env !== 'test') {
+    console.log('input', JSON.stringify(event)); // tslint:disable-line no-console
+  }
+
   // TOKEN verification
   if (event.httpMethod === 'GET') {
     if (!event.queryStringParameters) {
