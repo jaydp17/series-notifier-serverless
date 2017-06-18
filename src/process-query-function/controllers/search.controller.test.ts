@@ -20,7 +20,7 @@ import * as InternalTypes from '../../common/internal-message-types';
 import * as TraktTypes from '../apis/trakt.types';
 
 describe('Search Controller', () => {
-  const dummyShowFull: TraktTypes.ITraktShowFull = deepFreeze(getTraktFullShow(true));
+  const dummyShowFull: TraktTypes.ITraktShowFull = deepFreeze(getTraktFullShow({ running: true }));
 
   const dummyShow: InternalTypes.ITvShow = deepFreeze({
     title: 'dummyShow',
@@ -61,9 +61,9 @@ describe('Search Controller', () => {
 
   describe('Search', () => {
     const mockSearchResults: TraktTypes.ITraktSearchResult[] = deepFreeze([
-      getTraktSearchResult(true),
-      getTraktSearchResult(true),
-      getTraktSearchResult(false),
+      getTraktSearchResult({ running: true }),
+      getTraktSearchResult({ running: true }),
+      getTraktSearchResult({ running: false }),
     ]);
     const mockSearchImdbIds = deepFreeze(mockSearchResults.map(result => result.show.ids.imdb));
     const imageUrl = 'https://image.tmdb.org/abc.jpg';
@@ -72,19 +72,19 @@ describe('Search Controller', () => {
 
     beforeEach(() => {
       jest.resetAllMocks();
-      (<jest.Mock<{}>>TraktAPI.searchShow)
-        .mockReturnValueOnce(Promise.resolve(mockSearchResults));
+      (<jest.Mock<{}>>TraktAPI.searchShow).mockReturnValueOnce(Promise.resolve(mockSearchResults));
       // becuase of the below mock, the 1st imdbid is subscribed
-      (<jest.Mock<{}>>SubscriptionModel.getSubscribedShows)
-        .mockReturnValueOnce(Promise.resolve([{ imdbId: mockSearchImdbIds[0] }]));
+      (<jest.Mock<{}>>SubscriptionModel.getSubscribedShows).mockReturnValueOnce(
+        Promise.resolve([{ imdbId: mockSearchImdbIds[0] }]),
+      );
     });
 
     it('filters out non running shows', async () => {
       // prepare
-      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl)
-        .mockReturnValue(Promise.resolve(imageUrl));
+      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl).mockReturnValue(Promise.resolve(imageUrl));
 
       // test
+      // console.log('SearchController.search', SearchController.search);
       const results = await SearchController.search(query, socialId);
       expect(results.length).toEqual(2);
       expect(results[0].imdbId).toEqual(mockSearchImdbIds[0]);
@@ -94,8 +94,9 @@ describe('Search Controller', () => {
     it('filters out shows without backDropUrl', async () => {
       // prepare
       const expectedResultIndex = 1;
-      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl)
-        .mockImplementation(imdbId => (imdbId === mockSearchImdbIds[expectedResultIndex]) ? imageUrl : undefined);
+      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl).mockImplementation(
+        imdbId => (imdbId === mockSearchImdbIds[expectedResultIndex] ? imageUrl : undefined),
+      );
 
       // test
       const results = await SearchController.search(query, socialId);
@@ -105,8 +106,7 @@ describe('Search Controller', () => {
 
     it('checks isSubscribed field', async () => {
       // prepare
-      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl)
-        .mockReturnValue(Promise.resolve(imageUrl));
+      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl).mockReturnValue(Promise.resolve(imageUrl));
 
       // test
       const results = await SearchController.search(query, socialId);
