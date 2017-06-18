@@ -43,9 +43,12 @@ describe('Subscription Model', () => {
   describe('get all Subscribed shows', () => {
     it('throws error on invalid socialId', async () => {
       const socialId = 'asdf';
-      await expect(SubscriptionModel.getSubscribedShows(socialId)).rejects.toEqual(
-        new Error(`Invalid socialId: ${socialId}`),
-      );
+      expect.assertions(1);
+      try {
+        await SubscriptionModel.getSubscribedShows(socialId);
+      } catch (err) {
+        expect(err.message).toEqual(`Invalid socialId: ${socialId}`);
+      }
     });
 
     it('gets subscribed shows', async () => {
