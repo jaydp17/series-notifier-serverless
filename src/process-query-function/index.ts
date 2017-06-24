@@ -2,7 +2,7 @@
  * The main file that starts the Process Query function
  */
 
-import 'babel-polyfill';
+import 'babel-polyfill'; // tslint:disable-line:no-import-side-effect
 import { inspect } from 'util';
 import { prettyPrint } from '../common/common-utils';
 import { platformNames } from '../common/constants';

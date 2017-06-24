@@ -1,7 +1,7 @@
 /**
  * The main file that starts the function
  */
-import 'babel-polyfill';
+import 'babel-polyfill'; // tslint:disable-line:no-import-side-effect
 import { platformNames } from '../common/constants';
 import { env } from '../common/environment';
 import { verifyToken } from '../common/environment';
@@ -24,9 +24,7 @@ export function processPostBody(body: MessengerTypes.FBWebHookMessage) {
     MessengerTypes.isPostBackMessagingObj(messaging),
   );
 
-  const textMessaging = (<MessengerTypes.ITextMessageMessaging[]>messagingObjs).filter(messaging =>
-    filterTextMessages(messaging),
-  );
+  const textMessaging = (<MessengerTypes.ITextMessageMessaging[]>messagingObjs).filter(filterTextMessages);
 
   return Promise.all([processMessage(textMessaging), processPostBack(postBackMessaging)]);
 }
@@ -58,7 +56,7 @@ export async function handler(event: LambdaEvent, context: {}, callback: LambdaH
         // send 200 OK, after delegating the tasks
         .then(() => callback(null, { statusCode: 200 }))
         // incase there's some error, return it back
-        .catch(err => callback(err))
+        .catch(callback)
     );
   }
 

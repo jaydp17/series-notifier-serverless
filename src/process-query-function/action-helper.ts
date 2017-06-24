@@ -26,7 +26,10 @@ export function getSocialId(action: InternalTypes.AnyAction): string {
 /**
  * Converts ITraktShowFull to the internal show type ITvShow
  */
-export function convertToITvShow(show: TraktTypes.ITraktShowFull, isSubscribed: boolean = false): InternalTypes.ITvShow {
+export function convertToITvShow(
+  show: TraktTypes.ITraktShowFull,
+  isSubscribed: boolean = false,
+): InternalTypes.ITvShow {
   return {
     title: show.title,
     year: show.year,
@@ -44,6 +47,6 @@ export function convertToITvShow(show: TraktTypes.ITraktShowFull, isSubscribed: 
 export function capitalizeGeneres(show: InternalTypes.ITvShow): InternalTypes.ITvShow {
   return {
     ...show,
-    genres: show.genres.map(genre => capitalize(genre)),
+    genres: show.genres.map(capitalize),
   };
 }

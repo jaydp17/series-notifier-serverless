@@ -8,6 +8,7 @@
     "no-relative-imports": false,
     "no-unsafe-any": false,
     "strict-boolean-expressions": false,
+    "newline-before-return": false,
     "typedef": [
       true,
       "parameter",

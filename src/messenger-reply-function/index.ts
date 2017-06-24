@@ -3,7 +3,7 @@
  * and sends it back to the source (in this case FB Messenger)
  */
 
-import 'babel-polyfill';
+import 'babel-polyfill'; // tslint:disable-line:no-import-side-effect
 import { get, isEmpty } from 'lodash';
 import { inspect } from 'util';
 import { getError, prettyPrint } from '../common/common-utils';
