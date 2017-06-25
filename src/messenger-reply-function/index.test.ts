@@ -16,7 +16,7 @@ import * as InternalTypes from '../common/internal-message-types';
 import * as MessengerTypes from '../common/messenger-types';
 
 describe('Messenger Reply Function', () => {
-  const senderId = 'FBMessenger::88586';
+  const senderId = '2342388586';
   const metaData: InternalTypes.IMetaData = {
     fbMessenger: <MessengerTypes.AnyMessagingObject>{
       sender: { id: senderId },

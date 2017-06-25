@@ -2,7 +2,7 @@
 
 exports[`Messenger Reply Function sends subscription result 1`] = `
 Array [
-  "FBMessenger::88586",
+  "2342388586",
   Object {
     "text": "Subscribed to The Flash ✅",
   },
