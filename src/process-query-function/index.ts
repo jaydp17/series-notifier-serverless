@@ -6,6 +6,7 @@ import 'babel-polyfill'; // tslint:disable-line:no-import-side-effect
 import { inspect } from 'util';
 import { prettyPrint } from '../common/common-utils';
 import { platformNames } from '../common/constants';
+import { env } from '../common/environment';
 import { invokeMessengerReply, invokeProcessQuery } from '../common/lambda-utils';
 import * as MessengerAPI from '../common/messenger.api';
 import * as Subscription from '../models/subscription';
@@ -22,47 +23,53 @@ import { AnyMessagingObject, ITextMessageMessaging } from '../common/messenger-t
 const { ActionTypes, ReplyKind } = InternalTypes;
 
 export async function handler(action: InternalTypes.AnyAction, context: {}, callback: LambdaCallback): Promise<void> {
-  console.log('entry'); // tslint:disable-line:no-console
-  prettyPrint(action);
+  if (env !== 'test') {
+    console.log('entry'); // tslint:disable-line:no-console
+    prettyPrint(action);
+  }
 
   const socialId = ActionHelper.getSocialId(action);
   let reply: InternalTypes.AnyReplyKind;
 
   // compute the reply
-  switch (action.type) {
-    case ActionTypes.Search: {
-      const shows = await SearchController.search(action.text, socialId);
-      reply = {
-        kind: ReplyKind.SearchResults,
-        shows,
-        metaData: action.metaData,
-      };
-      break;
+  try {
+    switch (action.type) {
+      case ActionTypes.Search: {
+        const shows = await SearchController.search(action.text, socialId);
+        reply = {
+          kind: ReplyKind.SearchResults,
+          shows,
+          metaData: action.metaData,
+        };
+        break;
+      }
+      case ActionTypes.ShowTrending: {
+        const shows = await TrendingController.getTrending();
+        reply = {
+          kind: ReplyKind.TrendingShows,
+          shows,
+          metaData: action.metaData,
+        };
+        break;
+      }
+      case ActionTypes.Subscribe: {
+        await Subscription.createSubscription(action.imdbId, socialId);
+        reply = {
+          kind: ReplyKind.SubscribeResult,
+          success: true,
+          imdbId: action.imdbId,
+          title: action.title,
+          metaData: action.metaData,
+        };
+        break;
+      }
+      default:
+        const message = `Unknows Action: ${action}`;
+        console.error(message);
+        return callback(new Error(message));
     }
-    case ActionTypes.ShowTrending: {
-      const shows = await TrendingController.getTrending();
-      reply = {
-        kind: ReplyKind.TrendingShows,
-        shows,
-        metaData: action.metaData,
-      };
-      break;
-    }
-    case ActionTypes.Subscribe: {
-      await Subscription.createSubscription(action.imdbId, socialId);
-      reply = {
-        kind: ReplyKind.SubscribeResult,
-        success: true,
-        imdbId: action.imdbId,
-        title: action.title,
-        metaData: action.metaData,
-      };
-      break;
-    }
-    default:
-      const message = `Unknows Action: ${action}`;
-      console.error(message);
-      return callback(new Error(message));
+  } catch (err) {
+    return callback(err);
   }
 
   // in case for some reason reply wasn't computed
