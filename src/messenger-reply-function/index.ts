@@ -7,6 +7,7 @@ import 'babel-polyfill'; // tslint:disable-line:no-import-side-effect
 import { get, isEmpty } from 'lodash';
 import { inspect } from 'util';
 import { getError, prettyPrint } from '../common/common-utils';
+import { env } from '../common/environment';
 import * as MessengerAPI from '../common/messenger.api';
 import { GenericTemplate } from './messenger.formatter';
 
@@ -18,11 +19,16 @@ import * as MessengerTypes from '../common/messenger-types';
 const { ReplyKind } = InternalTypes;
 
 export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, callback: LambdaCallback): Promise<void> {
-  console.log('input', JSON.stringify(reply)); // tslint:disable-line:no-console
+  if (env !== 'test') {
+    console.log('input', JSON.stringify(reply)); // tslint:disable-line:no-console
+  }
 
+  if (isEmpty(reply.metaData)) {
+    return callback(new Error('no metaData'));
+  }
   const metaData = reply.metaData.fbMessenger;
-  if (!metaData) {
-    return callback(new Error('No metaData'));
+  if (isEmpty(metaData)) {
+    return callback(new Error('No fbMessenger metaData'));
   }
 
   const senderId: string = get(metaData, 'sender.id', '');

@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Messenger Reply Function sends subscription result 1`] = `
+Array [
+  "FBMessenger::88586",
+  Object {
+    "text": "Subscribed to The Flash ✅",
+  },
+]
+`;
