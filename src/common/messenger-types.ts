@@ -2,6 +2,8 @@
  * Contains types related to Messenger API
  */
 
+// tslint:disable:no-reserved-keywords
+
 interface IEntry {
   id: string;
   time: number;
@@ -55,13 +57,13 @@ export interface ISendTextMessage {
 
 export namespace GenericTemplate {
   export type WebUrlButton = {
-    type: 'web_url'; // tslint:disable-line:no-reserved-keywords
+    type: 'web_url';
     url: string;
     title: string;
   };
 
   export type PostBackButton = {
-    type: 'postback'; // tslint:disable-line:no-reserved-keywords
+    type: 'postback';
     title: string;
     payload: string;
   };
@@ -84,7 +86,7 @@ export type GenericTemplateElement = {
  */
 export interface ISendGenericTemplateMessage {
   attachment: {
-    type: 'template'; // tslint:disable-line:no-reserved-keywords
+    type: 'template';
     payload: {
       template_type: 'generic';
       elements: GenericTemplateElement[];

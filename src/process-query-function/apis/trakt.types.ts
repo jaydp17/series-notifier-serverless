@@ -2,6 +2,8 @@
  * Contains the types used with trakt API
  */
 
+// tslint:disable:no-reserved-keywords
+
 export interface ITraktIds {
   trakt: number;
   slug: string;
@@ -30,7 +32,7 @@ export interface ITraktShowFull {
 }
 
 export interface ITraktSearchResult {
-  type: 'show'; // tslint:disable-line:no-reserved-keywords
+  type: 'show';
   score: number | null;
   show: ITraktShowFull;
 }
@@ -42,14 +44,14 @@ export interface ITraktTrendingResult {
 
 export interface ITraktEpisode {
   season: number;
-  number: number; // tslint:disable-line:no-reserved-keywords
+  number: number;
   title: string;
   ids: ITraktIds;
 }
 
 export interface ITraktEpisodeFull {
   season: number;
-  number: number; // tslint:disable-line:no-reserved-keywords
+  number: number;
   title: string;
   ids: ITraktIds;
   overview: string;

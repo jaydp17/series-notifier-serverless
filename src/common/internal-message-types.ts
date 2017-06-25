@@ -2,6 +2,8 @@
  * Contains types related to messages transfered between lambas
  */
 
+// tslint:disable:no-reserved-keywords
+
 import * as MessengerTypes from '../common/messenger-types';
 import { platformNames } from './constants';
 
@@ -37,7 +39,7 @@ export interface IMetaData {
  * It's similar to what Action/ActionTypes do in redux
  */
 interface IAction {
-  type: ActionTypes; // tslint:disable-line:no-reserved-keywords
+  type: ActionTypes;
   platform: Platform;
   metaData: IMetaData;
 }
@@ -46,7 +48,7 @@ interface IAction {
  * An action that represents a search query
  */
 export interface ISearchAction extends IAction {
-  type: ActionTypes.Search; // tslint:disable-line:no-reserved-keywords
+  type: ActionTypes.Search;
   text: string;
 }
 
@@ -54,7 +56,7 @@ export interface ISearchAction extends IAction {
  * An action that represents that the user is asking for the trending shows
  */
 export interface IShowTrendingAction extends IAction {
-  type: ActionTypes.ShowTrending; // tslint:disable-line:no-reserved-keywords
+  type: ActionTypes.ShowTrending;
 }
 
 /**
