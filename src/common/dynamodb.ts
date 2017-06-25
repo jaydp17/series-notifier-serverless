@@ -6,7 +6,7 @@ import { DynamoDB } from 'aws-sdk';
 import { env } from './environment';
 
 let dynamoDbOptions = {};
-if (env === 'development' && process.env.SERVERLESS_LOCAL) {
+if (env === 'development' && process.env.IS_LOCAL) {
   dynamoDbOptions = { endpoint: 'http://localhost:8000' }; //tslint:disable-line
 }
 export const dynamodb = new DynamoDB(dynamoDbOptions);

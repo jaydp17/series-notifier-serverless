@@ -9,7 +9,7 @@ import { inspect } from 'util';
  * Pretty prints an object
  */
 export function prettyPrint(obj: any): void { // tslint:disable-line:no-any
-  const color = !!process.env.SERVERLESS_LOCAL;
+  const color = !!process.env.IS_LOCAL;
   console.log(inspect(obj, false, 20, color)); // tslint:disable-line:no-console
 }
 
