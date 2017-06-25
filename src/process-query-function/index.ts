@@ -8,6 +8,7 @@ import { prettyPrint } from '../common/common-utils';
 import { platformNames } from '../common/constants';
 import { invokeMessengerReply, invokeProcessQuery } from '../common/lambda-utils';
 import * as MessengerAPI from '../common/messenger.api';
+import * as Subscription from '../models/subscription';
 import * as ActionHelper from './action-helper';
 import * as TraktAPI from './apis/trakt.api';
 import * as SearchController from './controllers/search.controller';
@@ -43,6 +44,17 @@ export async function handler(action: InternalTypes.AnyAction, context: {}, call
       reply = {
         kind: ReplyKind.TrendingShows,
         shows,
+        metaData: action.metaData,
+      };
+      break;
+    }
+    case ActionTypes.Subscribe: {
+      await Subscription.createSubscription(action.imdbId, socialId);
+      reply = {
+        kind: ReplyKind.SubscribeResult,
+        success: true,
+        imdbId: action.imdbId,
+        title: action.title,
         metaData: action.metaData,
       };
       break;

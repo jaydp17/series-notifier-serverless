@@ -103,6 +103,7 @@ export type TvShowPayLoad = {
   action: string;
   tvdbId: number;
   imdbId: string;
+  title: string;
 };
 
 /**

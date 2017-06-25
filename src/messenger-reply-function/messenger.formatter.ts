@@ -51,5 +51,6 @@ export function convertToTvShowPayload(show: InternalTypes.ITvShow, actionType: 
     action: actionType,
     tvdbId: show.tvdbId,
     imdbId: show.imdbId,
+    title: show.title,
   };
 }

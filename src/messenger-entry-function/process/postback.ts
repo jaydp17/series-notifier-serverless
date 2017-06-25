@@ -8,7 +8,7 @@ import { invokeProcessQuery } from '../../common/lambda-utils';
 import * as MessengerActionTypes from '../../common/messenger-actions-types';
 import * as MessengerTypes from '../../common/messenger-types';
 
-export async function process(postBackMessagings: MessengerTypes.IPostBackMessaging[]): Promise<any> {
+export async function process(postBackMessagings: MessengerTypes.IPostBackMessaging[]): Promise<(undefined | {})[]> {
   const promises = postBackMessagings.map(messaging => {
     const { payload } = messaging.postback;
     if (!payload) {
@@ -21,6 +21,9 @@ export async function process(postBackMessagings: MessengerTypes.IPostBackMessag
   return Promise.all(promises);
 }
 
+/**
+ * NOTE: keep metaData.fbMessenger empty for now, it will be attached by the process method
+ */
 export function _getInternalAction(postbackPayload: string): InternalTypes.AnyAction {
   const payloadJSON: MessengerTypes.TvShowPayLoad = JSON.parse(postbackPayload);
   switch (payloadJSON.action) {
@@ -29,6 +32,16 @@ export function _getInternalAction(postbackPayload: string): InternalTypes.AnyAc
         type: InternalTypes.ActionTypes.ShowTrending,
         platform: platformNames.FBMessenger,
         metaData: { fbMessenger: undefined },
+      };
+    }
+    case MessengerActionTypes.subscribe.type: {
+      return {
+        type: InternalTypes.ActionTypes.Subscribe,
+        platform: platformNames.FBMessenger,
+        metaData: { fbMessenger: undefined },
+        imdbId: payloadJSON.imdbId,
+        tvdbId: payloadJSON.tvdbId,
+        title: payloadJSON.title,
       };
     }
     default:

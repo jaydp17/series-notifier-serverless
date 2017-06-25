@@ -42,6 +42,13 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
         await MessengerAPI.sendMessage(senderId, message);
         break;
       }
+      case ReplyKind.SubscribeResult: {
+        const msgObj: MessengerTypes.ISendTextMessage = {
+          text: `Subscribed to ${reply.title} ✅`,
+        };
+        await MessengerAPI.sendMessage(senderId, msgObj);
+        break;
+      }
       default:
         const errorMessage = `Not supported Kind: ${reply.kind}`;
         console.error(errorMessage);

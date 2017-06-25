@@ -60,9 +60,19 @@ export interface IShowTrendingAction extends IAction {
 }
 
 /**
+ * An action that represents that the user is asking to subscribe a show
+ */
+export interface ISubscribeAction extends IAction {
+  type: ActionTypes.Subscribe;
+  imdbId: string;
+  tvdbId: number;
+  title: string;
+}
+
+/**
  * Generic Action Type
  */
-export type AnyAction = ISearchAction | IShowTrendingAction;
+export type AnyAction = ISearchAction | IShowTrendingAction | ISubscribeAction;
 
 /**
  * Message that is sent to the ProcessQuery function
@@ -81,6 +91,7 @@ export enum ReplyKind {
   Text,
   SearchResults,
   TrendingShows,
+  SubscribeResult,
 }
 
 /**
@@ -109,6 +120,16 @@ export interface ISearchResultsReply extends IReply {
 }
 
 /**
+ * Reply to a subscribe show request
+ */
+export interface ISubscribeReply extends IReply {
+  kind: ReplyKind.SubscribeResult;
+  success: boolean;
+  imdbId: string;
+  title: string;
+}
+
+/**
  * A reply for Show Trending
  */
 export interface ITrendingShowsReply extends IReply {
@@ -119,7 +140,7 @@ export interface ITrendingShowsReply extends IReply {
 /**
  * Generic reply type
  */
-export type AnyReplyKind = ITextReply | ISearchResultsReply | ITrendingShowsReply;
+export type AnyReplyKind = ITextReply | ISearchResultsReply | ITrendingShowsReply | ISubscribeReply;
 
 /**
  * Internal representation of a TV Show
