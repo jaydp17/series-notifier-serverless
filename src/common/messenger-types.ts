@@ -9,7 +9,7 @@ interface IEntry {
   time: number;
 }
 
-export interface IMesssaging {
+export interface IMessaging {
   sender: { id: string };
   recipient: { id: string };
   timestamp: number;
@@ -29,20 +29,20 @@ export type PostBackMessage = {
   entry: IPostBackMessaging[];
 };
 
-export interface ITextMessageMessaging extends IMesssaging {
+export interface ITextMessageMessaging extends IMessaging {
   message: {
     text: string;
     is_echo: boolean;
   };
 }
 
-export interface IDeliveryMessageMessaging extends IMesssaging {
+export interface IDeliveryMessageMessaging extends IMessaging {
   delivery: {
     mids: string[];
   };
 }
 
-export interface IPostBackMessaging extends IMesssaging {
+export interface IPostBackMessaging extends IMessaging {
   postback: {
     payload: string | undefined | null;
   };
