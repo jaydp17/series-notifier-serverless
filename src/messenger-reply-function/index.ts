@@ -4,7 +4,7 @@
  */
 
 import 'babel-polyfill'; // tslint:disable-line:no-import-side-effect
-import { get, isEmpty } from 'lodash';
+import { chunk, get, isEmpty } from 'lodash';
 import { inspect } from 'util';
 import { getError, prettyPrint } from '../common/common-utils';
 import { env } from '../common/environment';
@@ -53,6 +53,15 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
           text: `Subscribed to ${reply.title} ✅`,
         };
         await MessengerAPI.sendMessage(senderId, msgObj);
+        break;
+      }
+      case ReplyKind.MyShows: {
+        const showChunks = chunk(reply.shows, 10);
+        const messages = showChunks.map(GenericTemplate.generate);
+        for (const message of messages) {
+          // serially send each message
+          await MessengerAPI.sendMessage(senderId, message);
+        }
         break;
       }
       default:

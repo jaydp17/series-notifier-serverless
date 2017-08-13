@@ -135,6 +135,29 @@ describe('Messenger Reply Function', () => {
     expect(callback).toHaveBeenCalledWith(null, { status: true });
   });
 
+  it('sends myShows results', async () => {
+    const shows = [dummyCommonData.getTVShow()];
+    for (let i = 0; i < 10; i += 1) {
+      shows.push(dummyCommonData.getTVShow());
+    }
+    const message = { payload: 'some-random-payload' };
+    const reply = <InternalTypes.IMyShowsReply>{
+      kind: InternalTypes.ReplyKind.MyShows,
+      metaData,
+      shows,
+    };
+    const callback = jest.fn();
+    (<jest.Mock<{}>>GenericTemplate.generate).mockReturnValueOnce(message);
+
+    // test
+    await MessengerReply.handler(reply, {}, callback);
+    expect(GenericTemplate.generate).toHaveBeenCalledTimes(Math.ceil(shows.length / 10));
+    expect(MessengerAPI.sendMessage).toHaveBeenCalledTimes(Math.ceil(shows.length / 10));
+    expect(MessengerAPI.sendMessage).toHaveBeenCalledWith(senderId, message);
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith(null, { status: true });
+  });
+
   it('catches MessengerAPI.sendMessage error', async () => {
     const title = 'The Flash';
     const reply = <InternalTypes.ISubscribeReply>{

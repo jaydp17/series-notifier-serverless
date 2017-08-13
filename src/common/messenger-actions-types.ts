@@ -16,3 +16,8 @@ export const showTrending = {
   label: 'Show Trending',
   type: 'show-trending',
 };
+
+export const myShows = {
+  label: 'My Shows',
+  type: 'my-shows',
+};

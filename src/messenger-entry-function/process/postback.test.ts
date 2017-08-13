@@ -57,6 +57,21 @@ describe('Postback processer', () => {
     });
   });
 
+  it('gets internal action [myShows]', () => {
+    // prepare
+    const payload = {
+      action: MessengerActionTypes.myShows.type,
+    };
+
+    // test
+    const result = PostbackProcessor._getInternalAction(JSON.stringify(payload));
+    expect(result).toEqual({
+      type: InternalTypes.ActionTypes.MyShows,
+      platform: platformNames.FBMessenger,
+      metaData: { fbMessenger: undefined },
+    });
+  });
+
   it('gets internal action [unknown]', () => {
     // prepare
     const payload = { action: 'random-action' };

@@ -44,6 +44,13 @@ export function _getInternalAction(postbackPayload: string): InternalTypes.AnyAc
         title: payloadJSON.title,
       };
     }
+    case MessengerActionTypes.myShows.type: {
+      return {
+        type: InternalTypes.ActionTypes.MyShows,
+        platform: platformNames.FBMessenger,
+        metaData: { fbMessenger: undefined },
+      };
+    }
     default:
       throw new Error(`Unknown PostBack ActionType: ${payloadJSON.action}`);
   }
