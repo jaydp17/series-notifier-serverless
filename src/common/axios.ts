@@ -2,9 +2,9 @@
  * Gives a common axios instance across the entire app
  */
 
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-function requestInterceptor(config: {}) {
+function requestInterceptor(config: AxiosRequestConfig) {
   return { ...config, startTime: Date.now() };
 }
 

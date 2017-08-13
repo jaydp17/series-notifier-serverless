@@ -15,7 +15,7 @@ export async function getTrending(): Promise<InternalTypes.ITvShow[]> {
   const trendingResults = await TraktApi.showTrending();
   const trendingImdbIds = trendingResults.map(result => result.show.ids.imdb);
 
-  const traktShowsPromises: Promise<TraktType.ITraktSearchResult | undefined>[] = trendingImdbIds.map(imdbId =>
+  const traktShowsPromises: Promise<TraktType.ITraktSearchResult | void>[] = trendingImdbIds.map(imdbId =>
     TraktApi.searchByImdbId(imdbId).catch(err => {
       console.error(`Error while fetching TraktApi.searchByImdbId(${imdbId})`);
       console.error(err);
@@ -27,7 +27,7 @@ export async function getTrending(): Promise<InternalTypes.ITvShow[]> {
 
   return traktShows
     .map(({ show }) => show)
-    .map(show => convertToITvShow(show))
+    .map(show => convertToITvShow(show, false))
     .map(show => ({ ...show, backDropUrl: backdropUrlMap[show.imdbId] }))
     .filter(show => !!show.backDropUrl); // keep shows with backdrop only;
 }
