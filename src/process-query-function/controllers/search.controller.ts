@@ -28,11 +28,8 @@ export function isShowRunning(show: ITraktShowFull): boolean {
  */
 export async function search(query: string, socialId: string): Promise<InternalTypes.ITvShow[]> {
   const traktResults = await TraktAPI.searchShow(query);
-  const runningShows = traktResults.map(result => result.show)
-    .filter(show => isShowRunning(show));
-  const validRunningShows = runningShows
-    .map(show => convertToITvShow(show))
-    .filter(show => show.imdbId); // keep only those series who have a valid imdb id
+  const runningShows = traktResults.map(result => result.show).filter(isShowRunning);
+  const validRunningShows = runningShows.map(show => convertToITvShow(show, false)).filter(show => show.imdbId); // keep only those series who have a valid imdb id
 
   // imdbIds of valid running shows
   const validImdbIds = validRunningShows.map(show => show.imdbId);
@@ -47,8 +44,24 @@ export async function search(query: string, socialId: string): Promise<InternalT
     .map(show => ({ ...show, backDropUrl: backDropUrlMap[show.imdbId] }))
     .filter(show => !!show.backDropUrl) // keep shows with backdrop only
     .map(show => ({ ...show, isSubscribed: subscribedImdbIds.includes(show.imdbId) }))
-    .map(show => capitalizeGeneres(show));
+    .map(capitalizeGeneres);
 }
+
+export async function searchByImdb(
+  imdbId: string,
+  isSubscribed: boolean = false,
+): Promise<InternalTypes.ITvShow | undefined> {
+  const [result, backDropUrlMap] = await Promise.all([TraktAPI.searchByImdbId(imdbId), _getBackDropUrls([imdbId])]);
+  if (!result) {
+    return undefined;
+  }
+  const tvShow = convertToITvShow(result.show, isSubscribed);
+  if (!tvShow.imdbId) {
+    return undefined;
+  }
+  return capitalizeGeneres({ ...tvShow, backDropUrl: backDropUrlMap[imdbId] });
+}
+
 /**
  * @private
  */

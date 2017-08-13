@@ -7,6 +7,7 @@ jest.mock('../common/lambda-utils');
 jest.mock('./controllers/trending.controller');
 jest.mock('../models/subscription');
 
+import { getTraktFullShow, getTraktSearchResult } from '../../test/test-data/trakt.data';
 import { platformNames } from '../common/constants';
 import { invokeMessengerReply, invokeProcessQuery } from '../common/lambda-utils';
 import * as Subscription from '../models/subscription';
@@ -118,6 +119,38 @@ describe('Process Query Function', () => {
       title: action.title,
       metaData: action.metaData,
     });
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith(null, { success: true });
+  });
+
+  it('handles myShows', async () => {
+    const action = <InternalTypes.IMyShowsAction>{
+      type: ActionTypes.MyShows,
+      platform: platformNames.FBMessenger,
+      metaData: { fbMessenger: { sender: { id: senderId } } },
+    };
+    const subscriptionRows: Subscription.SubscriptionRecord[] = [
+      { socialId, imdbId: 'tt123' },
+      { socialId, imdbId: 'tt456' },
+    ];
+    (<jest.Mock<{}>>Subscription.getSubscribedShows).mockReturnValueOnce(Promise.resolve(subscriptionRows));
+    (<jest.Mock<{}>>SearchController.searchByImdb).mockReturnValueOnce(
+      Promise.resolve(getTraktFullShow({ running: true })),
+    );
+    (<jest.Mock<{}>>SearchController.searchByImdb).mockReturnValueOnce(
+      Promise.resolve(getTraktFullShow({ running: true })),
+    );
+    const callback = jest.fn();
+
+    // test
+    await ProcessQuery.handler(action, {}, callback);
+    expect(invokeMessengerReply).toHaveBeenCalledTimes(1);
+    expect(invokeMessengerReply).toHaveBeenCalledWith(
+      expect.objectContaining({
+        kind: ReplyKind.MyShows,
+        metaData: action.metaData,
+      }),
+    );
     expect(callback).toHaveBeenCalledTimes(1);
     expect(callback).toHaveBeenCalledWith(null, { success: true });
   });

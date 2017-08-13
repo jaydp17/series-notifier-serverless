@@ -18,7 +18,8 @@
     "test:api": "./shell-scripts/test-api.sh",
     "ts-run": "./shell-scripts/ts-run.sh",
     "tables:create": "npm run ts-run src/bin/create-tables.ts",
-    "tables:delete": "npm run ts-run src/bin/delete-tables.ts"
+    "tables:delete": "npm run ts-run src/bin/delete-tables.ts",
+    "logs:prod": "sls logs --tail -f"
   },
   "repository": {
     "type": "git",

@@ -115,4 +115,48 @@ describe('Search Controller', () => {
       expect(results[1].isSubscribed).toEqual(false);
     });
   });
+
+  describe('Search by Imdb', () => {
+    const mockSearchResult: TraktTypes.ITraktSearchResult = deepFreeze(getTraktSearchResult({ running: true }));
+    const imdbId = 'tt123423';
+    const imageUrl = 'https://image.tmdb.org/abc.jpg';
+
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it('returns undefined if show not found', async () => {
+      (<jest.Mock<{}>>TraktAPI.searchByImdbId).mockReturnValueOnce(Promise.resolve(undefined));
+
+      const result = await SearchController.searchByImdb(imdbId);
+      expect(result).toEqual(undefined);
+    });
+
+    it('contains backdropUrl', async () => {
+      (<jest.Mock<{}>>TraktAPI.searchByImdbId).mockReturnValueOnce(Promise.resolve(mockSearchResult));
+      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl).mockReturnValueOnce(Promise.resolve(imageUrl));
+
+      const result = await SearchController.searchByImdb(imdbId);
+      expect(result).not.toBeUndefined();
+      expect(result && result.backDropUrl).toEqual(imageUrl);
+    });
+
+    it('passes on the isSubscribed flag [true]', async () => {
+      (<jest.Mock<{}>>TraktAPI.searchByImdbId).mockReturnValueOnce(Promise.resolve(mockSearchResult));
+      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl).mockReturnValueOnce(Promise.resolve(imageUrl));
+
+      const result = await SearchController.searchByImdb(imdbId, true);
+      expect(result).not.toBeUndefined();
+      expect(result && result.isSubscribed).toEqual(true);
+    });
+
+    it('passes on the isSubscribed flag [false]', async () => {
+      (<jest.Mock<{}>>TraktAPI.searchByImdbId).mockReturnValueOnce(Promise.resolve(mockSearchResult));
+      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl).mockReturnValueOnce(Promise.resolve(imageUrl));
+
+      const result = await SearchController.searchByImdb(imdbId, false);
+      expect(result).not.toBeUndefined();
+      expect(result && result.isSubscribed).toEqual(false);
+    });
+  });
 });

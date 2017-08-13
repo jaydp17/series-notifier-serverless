@@ -63,6 +63,18 @@ export async function handler(action: InternalTypes.AnyAction, context: {}, call
         };
         break;
       }
+      case ActionTypes.MyShows: {
+        const subscribtionRows = await Subscription.getSubscribedShows(socialId);
+        const imdbIds = subscribtionRows.map(row => row.imdbId);
+        const shows = await Promise.all(imdbIds.map(imdbId => SearchController.searchByImdb(imdbId, true)));
+        const filteredShows = <InternalTypes.ITvShow[]>shows.filter(row => !!row);
+        reply = {
+          kind: ReplyKind.MyShows,
+          shows: filteredShows,
+          metaData: action.metaData,
+        };
+        break;
+      }
       default:
         const message = `Unknows Action: ${action}`;
         console.error(message);

@@ -25,6 +25,7 @@ export enum ActionTypes {
   Subscribe,
   UnSubscribe,
   ShowTrending,
+  MyShows,
 }
 
 /**
@@ -70,9 +71,16 @@ export interface ISubscribeAction extends IAction {
 }
 
 /**
+ * An action that represents user asking for his subscribed shows
+ */
+export interface IMyShowsAction extends IAction {
+  type: ActionTypes.MyShows;
+}
+
+/**
  * Generic Action Type
  */
-export type AnyAction = ISearchAction | IShowTrendingAction | ISubscribeAction;
+export type AnyAction = ISearchAction | IShowTrendingAction | ISubscribeAction | IMyShowsAction;
 
 /**
  * Message that is sent to the ProcessQuery function
@@ -92,6 +100,7 @@ export enum ReplyKind {
   SearchResults,
   TrendingShows,
   SubscribeResult,
+  MyShows,
 }
 
 /**
@@ -137,10 +146,15 @@ export interface ITrendingShowsReply extends IReply {
   shows: ITvShow[];
 }
 
+export interface IMyShowsReply extends IReply {
+  kind: ReplyKind.MyShows;
+  shows: ITvShow[];
+}
+
 /**
  * Generic reply type
  */
-export type AnyReplyKind = ITextReply | ISearchResultsReply | ITrendingShowsReply | ISubscribeReply;
+export type AnyReplyKind = ITextReply | ISearchResultsReply | ITrendingShowsReply | ISubscribeReply | IMyShowsReply;
 
 /**
  * Internal representation of a TV Show
