@@ -44,7 +44,7 @@ export async function handler(action: InternalTypes.AnyAction, context: {}, call
         break;
       }
       case ActionTypes.ShowTrending: {
-        const shows = await TrendingController.getTrending();
+        const shows = await TrendingController.getTrending(socialId);
         reply = {
           kind: ReplyKind.TrendingShows,
           shows,

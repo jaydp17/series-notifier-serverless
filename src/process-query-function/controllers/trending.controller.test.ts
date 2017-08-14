@@ -5,6 +5,7 @@
 // mocks
 jest.mock('../apis/trakt.api');
 jest.mock('./search.controller');
+jest.mock('../../models/subscription');
 
 // types
 import * as TraktType from '../apis/trakt.types';
@@ -12,6 +13,7 @@ import * as TraktType from '../apis/trakt.types';
 import deepFreeze from 'deep-freeze';
 import * as faker from 'faker';
 import { getTraktSearchResult, getTraktShow } from '../../../test/test-data/trakt.data';
+import * as Subscription from '../../models/subscription';
 import * as TraktApi from '../apis/trakt.api';
 import { _getBackDropUrls } from './search.controller';
 import * as TrendingController from './trending.controller';
@@ -29,21 +31,30 @@ describe('Trending Controller', () => {
   afterAll(() => jest.resetAllMocks());
 
   it('gets trending shows', async () => {
-    const results = await TrendingController.getTrending();
+    const subscribedRecords = [{ imdbId: 'tt123' }, { imdbId: dummyResults[0].show.ids.imdb }];
+    const socialId = 'random-social-id';
+    (<jest.Mock<{}>>Subscription.getSubscribedShows).mockReturnValueOnce(Promise.resolve(subscribedRecords));
+
+    const results = await TrendingController.getTrending(socialId);
     expect(results).toHaveLength(2);
     expect(results[0].imdbId).toEqual(dummyResults[0].show.ids.imdb);
+    expect(results[0].isSubscribed).toEqual(true);
     expect(results[1].imdbId).toEqual(dummyResults[1].show.ids.imdb);
+    expect(results[1].isSubscribed).toEqual(false);
   });
 
   it('filters out shows without backDropUrl', async () => {
     // prepare
+    const subscribedRecords = [{ imdbId: 'tt123' }, { imdbId: dummyResults[0].show.ids.imdb }];
+    const socialId = 'random-social-id';
+    (<jest.Mock<{}>>Subscription.getSubscribedShows).mockReturnValueOnce(Promise.resolve(subscribedRecords));
     (<jest.Mock<{}>>_getBackDropUrls).mockReset();
     (<jest.Mock<{}>>_getBackDropUrls).mockImplementationOnce(imdbIds =>
       Promise.resolve({ ...getDummyBackDropUrls(imdbIds), [imdbIds[1]]: undefined }),
     );
 
     // test
-    const results = await TrendingController.getTrending();
+    const results = await TrendingController.getTrending(socialId);
     expect(results).toHaveLength(1);
     expect(results[0].imdbId).toEqual(dummyResults[0].show.ids.imdb);
   });
