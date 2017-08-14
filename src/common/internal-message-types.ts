@@ -71,6 +71,16 @@ export interface ISubscribeAction extends IAction {
 }
 
 /**
+ * An Action that represents that the user is trying to unSubscribe a show
+ */
+export interface IUnSubscribeAction extends IAction {
+  type: ActionTypes.UnSubscribe;
+  imdbId: string;
+  tvdbId: number;
+  title: string;
+}
+
+/**
  * An action that represents user asking for his subscribed shows
  */
 export interface IMyShowsAction extends IAction {
@@ -80,7 +90,7 @@ export interface IMyShowsAction extends IAction {
 /**
  * Generic Action Type
  */
-export type AnyAction = ISearchAction | IShowTrendingAction | ISubscribeAction | IMyShowsAction;
+export type AnyAction = ISearchAction | IShowTrendingAction | ISubscribeAction | IUnSubscribeAction | IMyShowsAction;
 
 /**
  * Message that is sent to the ProcessQuery function
@@ -100,6 +110,7 @@ export enum ReplyKind {
   SearchResults,
   TrendingShows,
   SubscribeResult,
+  UnSubscribeResult,
   MyShows,
 }
 
@@ -139,6 +150,16 @@ export interface ISubscribeReply extends IReply {
 }
 
 /**
+ * Reply to an un-subscribe request
+ */
+export interface IUnSubscribeReply extends IReply {
+  kind: ReplyKind.UnSubscribeResult;
+  success: boolean;
+  imdbId: string;
+  title: string;
+}
+
+/**
  * A reply for Show Trending
  */
 export interface ITrendingShowsReply extends IReply {
@@ -154,7 +175,13 @@ export interface IMyShowsReply extends IReply {
 /**
  * Generic reply type
  */
-export type AnyReplyKind = ITextReply | ISearchResultsReply | ITrendingShowsReply | ISubscribeReply | IMyShowsReply;
+export type AnyReplyKind =
+  | ITextReply
+  | ISearchResultsReply
+  | ITrendingShowsReply
+  | ISubscribeReply
+  | IUnSubscribeReply
+  | IMyShowsReply;
 
 /**
  * Internal representation of a TV Show

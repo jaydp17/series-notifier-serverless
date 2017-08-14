@@ -63,6 +63,17 @@ export async function handler(action: InternalTypes.AnyAction, context: {}, call
         };
         break;
       }
+      case ActionTypes.UnSubscribe: {
+        await Subscription.deleteSubscription(action.imdbId, socialId);
+        reply = {
+          kind: ReplyKind.UnSubscribeResult,
+          success: true,
+          imdbId: action.imdbId,
+          title: action.title,
+          metaData: action.metaData,
+        };
+        break;
+      }
       case ActionTypes.MyShows: {
         const subscribtionRows = await Subscription.getSubscribedShows(socialId);
         const imdbIds = subscribtionRows.map(row => row.imdbId);

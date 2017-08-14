@@ -123,6 +123,33 @@ describe('Process Query Function', () => {
     expect(callback).toHaveBeenCalledWith(null, { success: true });
   });
 
+  it('handles un-subscribe action', async () => {
+    const action = <InternalTypes.IUnSubscribeAction>{
+      type: ActionTypes.UnSubscribe,
+      platform: platformNames.FBMessenger,
+      metaData: { fbMessenger: { sender: { id: senderId } } },
+      imdbId: 'tt5673782',
+      tvdbId: 322399,
+      title: 'Genius',
+    };
+    const callback = jest.fn();
+
+    // test
+    await ProcessQuery.handler(action, {}, callback);
+    expect(Subscription.deleteSubscription).toHaveBeenCalledTimes(1);
+    expect(Subscription.deleteSubscription).toHaveBeenCalledWith(action.imdbId, socialId);
+    expect(invokeMessengerReply).toHaveBeenCalledTimes(1);
+    expect(invokeMessengerReply).toHaveBeenCalledWith({
+      kind: ReplyKind.UnSubscribeResult,
+      success: true,
+      imdbId: action.imdbId,
+      title: action.title,
+      metaData: action.metaData,
+    });
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith(null, { success: true });
+  });
+
   it('handles myShows', async () => {
     const action = <InternalTypes.IMyShowsAction>{
       type: ActionTypes.MyShows,
