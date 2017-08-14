@@ -93,6 +93,23 @@ describe('Messenger Reply Function', () => {
     expect(callback).toHaveBeenCalledWith(null, { status: true });
   });
 
+  it('sends un-subscription result', async () => {
+    const title = 'The Flash';
+    const reply = <InternalTypes.IUnSubscribeReply>{
+      kind: InternalTypes.ReplyKind.UnSubscribeResult,
+      metaData,
+      title,
+    };
+    const callback = jest.fn();
+
+    // test
+    await MessengerReply.handler(reply, {}, callback);
+    expect(MessengerAPI.sendMessage).toHaveBeenCalledTimes(1);
+    expect((<jest.Mock<{}>>MessengerAPI.sendMessage).mock.calls[0]).toMatchSnapshot();
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith(null, { status: true });
+  });
+
   it('sends search results', async () => {
     const shows = [dummyCommonData.getTVShow()];
     const message = { payload: 'some-random-payload' };

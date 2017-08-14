@@ -57,6 +57,27 @@ describe('Postback processer', () => {
     });
   });
 
+  it('gets internal action [un-subscribe]', () => {
+    // prepare
+    const payload = {
+      action: MessengerActionTypes.unSubscribe.type,
+      imdbId: 'tt5673782',
+      tvdbId: 322399,
+      title: 'Genius',
+    };
+
+    // test
+    const result = PostbackProcessor._getInternalAction(JSON.stringify(payload));
+    expect(result).toEqual({
+      type: InternalTypes.ActionTypes.UnSubscribe,
+      platform: platformNames.FBMessenger,
+      metaData: { fbMessenger: undefined },
+      imdbId: payload.imdbId,
+      tvdbId: payload.tvdbId,
+      title: payload.title,
+    });
+  });
+
   it('gets internal action [myShows]', () => {
     // prepare
     const payload = {

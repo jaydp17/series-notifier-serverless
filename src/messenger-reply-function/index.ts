@@ -55,6 +55,13 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
         await MessengerAPI.sendMessage(senderId, msgObj);
         break;
       }
+      case ReplyKind.UnSubscribeResult: {
+        const msgObj: MessengerTypes.ISendTextMessage = {
+          text: `UnSubscribed from ${reply.title}`,
+        };
+        await MessengerAPI.sendMessage(senderId, msgObj);
+        break;
+      }
       case ReplyKind.MyShows: {
         const showChunks = chunk(reply.shows, 10);
         const messages = showChunks.map(GenericTemplate.generate);

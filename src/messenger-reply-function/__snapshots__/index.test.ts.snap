@@ -8,3 +8,12 @@ Array [
   },
 ]
 `;
+
+exports[`Messenger Reply Function sends un-subscription result 1`] = `
+Array [
+  "2342388586",
+  Object {
+    "text": "UnSubscribed from The Flash",
+  },
+]
+`;

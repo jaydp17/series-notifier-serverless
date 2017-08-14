@@ -44,6 +44,16 @@ export function _getInternalAction(postbackPayload: string): InternalTypes.AnyAc
         title: payloadJSON.title,
       };
     }
+    case MessengerActionTypes.unSubscribe.type: {
+      return {
+        type: InternalTypes.ActionTypes.UnSubscribe,
+        platform: platformNames.FBMessenger,
+        metaData: { fbMessenger: undefined },
+        imdbId: payloadJSON.imdbId,
+        tvdbId: payloadJSON.tvdbId,
+        title: payloadJSON.title,
+      };
+    }
     case MessengerActionTypes.myShows.type: {
       return {
         type: InternalTypes.ActionTypes.MyShows,
