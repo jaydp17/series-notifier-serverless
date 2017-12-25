@@ -12,10 +12,7 @@
       }
     ]
   ],
-  "plugins": [
-    "lodash",
-    "transform-object-rest-spread"
-  ],
+  "plugins": ["lodash", "transform-object-rest-spread", "date-fns"],
   "env": {
     "test": {
       "presets": [
