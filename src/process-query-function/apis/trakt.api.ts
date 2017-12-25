@@ -3,6 +3,7 @@
  */
 
 import { AxiosPromise, AxiosRequestConfig } from 'axios';
+import { isEmpty } from 'lodash';
 import { inspect } from 'util';
 import axios from '../../common/axios';
 import { traktApiKey } from '../../common/environment';
@@ -68,6 +69,9 @@ export async function nextEpisode(imdbId: string): Promise<TraktType.ITraktEpiso
     headers: HEADERS,
   };
   const res = await axios(options);
+  if (isEmpty(res.data)) {
+    throw new Error('No next episode found');
+  }
   return res.data;
 }
 
