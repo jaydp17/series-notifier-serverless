@@ -21,3 +21,8 @@ export const myShows = {
   label: 'My Shows',
   type: 'my-shows',
 };
+
+export const nextEpisode = {
+  label: 'Next Episode',
+  type: 'next-episode',
+};

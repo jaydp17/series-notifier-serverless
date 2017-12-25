@@ -5,13 +5,14 @@
 import 'babel-polyfill'; // tslint:disable-line:no-import-side-effect
 import { inspect } from 'util';
 import { prettyPrint } from '../common/common-utils';
-import { platformNames } from '../common/constants';
+import { errorMessages, platformNames } from '../common/constants';
 import { env } from '../common/environment';
 import { invokeMessengerReply, invokeProcessQuery } from '../common/lambda-utils';
 import * as MessengerAPI from '../common/messenger.api';
 import * as Subscription from '../models/subscription';
 import * as ActionHelper from './action-helper';
 import * as TraktAPI from './apis/trakt.api';
+import * as NextEpisodeController from './controllers/next-episode.controller';
 import * as SearchController from './controllers/search.controller';
 import * as TrendingController from './controllers/trending.controller';
 
@@ -29,68 +30,11 @@ export async function handler(action: InternalTypes.AnyAction, context: {}, call
   }
 
   const socialId = ActionHelper.getSocialId(action);
-  let reply: InternalTypes.AnyReplyKind;
 
   // compute the reply
+  let reply;
   try {
-    switch (action.type) {
-      case ActionTypes.Search: {
-        const shows = await SearchController.search(action.text, socialId);
-        reply = {
-          kind: ReplyKind.SearchResults,
-          shows,
-          metaData: action.metaData,
-        };
-        break;
-      }
-      case ActionTypes.ShowTrending: {
-        const shows = await TrendingController.getTrending(socialId);
-        reply = {
-          kind: ReplyKind.TrendingShows,
-          shows,
-          metaData: action.metaData,
-        };
-        break;
-      }
-      case ActionTypes.Subscribe: {
-        await Subscription.createSubscription(action.imdbId, socialId);
-        reply = {
-          kind: ReplyKind.SubscribeResult,
-          success: true,
-          imdbId: action.imdbId,
-          title: action.title,
-          metaData: action.metaData,
-        };
-        break;
-      }
-      case ActionTypes.UnSubscribe: {
-        await Subscription.deleteSubscription(action.imdbId, socialId);
-        reply = {
-          kind: ReplyKind.UnSubscribeResult,
-          success: true,
-          imdbId: action.imdbId,
-          title: action.title,
-          metaData: action.metaData,
-        };
-        break;
-      }
-      case ActionTypes.MyShows: {
-        const subscribtionRows = await Subscription.getSubscribedShows(socialId);
-        const imdbIds = subscribtionRows.map(row => row.imdbId);
-        const shows = await Promise.all(imdbIds.map(imdbId => SearchController.searchByImdb(imdbId, true)));
-        const filteredShows = <InternalTypes.ITvShow[]>shows.filter(row => !!row);
-        reply = {
-          kind: ReplyKind.MyShows,
-          shows: filteredShows,
-          metaData: action.metaData,
-        };
-        break;
-      }
-      default:
-        const message = `Unknows Action: ${action}`;
-        console.error(message);
-        return callback(new Error(message));
-    }
+    reply = await getReply(action);
   } catch (err) {
     return callback(err);
   }
@@ -115,4 +59,80 @@ export async function handler(action: InternalTypes.AnyAction, context: {}, call
   }
 
   callback(null, { success: true });
+}
+
+async function getReply(action: InternalTypes.AnyAction): Promise<InternalTypes.AnyReplyKind> {
+  const socialId = ActionHelper.getSocialId(action);
+  switch (action.type) {
+    case ActionTypes.Search: {
+      const shows = await SearchController.search(action.text, socialId);
+      return {
+        kind: ReplyKind.SearchResults,
+        shows,
+        metaData: action.metaData,
+      };
+    }
+    case ActionTypes.ShowTrending: {
+      const shows = await TrendingController.getTrending(socialId);
+      return {
+        kind: ReplyKind.TrendingShows,
+        shows,
+        metaData: action.metaData,
+      };
+    }
+    case ActionTypes.Subscribe: {
+      await Subscription.createSubscription(action.imdbId, socialId);
+      return {
+        kind: ReplyKind.SubscribeResult,
+        success: true,
+        imdbId: action.imdbId,
+        title: action.title,
+        metaData: action.metaData,
+      };
+    }
+    case ActionTypes.UnSubscribe: {
+      await Subscription.deleteSubscription(action.imdbId, socialId);
+      return {
+        kind: ReplyKind.UnSubscribeResult,
+        success: true,
+        imdbId: action.imdbId,
+        title: action.title,
+        metaData: action.metaData,
+      };
+    }
+    case ActionTypes.MyShows: {
+      const subscribtionRows = await Subscription.getSubscribedShows(socialId);
+      const imdbIds = subscribtionRows.map(row => row.imdbId);
+      const shows = await Promise.all(imdbIds.map(imdbId => SearchController.searchByImdb(imdbId, true)));
+      const filteredShows = <InternalTypes.ITvShow[]>shows.filter(row => !!row);
+      return {
+        kind: ReplyKind.MyShows,
+        shows: filteredShows,
+        metaData: action.metaData,
+      };
+    }
+    case ActionTypes.NextEpisodeDate: {
+      let nextEpisode: InternalTypes.ITvEpisode | null = null;
+      let error = null;
+      try {
+        nextEpisode = await NextEpisodeController.getNextEpisode(action.imdbId);
+      } catch (err) {
+        error = err;
+      }
+      return {
+        kind: ReplyKind.NextEpisodeDate,
+        episode: nextEpisode,
+        error,
+        show: {
+          imdbId: action.imdbId,
+          title: action.title,
+        },
+        metaData: action.metaData,
+      };
+    }
+    default:
+      const message = `Unknows Action: ${action}`;
+      console.error(message);
+      throw new Error(message);
+  }
 }

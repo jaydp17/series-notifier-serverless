@@ -65,6 +65,7 @@
   "dependencies": {
     "axios": "0.16.2",
     "bluebird": "3.5.0",
+    "date-fns": "1.29.0",
     "lodash": "^4.17.4"
   }
 }

@@ -4,6 +4,7 @@
  */
 
 import 'babel-polyfill'; // tslint:disable-line:no-import-side-effect
+import { distanceInWords } from 'date-fns';
 import { chunk, get, isEmpty } from 'lodash';
 import { inspect } from 'util';
 import { getError, prettyPrint } from '../common/common-utils';
@@ -69,6 +70,21 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
           // serially send each message
           await MessengerAPI.sendMessage(senderId, message);
         }
+        break;
+      }
+      case ReplyKind.NextEpisodeDate: {
+        const msgObj: MessengerTypes.ISendTextMessage = {
+          text: `No next episode found for ${reply.show.title} 😕`,
+        };
+        if (reply.error) {
+          msgObj.text = `Error: ${reply.error.message}`;
+        } else if (reply.episode && reply.episode.firstAired) {
+          let episodeCode = `S${reply.episode.seasonNumber.toString().padStart(2, '0')}`;
+          episodeCode += `E${reply.episode.epNumber.toString().padStart(2, '0')}`;
+          const timeDifference = distanceInWords(new Date(), reply.episode.firstAired);
+          msgObj.text = `${episodeCode} of ${reply.show.title} goes live in ${timeDifference}`;
+        }
+        await MessengerAPI.sendMessage(senderId, msgObj);
         break;
       }
       default:

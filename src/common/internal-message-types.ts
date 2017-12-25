@@ -26,6 +26,7 @@ export enum ActionTypes {
   UnSubscribe,
   ShowTrending,
   MyShows,
+  NextEpisodeDate,
 }
 
 /**
@@ -87,10 +88,23 @@ export interface IMyShowsAction extends IAction {
   type: ActionTypes.MyShows;
 }
 
+export interface INextEpisodeDateAction extends IAction {
+  type: ActionTypes.NextEpisodeDate;
+  imdbId: string;
+  tvdbId: number;
+  title: string;
+}
+
 /**
  * Generic Action Type
  */
-export type AnyAction = ISearchAction | IShowTrendingAction | ISubscribeAction | IUnSubscribeAction | IMyShowsAction;
+export type AnyAction =
+  | ISearchAction
+  | IShowTrendingAction
+  | ISubscribeAction
+  | IUnSubscribeAction
+  | IMyShowsAction
+  | INextEpisodeDateAction;
 
 /**
  * Message that is sent to the ProcessQuery function
@@ -112,6 +126,7 @@ export enum ReplyKind {
   SubscribeResult,
   UnSubscribeResult,
   MyShows,
+  NextEpisodeDate,
 }
 
 /**
@@ -167,9 +182,25 @@ export interface ITrendingShowsReply extends IReply {
   shows: ITvShow[];
 }
 
+/**
+ * A reply for user's subscribed shows
+ */
 export interface IMyShowsReply extends IReply {
   kind: ReplyKind.MyShows;
   shows: ITvShow[];
+}
+
+/**
+ * A reply for Next episode's date
+ */
+export interface INextEpisodeDateReply extends IReply {
+  kind: ReplyKind.NextEpisodeDate;
+  episode: ITvEpisode | null;
+  error: Error | null;
+  show: {
+    imdbId: string;
+    title: string;
+  };
 }
 
 /**
@@ -181,7 +212,8 @@ export type AnyReplyKind =
   | ITrendingShowsReply
   | ISubscribeReply
   | IUnSubscribeReply
-  | IMyShowsReply;
+  | IMyShowsReply
+  | INextEpisodeDateReply;
 
 /**
  * Internal representation of a TV Show
@@ -195,4 +227,19 @@ export interface ITvShow {
   genres: string[];
   backDropUrl?: string | null;
   isSubscribed: boolean;
+}
+
+/**
+ * Internal representation of an Episode
+ */
+export interface ITvEpisode {
+  seasonNumber: number;
+  epNumber: number;
+  title?: string;
+  tvdbId: number;
+  imdbId: string;
+  overview: string;
+  rating?: number;
+  firstAired?: number | null; // epoc time
+  runtime?: number;
 }

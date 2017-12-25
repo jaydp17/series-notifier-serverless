@@ -6,6 +6,7 @@
 import * as InternalTypes from '../common/internal-message-types';
 import * as MessengerActionTypes from '../common/messenger-actions-types';
 import * as MessengerTypes from '../common/messenger-types';
+import { convertToITvShow } from '../process-query-function/action-helper';
 
 export namespace GenericTemplate {
   export function getSubscribeButton(show: InternalTypes.ITvShow): MessengerTypes.GenericTemplate.PostBackButton {
@@ -17,11 +18,20 @@ export namespace GenericTemplate {
     };
   }
 
+  export function getNextEpisodeButton(show: InternalTypes.ITvShow): MessengerTypes.GenericTemplate.PostBackButton {
+    const action = MessengerActionTypes.nextEpisode;
+    return {
+      type: 'postback',
+      title: action.label,
+      payload: JSON.stringify(convertToTvShowPayload(show, action.type)),
+    };
+  }
+
   /**
    * Generates a single element in the generic template
    */
   export function getElement(show: InternalTypes.ITvShow): MessengerTypes.GenericTemplateElement {
-    const buttons: MessengerTypes.GenericTemplate.Button[] = [getSubscribeButton(show)];
+    const buttons: MessengerTypes.GenericTemplate.Button[] = [getSubscribeButton(show), getNextEpisodeButton(show)];
     return {
       title: show.title,
       subtitle: show.genres.join(', '),

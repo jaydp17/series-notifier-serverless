@@ -61,6 +61,16 @@ export function _getInternalAction(postbackPayload: string): InternalTypes.AnyAc
         metaData: { fbMessenger: undefined },
       };
     }
+    case MessengerActionTypes.nextEpisode.type: {
+      return {
+        type: InternalTypes.ActionTypes.NextEpisodeDate,
+        platform: platformNames.FBMessenger,
+        metaData: { fbMessenger: undefined },
+        imdbId: payloadJSON.imdbId,
+        tvdbId: payloadJSON.tvdbId,
+        title: payloadJSON.title,
+      };
+    }
     default:
       throw new Error(`Unknown PostBack ActionType: ${payloadJSON.action}`);
   }
