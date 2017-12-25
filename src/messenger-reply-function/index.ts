@@ -8,6 +8,7 @@ import { distanceInWords } from 'date-fns';
 import { chunk, get, isEmpty } from 'lodash';
 import { inspect } from 'util';
 import { getError, prettyPrint } from '../common/common-utils';
+import { errorMessages } from '../common/constants';
 import { env } from '../common/environment';
 import * as MessengerAPI from '../common/messenger.api';
 import { GenericTemplate } from './messenger.formatter';
@@ -76,7 +77,7 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
         const msgObj: MessengerTypes.ISendTextMessage = {
           text: `No next episode found for ${reply.show.title} 😕`,
         };
-        if (reply.error) {
+        if (reply.error && reply.error.message !== errorMessages.noNextEpisode) {
           msgObj.text = `Error: ${reply.error.message}`;
         } else if (reply.episode && reply.episode.firstAired) {
           let episodeCode = `S${reply.episode.seasonNumber.toString().padStart(2, '0')}`;

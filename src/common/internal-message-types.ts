@@ -196,7 +196,7 @@ export interface IMyShowsReply extends IReply {
 export interface INextEpisodeDateReply extends IReply {
   kind: ReplyKind.NextEpisodeDate;
   episode: ITvEpisode | null;
-  error: Error | null;
+  error: { message: string } | null;
   show: {
     imdbId: string;
     title: string;

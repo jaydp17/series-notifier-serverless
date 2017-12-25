@@ -113,7 +113,7 @@ async function getReply(action: InternalTypes.AnyAction): Promise<InternalTypes.
     }
     case ActionTypes.NextEpisodeDate: {
       let nextEpisode: InternalTypes.ITvEpisode | null = null;
-      let error = null;
+      let error;
       try {
         nextEpisode = await NextEpisodeController.getNextEpisode(action.imdbId);
       } catch (err) {
@@ -122,7 +122,7 @@ async function getReply(action: InternalTypes.AnyAction): Promise<InternalTypes.
       return {
         kind: ReplyKind.NextEpisodeDate,
         episode: nextEpisode,
-        error,
+        error: error && { message: error.message },
         show: {
           imdbId: action.imdbId,
           title: action.title,
