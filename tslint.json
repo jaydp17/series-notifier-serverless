@@ -20,6 +20,7 @@
         "function-regex": "^[a-z_][\\w\\d]+$"
       }
     ],
-    "no-default-export": false
+    "no-default-export": false,
+    "import-name": false
   }
 }
