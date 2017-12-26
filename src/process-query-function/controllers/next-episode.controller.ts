@@ -3,15 +3,21 @@
  */
 
 import { prettyPrint } from '../../common/common-utils';
+import * as NextEpisodeCacheModel from '../../models/next-episode-cache';
 import * as TraktAPI from '../apis/trakt.api';
 
 // types
 import * as InternalTypes from '../../common/internal-message-types';
 
 export async function getNextEpisode(imdbId: string): Promise<InternalTypes.ITvEpisode> {
+  const episodeCache = await NextEpisodeCacheModel.getCache(imdbId);
+  if (episodeCache) {
+    return episodeCache;
+  }
   const nextEp = await TraktAPI.nextEpisode(imdbId);
   const episodeDetails = await TraktAPI.episodeSummary(imdbId, nextEp.season, nextEp.number);
-  return {
+
+  const nextEpisode: InternalTypes.ITvEpisode = {
     seasonNumber: episodeDetails.season,
     epNumber: episodeDetails.number,
     title: episodeDetails.title,
@@ -22,6 +28,9 @@ export async function getNextEpisode(imdbId: string): Promise<InternalTypes.ITvE
     firstAired: new Date(episodeDetails.first_aired).getTime() || null,
     runtime: episodeDetails.runtime,
   };
+  // fire & forget
+  NextEpisodeCacheModel.updateCache(imdbId, nextEpisode);
+  return nextEpisode;
 }
 
 // getNextEpisode('tt0898266').then(console.log).catch(console.error);
