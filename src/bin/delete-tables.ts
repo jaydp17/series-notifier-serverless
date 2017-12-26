@@ -8,7 +8,7 @@ import { env } from '../common/environment';
 import tables from '../common/tables';
 
 if (env === 'production') {
-  console.error('can\'t drop tables in production');
+  console.error("can't drop tables in production");
   process.exit(0);
 }
 
@@ -20,5 +20,4 @@ const promises = Object.values(tables.names)
   .map(getParams)
   .map(param => dynamodb.deleteTable(param).promise());
 
-Promise.all(promises)
-  .then(() => console.log('done!')); // tslint:disable-line:no-console
+Promise.all(promises).then(() => console.log('done!')); // tslint:disable-line:no-console

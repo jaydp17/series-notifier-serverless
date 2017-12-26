@@ -5,9 +5,10 @@
 import * as faker from 'faker';
 import * as MessengerTypes from '../common/messenger-types';
 
-export function getFacebookMessage(
-  { entries = 1, messagings = 1 }: { entries?: number; messagings?: number } = {},
-): MessengerTypes.FBWebHookMessage {
+export function getFacebookMessage({
+  entries = 1,
+  messagings = 1,
+}: { entries?: number; messagings?: number } = {}): MessengerTypes.FBWebHookMessage {
   const entry: MessengerTypes.FBWebHookMessageEntry[] = [];
   for (let i = 0; i < entries; i += 1) {
     entry.push(_getEntryObject({ messagings }));

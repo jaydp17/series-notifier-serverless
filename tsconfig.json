@@ -7,16 +7,8 @@
     "sourceMap": false,
     "strictNullChecks": true,
     "outDir": "build",
-    "types": [
-      "node",
-      "jest",
-      "bluebird"
-    ],
-    "lib": [
-      "esnext"
-    ]
+    "types": ["node", "jest", "bluebird"],
+    "lib": ["esnext"]
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

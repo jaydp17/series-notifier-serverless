@@ -5,12 +5,6 @@
   },
   "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
   "setupTestFrameworkScriptFile": "<rootDir>/test/test.setup.js",
-  "moduleFileExtensions": [
-    "ts",
-    "tsx",
-    "js"
-  ],
-  "collectCoverageFrom": [
-    "src/**/*.ts"
-  ]
+  "moduleFileExtensions": ["ts", "tsx", "js"],
+  "collectCoverageFrom": ["src/**/*.ts"]
 }

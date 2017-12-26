@@ -22,7 +22,6 @@ import * as indexFile from './index';
 import { getFacebookMessage, getMessageTexts } from './index.data';
 
 describe('Entry Function', () => {
-
   // tslint:disable-next-line:mocha-no-side-effect-code
   const baseEventBody = deepFreeze({
     object: 'page',
@@ -109,19 +108,24 @@ describe('Entry Function', () => {
   });
 
   it('filters text messages', () => {
-    const cases = [{
-      input: {},
-      result: false,
-    }, {
-      input: { message: {} },
-      result: true,
-    }, {
-      input: { message: { is_echo: true } },
-      result: false,
-    }, {
-      input: { message: { is_echo: false } },
-      result: true,
-    }];
+    const cases = [
+      {
+        input: {},
+        result: false,
+      },
+      {
+        input: { message: {} },
+        result: true,
+      },
+      {
+        input: { message: { is_echo: true } },
+        result: false,
+      },
+      {
+        input: { message: { is_echo: false } },
+        result: true,
+      },
+    ];
 
     for (const { input, result: expectedResult } of cases) {
       const result = indexFile.filterTextMessages(<MessengerTypes.AnyMessagingObject>input);
@@ -137,7 +141,7 @@ describe('Entry Function', () => {
     // test
     const invokeProcessQueryCalls = (<jest.Mock<{}>>invokeProcessQuery).mock.calls;
     expect(invokeProcessQueryCalls.length).toEqual(texts.length);
-    (invokeProcessQueryCalls).forEach(([param], index) => validateParam(param, texts[index]));
+    invokeProcessQueryCalls.forEach(([param], index) => validateParam(param, texts[index]));
   });
 
   it('tests processPostBody with 2 entries 1 messaging', () => {
@@ -148,7 +152,7 @@ describe('Entry Function', () => {
     // test
     const invokeProcessQueryCalls = (<jest.Mock<{}>>invokeProcessQuery).mock.calls;
     expect(invokeProcessQueryCalls.length).toEqual(texts.length);
-    (invokeProcessQueryCalls).forEach(([param], index) => validateParam(param, texts[index]));
+    invokeProcessQueryCalls.forEach(([param], index) => validateParam(param, texts[index]));
   });
 
   it('tests processPostBody with 2 entries 2 messaging', () => {
@@ -159,7 +163,7 @@ describe('Entry Function', () => {
     // test
     const invokeProcessQueryCalls = (<jest.Mock<{}>>invokeProcessQuery).mock.calls;
     expect(invokeProcessQueryCalls.length).toEqual(texts.length);
-    (invokeProcessQueryCalls).forEach(([param], index) => validateParam(param, texts[index]));
+    invokeProcessQueryCalls.forEach(([param], index) => validateParam(param, texts[index]));
   });
 
   it('returns statusCode: 200 if eveything goes well', async () => {

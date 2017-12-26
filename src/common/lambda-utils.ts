@@ -9,12 +9,18 @@ import { AnyAction, AnyReplyKind } from './internal-message-types';
 
 const lambda = new Lambda();
 
-export const invokeFunction = (functionName: string, payload: {}, invocationType: string = 'Event'): Promise<Lambda.InvocationResponse> => {
-  return lambda.invoke({
-    FunctionName: functionName,
-    InvocationType: invocationType,
-    Payload: JSON.stringify(payload),
-  }).promise();
+export const invokeFunction = (
+  functionName: string,
+  payload: {},
+  invocationType: string = 'Event',
+): Promise<Lambda.InvocationResponse> => {
+  return lambda
+    .invoke({
+      FunctionName: functionName,
+      InvocationType: invocationType,
+      Payload: JSON.stringify(payload),
+    })
+    .promise();
 };
 
 export const invokeProcessQuery = (data: AnyAction) => invokeFunction(processQuery, data);

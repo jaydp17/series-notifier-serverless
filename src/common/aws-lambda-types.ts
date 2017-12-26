@@ -11,7 +11,10 @@ export type LambdaEvent = {
 /**
  * Callback type that should be used when the lambda is gonna be invoked with an HTTP req
  */
-export type LambdaHttpCallback = (error: Error | null | undefined, response?: { statusCode: number, body?: string }) => void;
+export type LambdaHttpCallback = (
+  error: Error | null | undefined,
+  response?: { statusCode: number; body?: string },
+) => void;
 
 /**
  * Non-HTTP lambda callback type

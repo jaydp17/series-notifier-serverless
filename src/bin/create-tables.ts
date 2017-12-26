@@ -17,4 +17,6 @@ const createTable = async tableSchema => {
   }
 };
 
-createTable(tables.specs.users).then(() => createTable(tables.specs.subscriptions)).then(() => console.log('done!')); // tslint:disable-line:no-console
+createTable(tables.specs.users)
+  .then(() => createTable(tables.specs.subscriptions))
+  .then(() => console.log('done!')); // tslint:disable-line:no-console
