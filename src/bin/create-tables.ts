@@ -11,12 +11,10 @@ const createTable = async tableSchema => {
     const result = await dynamodb.createTable(tableSchema).promise();
     prettyPrint(result);
   } catch (err) {
-    if (err.message !== 'Cannot create preexisting table') {
+    if (err.code !== 'ResourceInUseException') {
       throw err;
     }
   }
 };
 
-createTable(tables.specs.users)
-  .then(() => createTable(tables.specs.subscriptions))
-  .then(() => console.log('done!')); // tslint:disable-line:no-console
+createTable(tables.specs.users).then(() => createTable(tables.specs.subscriptions)).then(() => console.log('done!')); // tslint:disable-line:no-console
