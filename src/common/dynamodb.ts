@@ -3,11 +3,11 @@
  */
 
 import { DynamoDB } from 'aws-sdk';
-import { env } from './environment';
+import { AWS_REGION, env } from './environment';
 
-let dynamoDbOptions = {};
+let dynamoDbOptions: DynamoDB.ClientConfiguration = { region: AWS_REGION };
 if (env === 'development' && process.env.IS_LOCAL) {
-  dynamoDbOptions = { endpoint: 'http://localhost:8000' }; //tslint:disable-line
+  dynamoDbOptions = { ...dynamoDbOptions, endpoint: 'http://localhost:8000' }; //tslint:disable-line
 }
 export const dynamodb = new DynamoDB(dynamoDbOptions);
 export const dynamoDocClient = new DynamoDB.DocumentClient(dynamoDbOptions);

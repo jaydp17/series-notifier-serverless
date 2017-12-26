@@ -2,6 +2,9 @@
  * Creates tables in Dynamodb
  */
 
+// tslint:disable no-console
+
+import * as Bluebird from 'bluebird';
 import { prettyPrint } from '../common/common-utils';
 import { dynamodb } from '../common/dynamodb';
 import tables from '../common/tables';
@@ -17,6 +20,10 @@ const createTable = async tableSchema => {
   }
 };
 
-createTable(tables.specs.users)
-  .then(() => createTable(tables.specs.subscriptions))
-  .then(() => console.log('done!')); // tslint:disable-line:no-console
+async function main() {
+  const specs = Object.values(tables.specs);
+  await Bluebird.map(specs, createTable, { concurrency: 10 });
+  console.log('done!');
+}
+
+main();
