@@ -81,3 +81,15 @@ functions:
     package:
       include:
         - build/processQueryFunction.js
+  
+  notificationCron:
+    handler: build/dispatch-notif.main
+    description: A cron that sends notifications to users when an episode is live
+    package:
+      include:
+        - build/dispatch-notif.js
+    events:
+      - schedule:
+          name: series-notifier-dispatch-notif-cron
+          description: A cron that sends notifications to users when an episode is live
+          rate: rate(15 minutes)

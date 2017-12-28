@@ -88,6 +88,16 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
         await MessengerAPI.sendMessage(senderId, msgObj);
         break;
       }
+      case ReplyKind.EpisodeNotification: {
+        const { episode } = reply;
+        const epNumber = `00${episode.epNumber}`.slice(-2);
+        const seriesNumber = `00${episode.seasonNumber}`.slice(-2);
+        const msgObj: MessengerTypes.ISendTextMessage = {
+          text: `${episode.imdbId} S${seriesNumber}E${epNumber} is live`,
+        };
+        await MessengerAPI.sendMessage(senderId, msgObj);
+        break;
+      }
       default:
         const errorMessage = `Not supported Kind: ${reply.kind}`;
         console.error(errorMessage);

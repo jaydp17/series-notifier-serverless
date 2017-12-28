@@ -127,6 +127,7 @@ export enum ReplyKind {
   UnSubscribeResult,
   MyShows,
   NextEpisodeDate,
+  EpisodeNotification,
 }
 
 /**
@@ -204,6 +205,18 @@ export interface INextEpisodeDateReply extends IReply {
 }
 
 /**
+ * A reply for when the notification is sent to the user
+ * when one of the episodes from the series he has subscribed goes live
+ */
+export interface IEpisodeNotificationReply extends IReply {
+  kind: ReplyKind.EpisodeNotification;
+  episode: ITvEpisode;
+  show: {
+    imdbId: string;
+  };
+}
+
+/**
  * Generic reply type
  */
 export type AnyReplyKind =
@@ -213,7 +226,8 @@ export type AnyReplyKind =
   | ISubscribeReply
   | IUnSubscribeReply
   | IMyShowsReply
-  | INextEpisodeDateReply;
+  | INextEpisodeDateReply
+  | IEpisodeNotificationReply;
 
 /**
  * Internal representation of a TV Show

@@ -10,6 +10,7 @@ module.exports = {
     messengerEntryFunction: './src/messenger-entry-function/index.ts',
     processQueryFunction: './src/process-query-function/index.ts',
     messengerReplyFunction: './src/messenger-reply-function/index.ts',
+    'dispatch-notif': './src/cron/dispatch-notif.ts',
   },
   resolve: {
     extensions: ['.ts', '.js'],
