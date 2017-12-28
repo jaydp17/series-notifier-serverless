@@ -17,4 +17,5 @@ export default {
   put: params => dynamoDocClient.put(params).promise(),
   query: params => dynamoDocClient.query(params).promise(),
   delete: params => dynamoDocClient.delete(params).promise(),
+  scan: params => dynamoDocClient.scan(params).promise(),
 };

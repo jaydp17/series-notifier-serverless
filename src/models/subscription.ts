@@ -3,6 +3,7 @@
  */
 
 import { DynamoDB } from 'aws-sdk';
+import { uniq } from 'lodash';
 import dynamodb from '../common/dynamodb';
 import tables from '../common/tables';
 import { isValidSocialId } from './user';
@@ -74,3 +75,31 @@ export function deleteSubscription(imdbId: string, socialId: string) {
   };
   return dynamodb.delete(params);
 }
+
+/**
+ * Gets all the unique subscribed shows
+ * by all users
+ */
+export async function getAllUniqShows(): Promise<string[]> {
+  const imdbIds: string[] = [];
+  const params: DynamoDB.DocumentClient.ScanInput = {
+    TableName,
+    ProjectionExpression: 'imdbId',
+  };
+
+  let result: DynamoDB.DocumentClient.ScanOutput | null = null;
+  do {
+    if (result && result.LastEvaluatedKey) {
+      params.ExclusiveStartKey = result.LastEvaluatedKey;
+    }
+    result = await dynamodb.scan(params);
+    const imdbIdBatch = (<{ imdbId: string }[]>result.Items).map(item => item.imdbId);
+    imdbIds.push(...imdbIdBatch);
+  } while (result.LastEvaluatedKey !== undefined);
+
+  return uniq(imdbIds);
+}
+
+// getUsersWhoSubscribed('tt5673782')
+//   .then(console.log)
+//   .catch(console.error);
