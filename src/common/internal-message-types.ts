@@ -213,6 +213,7 @@ export interface IEpisodeNotificationReply extends IReply {
   episode: ITvEpisode;
   show: {
     imdbId: string;
+    title: string;
   };
 }
 

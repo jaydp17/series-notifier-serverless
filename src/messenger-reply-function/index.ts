@@ -89,11 +89,11 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
         break;
       }
       case ReplyKind.EpisodeNotification: {
-        const { episode } = reply;
+        const { episode, show } = reply;
         const epNumber = `00${episode.epNumber}`.slice(-2);
         const seriesNumber = `00${episode.seasonNumber}`.slice(-2);
         const msgObj: MessengerTypes.ISendTextMessage = {
-          text: `${episode.imdbId} S${seriesNumber}E${epNumber} is live`,
+          text: `${show.title} S${seriesNumber}E${epNumber} is live`,
         };
         await MessengerAPI.sendMessage(senderId, msgObj);
         break;

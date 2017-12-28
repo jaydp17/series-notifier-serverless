@@ -14,6 +14,7 @@ import * as LambdaUtils from '../common/lambda-utils';
 import tables from '../common/tables';
 import * as SubscriptionModel from '../models/subscription';
 import * as NextEpisodeController from '../process-query-function/controllers/next-episode.controller';
+import * as SearchController from '../process-query-function/controllers/search.controller';
 
 // types
 import * as InternalTypes from '../common/internal-message-types';
@@ -35,12 +36,19 @@ export async function main() {
 }
 
 async function processEachEpisode(episode: InternalTypes.ITvEpisode) {
-  const usersSubscribed = await SubscriptionModel.getUsersWhoSubscribed(episode.imdbId);
+  const [usersSubscribed, show] = await Promise.all([
+    SubscriptionModel.getUsersWhoSubscribed(episode.imdbId),
+    SearchController.searchByImdb(episode.imdbId, true),
+  ]);
+  if (!show || !show.title) {
+    console.error(new Error(`${episode.imdbId} doesn't have a show or title`));
+    return undefined;
+  }
   const socialIds = usersSubscribed.map(subscription => subscription.socialId);
-  await Bluebird.map(socialIds, socialId => sendNotification(socialId, episode), { concurrency: 10 });
+  await Bluebird.map(socialIds, socialId => sendNotification(socialId, episode, show), { concurrency: 10 });
 }
 
-async function sendNotification(socialId: string, episode: InternalTypes.ITvEpisode) {
+async function sendNotification(socialId: string, episode: InternalTypes.ITvEpisode, show: InternalTypes.ITvShow) {
   console.log('sending notif', episode);
   const senderId = socialId.split('::')[1];
   const event: InternalTypes.IEpisodeNotificationReply = {
@@ -48,6 +56,7 @@ async function sendNotification(socialId: string, episode: InternalTypes.ITvEpis
     episode,
     show: {
       imdbId: episode.imdbId,
+      title: show.title,
     },
     metaData: <InternalTypes.IMetaData>{ fbMessenger: { sender: { id: senderId } } },
   };
