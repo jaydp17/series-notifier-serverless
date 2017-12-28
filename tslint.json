@@ -21,6 +21,7 @@
       }
     ],
     "no-default-export": false,
-    "import-name": false
+    "import-name": false,
+    "curly": [true, "ignore-same-line"]
   }
 }
