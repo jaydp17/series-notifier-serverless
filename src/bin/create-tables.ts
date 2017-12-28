@@ -23,7 +23,7 @@ const createTable = async tableSchema => {
 /**
  * Makes a table remove rows after the TTL is expired
  */
-function addTTL2Table(tableName: string, attributeName: string) {
+async function addTTL2Table(tableName: string, attributeName: string) {
   const params = {
     TableName: tableName,
     TimeToLiveSpecification: {
@@ -31,13 +31,18 @@ function addTTL2Table(tableName: string, attributeName: string) {
       Enabled: true,
     },
   };
-  return dynamodb.updateTimeToLive(params).promise();
+  try {
+    await dynamodb.updateTimeToLive(params).promise();
+  } catch (err) {
+    if (err.message !== 'TimeToLive is already enabled') throw err;
+  }
 }
 
 async function main() {
   const specs = Object.values(tables.specs);
   await Bluebird.map(specs, createTable, { concurrency: 10 });
   await addTTL2Table(tables.names.nextEpisodeCache, 'ttl');
+  await addTTL2Table(tables.names.seriesCache, 'ttl');
   console.log('done!');
 }
 

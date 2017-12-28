@@ -8,6 +8,7 @@ export const names = {
   users: 'Users',
   subscriptions: 'Subscriptions',
   nextEpisodeCache: 'NextEpisodeCache',
+  seriesCache: 'SeriesCache',
 };
 
 const usersTable = {
@@ -72,10 +73,23 @@ const nextEpisodeCacheTable: DynamoDB.CreateTableInput = {
   },
 };
 
+const seriesCacheTable: DynamoDB.CreateTableInput = {
+  TableName: names.seriesCache,
+  KeySchema: [
+    { AttributeName: 'imdbId', KeyType: 'HASH' }, //Partition key
+  ],
+  AttributeDefinitions: [{ AttributeName: 'imdbId', AttributeType: 'S' }],
+  ProvisionedThroughput: {
+    ReadCapacityUnits: 1,
+    WriteCapacityUnits: 1,
+  },
+};
+
 export const specs = {
   users: usersTable,
   subscriptions: subscriptionsTable,
   nextEpisodeCache: nextEpisodeCacheTable,
+  seriesCache: seriesCacheTable,
 };
 
 export default { names, specs, indexes };
