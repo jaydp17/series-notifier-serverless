@@ -94,4 +94,21 @@ describe('Subscription Model', () => {
     expect(dynamodb.delete).toHaveBeenCalledTimes(1);
     expect((<jest.Mock<{}>>dynamodb.delete).mock.calls[0]).toMatchSnapshot();
   });
+
+  it('get all uniq subscribed shows', async () => {
+    // prepare
+    const expectedImdbIds = ['tt2234222', 'tt4159076', 'tt0898266'];
+    (<jest.Mock<{}>>dynamodb.scan).mockReturnValueOnce({
+      // this output contains duplicate imdb ids
+      Items: [...expectedImdbIds, expectedImdbIds[0], expectedImdbIds[1]].map(imdbId => ({ imdbId })),
+    });
+
+    // execute
+    const imdbIdsResult = await SubscriptionModel.getAllUniqShows();
+
+    // test
+    expect(imdbIdsResult).toEqual(expectedImdbIds);
+    expect(dynamodb.scan).toHaveBeenCalledTimes(1);
+    expect((<jest.Mock<{}>>dynamodb.scan).mock.calls[0]).toMatchSnapshot();
+  });
 });

@@ -37,6 +37,15 @@ Array [
 ]
 `;
 
+exports[`Subscription Model get all uniq subscribed shows 1`] = `
+Array [
+  Object {
+    "ProjectionExpression": "imdbId",
+    "TableName": "Subscriptions",
+  },
+]
+`;
+
 exports[`Subscription Model gets users who subscribed 1`] = `
 Array [
   Object {
