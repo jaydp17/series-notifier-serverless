@@ -229,10 +229,7 @@ export type AnyReplyKind =
   | INextEpisodeDateReply
   | IEpisodeNotificationReply;
 
-/**
- * Internal representation of a TV Show
- */
-export interface ITvShow {
+export interface ITvShowMetaData {
   title: string;
   year: number;
   tvdbId: number;
@@ -240,6 +237,12 @@ export interface ITvShow {
   overview: string;
   genres: string[];
   backDropUrl?: string | null;
+}
+
+/**
+ * Internal representation of a TV Show
+ */
+export interface ITvShow extends ITvShowMetaData {
   isSubscribed: boolean;
 }
 

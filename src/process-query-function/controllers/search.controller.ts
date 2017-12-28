@@ -2,6 +2,7 @@
  * Everything related to searching series
  */
 
+import * as SeriesCacheModel from '../../models/series-cache';
 import * as SubscriptionModel from '../../models/subscription';
 import { capitalizeGeneres, convertToITvShow } from '../action-helper';
 import * as TheMovieDbAPI from '../apis/themoviedb.api';
@@ -40,17 +41,27 @@ export async function search(query: string, socialId: string): Promise<InternalT
   ]);
   const subscribedImdbIds = subscriptionRecords.map(record => record.imdbId);
 
-  return validRunningShows
+  const processedShows = validRunningShows
     .map(show => ({ ...show, backDropUrl: backDropUrlMap[show.imdbId] }))
     .filter(show => !!show.backDropUrl) // keep shows with backdrop only
     .map(show => ({ ...show, isSubscribed: subscribedImdbIds.includes(show.imdbId) }))
     .map(capitalizeGeneres);
+
+  // save cache
+  // fire & forget
+  Promise.all(processedShows.map(show => SeriesCacheModel.updateCache(show.imdbId, show)));
+
+  return processedShows;
 }
 
 export async function searchByImdb(
   imdbId: string,
   isSubscribed: boolean = false,
 ): Promise<InternalTypes.ITvShow | undefined> {
+  const showCache: InternalTypes.ITvShowMetaData | null = await SeriesCacheModel.getCache(imdbId);
+  if (showCache) {
+    return { ...showCache, isSubscribed };
+  }
   const [result, backDropUrlMap] = await Promise.all([TraktAPI.searchByImdbId(imdbId), _getBackDropUrls([imdbId])]);
   if (!result) {
     return undefined;
