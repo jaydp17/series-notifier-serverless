@@ -70,7 +70,13 @@ export async function searchByImdb(
   if (!tvShow.imdbId) {
     return undefined;
   }
-  return capitalizeGeneres({ ...tvShow, backDropUrl: backDropUrlMap[imdbId] });
+  const show = capitalizeGeneres({ ...tvShow, backDropUrl: backDropUrlMap[imdbId] });
+
+  // save cache
+  // fire & forget
+  SeriesCacheModel.updateCache(show.imdbId, show);
+
+  return show;
 }
 
 /**
