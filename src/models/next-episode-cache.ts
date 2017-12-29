@@ -23,7 +23,8 @@ export function updateCache(imdbId: string, cache: ITvEpisode) {
     Item: {
       ...cache,
       imdbId,
-      ttl: earliestTTL, // this item will expire in 24 hrs
+      // dividing by 1000 coz TTL in Dynamodb is seconds from epoc time
+      ttl: Math.ceil(earliestTTL / 1000), // this item will expire in 24 hrs
     },
   };
   return dynamodb.put(params);

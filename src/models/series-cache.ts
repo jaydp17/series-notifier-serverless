@@ -17,7 +17,8 @@ export function updateCache(imdbId: string, cache: InternalTypes.ITvShowMetaData
       ...cache,
       isSubscribed: undefined, // as subscription info shouldn't go in cache
       imdbId,
-      ttl: after10Days, // this item will expire in 10 days
+      // dividing by 1000 coz TTL in Dynamodb is seconds from epoc time
+      ttl: Math.ceil(after10Days / 1000), // this item will expire in 10 days
     },
   };
   return dynamodb.put(params);
