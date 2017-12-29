@@ -5,10 +5,12 @@
 jest.mock('../apis/themoviedb.api');
 jest.mock('../apis/trakt.api');
 jest.mock('../../models/subscription');
+jest.mock('../../models/series-cache');
 
 import deepFreeze from 'deep-freeze';
 import { getSocialId } from '../../../test/test-data/common.data';
 import { getTraktFullShow, getTraktSearchResult } from '../../../test/test-data/trakt.data';
+import * as SeriesCacheModel from '../../models/series-cache';
 import * as SubscriptionModel from '../../models/subscription';
 import * as ActionHelper from '../action-helper';
 import * as TheMovieDbAPI from '../apis/themoviedb.api';
