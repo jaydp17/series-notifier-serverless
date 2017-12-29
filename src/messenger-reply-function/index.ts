@@ -77,7 +77,7 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
         const msgObj: MessengerTypes.ISendTextMessage = {
           text: `No next episode found for ${reply.show.title} 😕`,
         };
-        if (reply.error && reply.error.message !== errorMessages.noNextEpisode) {
+        if (reply.error && !reply.error.message.startsWith(errorMessages.noNextEpisode)) {
           msgObj.text = `Error: ${reply.error.message}`;
         } else if (reply.episode && reply.episode.firstAired) {
           let episodeCode = `S${reply.episode.seasonNumber.toString().padStart(2, '0')}`;

@@ -71,7 +71,7 @@ export async function nextEpisode(imdbId: string): Promise<TraktType.ITraktEpiso
   };
   const res = await axios(options);
   if (isEmpty(res.data)) {
-    throw new Error(errorMessages.noNextEpisode);
+    throw new Error(`${errorMessages.noNextEpisode} : ${imdbId}`);
   }
   return res.data;
 }
