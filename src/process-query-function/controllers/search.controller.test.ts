@@ -7,7 +7,7 @@ jest.mock('../apis/trakt.api');
 jest.mock('../../models/subscription');
 jest.mock('../../models/series-cache');
 
-import deepFreeze from 'deep-freeze';
+import * as deepFreeze from 'deep-freeze';
 import { getSocialId } from '../../../test/test-data/common.data';
 import { getTraktFullShow, getTraktSearchResult } from '../../../test/test-data/trakt.data';
 import * as SeriesCacheModel from '../../models/series-cache';

@@ -1,8 +1,9 @@
 {
   "testEnvironment": "node",
   "transform": {
-    ".ts$": "<rootDir>/test/jest.preprocessor.js"
+    "^.+\\.tsx?$": "ts-jest"
   },
+  "mapCoverage": true,
   "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
   "setupTestFrameworkScriptFile": "<rootDir>/test/test.setup.js",
   "moduleFileExtensions": ["ts", "tsx", "js"],

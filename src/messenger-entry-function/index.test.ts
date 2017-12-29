@@ -15,7 +15,7 @@ import * as InternalTypes from '../common/internal-message-types';
 import * as MessengerTypes from '../common/messenger-types';
 
 // other imports
-import deepFreeze from 'deep-freeze';
+import * as deepFreeze from 'deep-freeze';
 import { platformNames } from '../common/constants';
 import { ActionTypes } from '../common/internal-message-types';
 import * as indexFile from './index';

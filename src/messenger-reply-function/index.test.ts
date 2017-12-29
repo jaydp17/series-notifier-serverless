@@ -5,7 +5,7 @@
 jest.mock('../common/messenger.api');
 jest.mock('./messenger.formatter');
 
-import deepFreeze from 'deep-freeze';
+import * as deepFreeze from 'deep-freeze';
 import * as dummyCommonData from '../../test/test-data/common.data';
 import * as MessengerAPI from '../common/messenger.api';
 import * as MessengerReply from './index';

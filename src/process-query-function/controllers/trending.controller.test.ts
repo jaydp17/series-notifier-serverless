@@ -10,7 +10,7 @@ jest.mock('../../models/subscription');
 // types
 import * as TraktType from '../apis/trakt.types';
 
-import deepFreeze from 'deep-freeze';
+import * as deepFreeze from 'deep-freeze';
 import * as faker from 'faker';
 import { getTVShow } from '../../../test/test-data/common.data';
 import { getTraktSearchResult, getTraktShow } from '../../../test/test-data/trakt.data';
