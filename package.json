@@ -10,6 +10,7 @@
     "deploy:function": "sls deploy function -f",
     "predeploy:all": "yarn build",
     "deploy:all": "sls deploy --verbose",
+    "deploy:all:prod": "NODE_ENV=production yarn deploy:all --stage production",
     "invoke": "sls invoke -p event.json -f",
     "preinvoke:local": "yarn build",
     "invoke:local": "sls invoke local -p event.json -f",
