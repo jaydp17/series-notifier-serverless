@@ -3,9 +3,9 @@
  */
 
 import { DynamoDB } from 'aws-sdk';
-import { AWS_REGION, env } from './environment';
+import { env } from './environment';
 
-let dynamoDbOptions: DynamoDB.ClientConfiguration = { region: AWS_REGION };
+let dynamoDbOptions: DynamoDB.ClientConfiguration = { region: 'us-east-1' };
 if (env === 'development' && process.env.IS_LOCAL) {
   dynamoDbOptions = { ...dynamoDbOptions, endpoint: 'http://localhost:8000' }; //tslint:disable-line
 }

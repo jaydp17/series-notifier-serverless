@@ -3,16 +3,19 @@
  */
 
 import { DynamoDB } from 'aws-sdk';
+import { isProd } from './environment';
+
+const getFullTableName = baseName => `${baseName}${isProd ? '' : '-dev'}`;
 
 export const names = {
-  users: 'Users',
-  subscriptions: 'Subscriptions',
-  nextEpisodeCache: 'NextEpisodeCache',
-  seriesCache: 'SeriesCache',
+  users: getFullTableName('Users'),
+  subscriptions: getFullTableName('Subscriptions'),
+  nextEpisodeCache: getFullTableName('NextEpisodeCache'),
+  seriesCache: getFullTableName('SeriesCache'),
 };
 
 const usersTable = {
-  TableName: 'Users',
+  TableName: names.users,
   KeySchema: [
     { AttributeName: 'socialId', KeyType: 'HASH' }, //Partition key
   ],
@@ -30,7 +33,7 @@ export const indexes = {
 };
 
 const subscriptionsTable: DynamoDB.CreateTableInput = {
-  TableName: 'Subscriptions',
+  TableName: names.subscriptions,
   KeySchema: [
     { AttributeName: 'imdbId', KeyType: 'HASH' }, //Partition key
     { AttributeName: 'socialId', KeyType: 'RANGE' }, //Sort key

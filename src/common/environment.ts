@@ -7,7 +7,7 @@
  */
 export const env: string = process.env.NODE_ENV || 'development';
 
-export const AWS_REGION: string = 'us-east-1';
+export const isProd: boolean = env === 'production';
 
 /**
  * The Stage which this function is running in
