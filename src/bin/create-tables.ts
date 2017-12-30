@@ -46,4 +46,4 @@ async function main() {
   console.log('done!');
 }
 
-main();
+main().catch(console.error);
