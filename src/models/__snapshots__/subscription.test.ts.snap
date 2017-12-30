@@ -7,7 +7,7 @@ Array [
       "imdbId": "t23456",
       "socialId": "FBMessenger::123",
     },
-    "TableName": "Subscriptions",
+    "TableName": "Subscriptions-dev",
   },
 ]
 `;
@@ -19,7 +19,7 @@ Array [
       "imdbId": "t123123",
       "socialId": "FBMessenger::123",
     },
-    "TableName": "Subscriptions",
+    "TableName": "Subscriptions-dev",
   },
 ]
 `;
@@ -32,7 +32,7 @@ Array [
     },
     "IndexName": "socialId-index",
     "KeyConditionExpression": "socialId = :socialId",
-    "TableName": "Subscriptions",
+    "TableName": "Subscriptions-dev",
   },
 ]
 `;
@@ -41,7 +41,7 @@ exports[`Subscription Model get all uniq subscribed shows 1`] = `
 Array [
   Object {
     "ProjectionExpression": "imdbId",
-    "TableName": "Subscriptions",
+    "TableName": "Subscriptions-dev",
   },
 ]
 `;
@@ -53,7 +53,7 @@ Array [
       ":imdbId": "t123123",
     },
     "KeyConditionExpression": "imdbId = :imdbId",
-    "TableName": "Subscriptions",
+    "TableName": "Subscriptions-dev",
   },
 ]
 `;
