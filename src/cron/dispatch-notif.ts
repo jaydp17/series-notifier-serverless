@@ -1,5 +1,3 @@
-// I'll need a Cache table to keep the next episode release date
-
 /**
  * Finds the episodes that launched in last 5 mins
  * or are going to be launched in next 10 minutes
@@ -82,6 +80,8 @@ function keepOnlyNearByEpisodes(episode: InternalTypes.ITvEpisode | undefined) {
 
 export async function getNextEpisode(imdbId: string): Promise<InternalTypes.ITvEpisode | undefined> {
   try {
+    // there's await over here because I wanna catch the error here
+    // and not at one level up
     return await NextEpisodeController.getNextEpisode(imdbId);
   } catch (err) {
     console.error(err);

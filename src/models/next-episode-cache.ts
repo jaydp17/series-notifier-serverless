@@ -12,19 +12,13 @@ const TableName = tables.names.nextEpisodeCache; // tslint:disable-line:variable
 
 export function updateCache(imdbId: string, cache: ITvEpisode) {
   const tomorrow = addDays(new Date(), 1).getTime();
-  const eligibleTTLDates = [tomorrow];
-  if (cache.firstAired && !isPast(cache.firstAired)) {
-    eligibleTTLDates.push(cache.firstAired);
-  }
-  // the earliest of tomorrow and the firstAired date of the episode is stored as TTL
-  const earliestTTL = min(...eligibleTTLDates).getTime();
   const params: DynamoDB.DocumentClient.PutItemInput = {
     TableName,
     Item: {
       ...cache,
       imdbId,
       // dividing by 1000 coz TTL in Dynamodb is seconds from epoc time
-      ttl: Math.ceil(earliestTTL / 1000), // this item will expire in 24 hrs
+      ttl: Math.ceil(tomorrow / 1000), // this item will expire in 24 hrs
     },
   };
   return dynamodb.put(params);
