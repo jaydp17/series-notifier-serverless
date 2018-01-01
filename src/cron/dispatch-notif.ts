@@ -8,8 +8,10 @@
 
 import { DynamoDB } from 'aws-sdk';
 import * as Bluebird from 'bluebird';
+import { addMinutes } from 'date-fns';
 import { keyBy } from 'lodash';
 import dynamodb from '../common/dynamodb';
+import { env } from '../common/environment';
 import * as LambdaUtils from '../common/lambda-utils';
 import tables from '../common/tables';
 import * as SubscriptionModel from '../models/subscription';
@@ -32,10 +34,12 @@ export async function main() {
   const nearbyEpisodes = <InternalTypes.ITvEpisode[]>nextEpisodesPerImdbId.filter(keepOnlyNearByEpisodes);
 
   await Bluebird.map(nearbyEpisodes, processEachEpisode, { concurrency: 5 });
-  console.log('done!');
+  if (env !== 'test') {
+    console.log('done!');
+  }
 }
 
-async function processEachEpisode(episode: InternalTypes.ITvEpisode) {
+export async function processEachEpisode(episode: InternalTypes.ITvEpisode) {
   const [usersSubscribed, show] = await Promise.all([
     SubscriptionModel.getUsersWhoSubscribed(episode.imdbId),
     SearchController.searchByImdb(episode.imdbId, true),
@@ -49,7 +53,9 @@ async function processEachEpisode(episode: InternalTypes.ITvEpisode) {
 }
 
 async function sendNotification(socialId: string, episode: InternalTypes.ITvEpisode, show: InternalTypes.ITvShow) {
-  console.log('sending notif', episode);
+  if (env !== 'test') {
+    console.log('sending notif', episode);
+  }
   const senderId = socialId.split('::')[1];
   const event: InternalTypes.IEpisodeNotificationReply = {
     kind: InternalTypes.ReplyKind.EpisodeNotification,
@@ -69,12 +75,12 @@ async function sendNotification(socialId: string, episode: InternalTypes.ITvEpis
  */
 function keepOnlyNearByEpisodes(episode: InternalTypes.ITvEpisode | undefined) {
   if (!episode || !episode.firstAired) return false;
-  const past5Mins = now - 5 * MINUTE;
-  const next10Mins = now + 10 * MINUTE;
+  const past5Mins = addMinutes(now, -5).getTime();
+  const next10Mins = addMinutes(now, 10).getTime();
   return episode.firstAired >= past5Mins && episode.firstAired <= next10Mins;
 }
 
-async function getNextEpisode(imdbId: string): Promise<InternalTypes.ITvEpisode | undefined> {
+export async function getNextEpisode(imdbId: string): Promise<InternalTypes.ITvEpisode | undefined> {
   try {
     return await NextEpisodeController.getNextEpisode(imdbId);
   } catch (err) {

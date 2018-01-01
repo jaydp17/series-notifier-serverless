@@ -24,3 +24,19 @@ export function getTVShow(overrides: { [key: string]: any } = {}): InternalTypes
     isSubscribed: overrides.isSubscribed || false,
   };
 }
+
+// tslint:disable-next-line:no-any
+export function getTvEpisode(overrides: { [key: string]: any } = {}): InternalTypes.ITvEpisode {
+  const title = `${faker.hacker.adjective()} ${faker.hacker.noun()}`;
+  return {
+    seasonNumber: overrides.seasonNumber || faker.random.number(),
+    epNumber: overrides.epNumber || faker.random.number(),
+    title: overrides.title || title,
+    tvdbId: overrides.tvdb || faker.random.number(),
+    imdbId: overrides.imdb || `tt${faker.random.number()}`,
+    overview: overrides.overview || faker.hacker.phrase(),
+    rating: overrides.rating || null,
+    firstAired: overrides.firstAired || null,
+    runtime: overrides.runtime || null,
+  };
+}
