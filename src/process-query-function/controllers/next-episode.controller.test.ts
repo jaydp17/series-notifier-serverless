@@ -93,7 +93,7 @@ describe('Next Episode Controller', () => {
     };
 
     // execute
-    const result = await NextEpisodeController.getNextEpisode(originalImdbId, true);
+    const result = await NextEpisodeController.getNextEpisode(originalImdbId, { skipCacheRead: true });
 
     // test
     expect(result).toEqual(nextEpisode);

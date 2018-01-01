@@ -115,7 +115,7 @@ async function getReply(action: InternalTypes.AnyAction): Promise<InternalTypes.
       let nextEpisode: InternalTypes.ITvEpisode | null = null;
       let error;
       try {
-        nextEpisode = await NextEpisodeController.getNextEpisode(action.imdbId);
+        nextEpisode = await NextEpisodeController.getNextEpisodeAskedByUser(action.imdbId);
       } catch (err) {
         error = err;
       }

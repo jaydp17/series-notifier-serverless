@@ -14,6 +14,10 @@ export const isProd: boolean = env === 'production';
  */
 export const stage: string = env === 'production' ? 'production' : 'dev';
 
+export const cronIntervalMins = 15;
+
+export const cronIntervalMillis = cronIntervalMins * 60 * 1000;
+
 /**
  * Name of the service, it's not gonna change
  */

@@ -22,7 +22,7 @@ export async function getNextEpisode(imdbId: string): Promise<InternalTypes.ITvE
   try {
     // there's await over here because I wanna catch the error here
     // and not at one level up
-    return await NextEpisodeController.getNextEpisode(imdbId, true);
+    return await NextEpisodeController.getNextEpisode(imdbId, { skipCacheRead: true });
   } catch (err) {
     console.error(err);
   }
