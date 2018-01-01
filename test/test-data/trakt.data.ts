@@ -68,3 +68,29 @@ export function getTraktFullShow(overrides: Override = { running: true }): Trakt
     genres: overrides.genres || ['drama', 'fantasy', 'science-fiction'],
   };
 }
+
+// tslint:disable-next-line:no-any
+export function getTraktEpisode(overrides: { [key: string]: any } = {}): TraktTypes.ITraktEpisode {
+  const title = `${faker.hacker.adjective()} ${faker.hacker.noun()}`;
+  const imdbId = overrides.imdbId || faker.random.number();
+  return {
+    season: overrides.season || faker.random.number(),
+    number: overrides.number || faker.random.number(),
+    title: overrides.title || title,
+    ids: overrides.ids || {
+      imdbId,
+    },
+  };
+}
+
+// tslint:disable-next-line:no-any
+export function getTraktEpisodeFull(overrides: { [key: string]: any } = {}): TraktTypes.ITraktEpisodeFull {
+  const episode = getTraktEpisode(overrides);
+  return {
+    ...episode,
+    overview: overrides.overview || faker.hacker.phrase(),
+    rating: overrides.rating || faker.random.number(),
+    first_aired: overrides.first_aired || Date.now().toString(),
+    runtime: overrides.runtime || faker.random.number(),
+  };
+}
