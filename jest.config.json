@@ -7,5 +7,10 @@
   "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
   "setupTestFrameworkScriptFile": "<rootDir>/test/test.setup.js",
   "moduleFileExtensions": ["ts", "tsx", "js"],
-  "collectCoverageFrom": ["src/**/*.ts"]
+  "collectCoverageFrom": ["src/**/*.ts"],
+  "globals": {
+    "ts-jest": {
+      "useBabelrc": true
+    }
+  }
 }
