@@ -93,3 +93,15 @@ functions:
           name: series-notifier-dispatch-notif-cron-${self:provider.stage}
           description: A cron that sends notifications to users when an episode is live
           rate: rate(15 minutes)
+
+  nextEpCacheUpdateCron:
+    handler: build/update-next-episode-cache.main
+    description: A cron that updates the cache in DB of Next Episode Cache model
+    package:
+      include:
+        - build/update-next-episode-cache.js
+    events:
+      - schedule:
+          name: series-notifier-update-next-episode-cache-cron-${self:provider.stage}
+          description: A cron that updates the cache in DB of Next Episode Cache model
+          rate: rate(12 hours)

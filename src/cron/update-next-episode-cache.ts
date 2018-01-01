@@ -11,6 +11,8 @@ import * as InternalTypes from '../common/internal-message-types';
 
 export async function main() {
   const imdbIds = await SubscriptionModel.getAllUniqShows();
+  // tslint:disable-next-line no-console
+  console.log('Updating next episode cache for imdbids', imdbIds);
   await Bluebird.map(imdbIds, getNextEpisode, {
     concurrency: 50,
   });

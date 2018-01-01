@@ -11,6 +11,7 @@ module.exports = {
     processQueryFunction: './src/process-query-function/index.ts',
     messengerReplyFunction: './src/messenger-reply-function/index.ts',
     'dispatch-notif': './src/cron/dispatch-notif.ts',
+    'update-next-episode-cache': './src/cron/update-next-episode-cache.ts',
   },
   resolve: {
     extensions: ['.ts', '.js'],
