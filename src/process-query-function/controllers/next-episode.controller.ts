@@ -9,10 +9,12 @@ import * as TraktAPI from '../apis/trakt.api';
 // types
 import * as InternalTypes from '../../common/internal-message-types';
 
-export async function getNextEpisode(imdbId: string): Promise<InternalTypes.ITvEpisode> {
-  const episodeCache = await NextEpisodeCacheModel.getCache(imdbId);
-  if (episodeCache) {
-    return episodeCache;
+export async function getNextEpisode(imdbId: string, skipCache: boolean = false): Promise<InternalTypes.ITvEpisode> {
+  if (!skipCache) {
+    const episodeCache = await NextEpisodeCacheModel.getCache(imdbId);
+    if (episodeCache) {
+      return episodeCache;
+    }
   }
   const nextEp = await TraktAPI.nextEpisode(imdbId);
   const episodeDetails = await TraktAPI.episodeSummary(imdbId, nextEp.season, nextEp.number);
