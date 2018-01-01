@@ -65,11 +65,18 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
         break;
       }
       case ReplyKind.MyShows: {
-        const showChunks = chunk(reply.shows, 10);
-        const messages = showChunks.map(GenericTemplate.generate);
-        for (const message of messages) {
-          // serially send each message
-          await MessengerAPI.sendMessage(senderId, message);
+        if (reply.shows.length === 0) {
+          const msgObj: MessengerTypes.ISendTextMessage = {
+            text: 'You have no subscribed shows!',
+          };
+          await MessengerAPI.sendMessage(senderId, msgObj);
+        } else {
+          const showChunks = chunk(reply.shows, 10);
+          const messages = showChunks.map(GenericTemplate.generate);
+          for (const message of messages) {
+            // serially send each message
+            await MessengerAPI.sendMessage(senderId, message);
+          }
         }
         break;
       }
