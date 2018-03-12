@@ -19,6 +19,7 @@ provider:
     WITAI_TOKEN: ${self:provider.variables.WITAI_TOKEN}
     FAN_ART_API_KEY: ${self:provider.variables.FAN_ART_API_KEY}
     THE_MOVIE_DB_API_KEY: ${self:provider.variables.THE_MOVIE_DB_API_KEY}
+    DEBUG: "dispatch-notif:*"
   iamRoleStatements:
     - Effect: "Allow"
       Action:
