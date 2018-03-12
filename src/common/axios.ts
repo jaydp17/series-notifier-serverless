@@ -3,6 +3,9 @@
  */
 
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import Logger from '../common/logger';
+
+const timeLogger = Logger('TimeLogger');
 
 function requestInterceptor(config: AxiosRequestConfig) {
   return { ...config, startTime: Date.now() };
@@ -11,8 +14,7 @@ function requestInterceptor(config: AxiosRequestConfig) {
 function responseInterceptor(response: AxiosResponse) {
   const { startTime } = <any>response.config; // tslint:disable-line:no-any
   const endTime = Date.now();
-  // tslint:disable-next-line:no-console
-  console.log(`[TimeLogger]:: ${response.config.url} -> ${endTime - startTime}ms`);
+  timeLogger.log(`[TimeLogger]:: ${response.config.url} -> ${endTime - startTime}ms`);
   return response;
 }
 

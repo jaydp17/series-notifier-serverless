@@ -36,6 +36,7 @@
   "homepage": "https://github.com/jaydp17/series-notifier-serverless#readme",
   "devDependencies": {
     "@types/bluebird": "3.5.19",
+    "@types/debug": "0.0.30",
     "@types/faker": "^4.1.2",
     "@types/jest": "22.0.0",
     "@types/lodash": "4.14.91",
@@ -71,6 +72,7 @@
     "axios": "0.17.1",
     "bluebird": "3.5.1",
     "date-fns": "1.29.0",
+    "debug": "3.1.0",
     "lodash": "^4.17.4"
   }
 }

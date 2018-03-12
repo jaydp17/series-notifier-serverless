@@ -11,6 +11,7 @@ import { keyBy } from 'lodash';
 import dynamodb from '../common/dynamodb';
 import { env } from '../common/environment';
 import * as LambdaUtils from '../common/lambda-utils';
+import Logger from '../common/logger';
 import tables from '../common/tables';
 import * as SubscriptionModel from '../models/subscription';
 import * as NextEpisodeController from '../process-query-function/controllers/next-episode.controller';
@@ -19,25 +20,28 @@ import * as SearchController from '../process-query-function/controllers/search.
 // types
 import * as InternalTypes from '../common/internal-message-types';
 
-// tslint:disable no-console
-
 const now = Date.now();
 const MINUTE = 60 * 1000;
+const logger = Logger('dispatch-notif');
 
 export async function main() {
   const imdbIds = await SubscriptionModel.getAllUniqShows();
+  logger.log('imdbIds: %O', imdbIds);
   const nextEpisodesPerImdbId = await Bluebird.map(imdbIds, getNextEpisode, {
     concurrency: 50,
   });
+  logger.log('nextEpisodesPerImdbId: %O', nextEpisodesPerImdbId);
   const nearbyEpisodes = <InternalTypes.ITvEpisode[]>nextEpisodesPerImdbId.filter(keepOnlyNearByEpisodes);
+  logger.log('nearbyEpisodes', nearbyEpisodes);
 
   await Bluebird.map(nearbyEpisodes, processEachEpisode, { concurrency: 5 });
   if (env !== 'test') {
-    console.log('done!');
+    logger.log('done!');
   }
 }
 
 export async function processEachEpisode(episode: InternalTypes.ITvEpisode) {
+  logger.log('processing episode for imdb: %s', episode.imdbId);
   const [usersSubscribed, show] = await Promise.all([
     SubscriptionModel.getUsersWhoSubscribed(episode.imdbId),
     SearchController.searchByImdb(episode.imdbId, true),
@@ -52,7 +56,7 @@ export async function processEachEpisode(episode: InternalTypes.ITvEpisode) {
 
 async function sendNotification(socialId: string, episode: InternalTypes.ITvEpisode, show: InternalTypes.ITvShow) {
   if (env !== 'test') {
-    console.log('sending notif', episode);
+    logger.log('sending notif: %O', episode);
   }
   const senderId = socialId.split('::')[1];
   const event: InternalTypes.IEpisodeNotificationReply = {
@@ -84,7 +88,7 @@ export async function getNextEpisode(imdbId: string): Promise<InternalTypes.ITvE
     // and not at one level up
     return await NextEpisodeController.getNextEpisode(imdbId);
   } catch (err) {
-    console.error(err);
+    logger.error(err);
   }
   return Promise.resolve(undefined);
 }
