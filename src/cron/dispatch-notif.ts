@@ -20,18 +20,21 @@ import * as SearchController from '../process-query-function/controllers/search.
 // types
 import * as InternalTypes from '../common/internal-message-types';
 
-const now = Date.now();
 const MINUTE = 60 * 1000;
 const logger = Logger('dispatch-notif');
 
 export async function main() {
+  const now = Date.now();
+  logger.log('now: %d', now);
   const imdbIds = await SubscriptionModel.getAllUniqShows();
   logger.log('imdbIds: %O', imdbIds);
   const nextEpisodesPerImdbId = await Bluebird.map(imdbIds, getNextEpisode, {
     concurrency: 50,
   });
   logger.log('nextEpisodesPerImdbId: %O', nextEpisodesPerImdbId);
-  const nearbyEpisodes = <InternalTypes.ITvEpisode[]>nextEpisodesPerImdbId.filter(keepOnlyNearByEpisodes);
+  const nearbyEpisodes = <InternalTypes.ITvEpisode[]>nextEpisodesPerImdbId.filter(ep =>
+    keepOnlyNearByEpisodes(ep, now),
+  );
   logger.log('nearbyEpisodes', nearbyEpisodes);
 
   await Bluebird.map(nearbyEpisodes, processEachEpisode, { concurrency: 5 });
@@ -75,10 +78,10 @@ async function sendNotification(socialId: string, episode: InternalTypes.ITvEpis
  * Filters shows which are going to be live in next 10 mins
  * or went live in past 5 mins
  */
-function keepOnlyNearByEpisodes(episode: InternalTypes.ITvEpisode | undefined) {
+function keepOnlyNearByEpisodes(episode: InternalTypes.ITvEpisode | undefined, currentTimeInMillis: number) {
   if (!episode || !episode.firstAired) return false;
-  const past5Mins = addMinutes(now, -5).getTime();
-  const next10Mins = addMinutes(now, 10).getTime();
+  const past5Mins = addMinutes(currentTimeInMillis, -5).getTime();
+  const next10Mins = addMinutes(currentTimeInMillis, 10).getTime();
   return episode.firstAired >= past5Mins && episode.firstAired <= next10Mins;
 }
 
