@@ -3,7 +3,7 @@
 Series Notifier is a Facebook Messenger bot 🤖 that notifies you when your favorite TV Series (for example: [Game of Thrones](http://www.imdb.com/title/tt0944947/), [Big Bang Theory](http://www.imdb.com/title/tt0898266/), etc.) releases 🚀 a new episode!
 
 <a href="https://m.me/snbot">
-<img src="https://s23.postimg.org/lx7vvkugb/try_it_now_button.png" height="50px"/>
+<img src="try_it_now_button.png" height="50px"/>
 </a>
 
 ## ✨ Features
