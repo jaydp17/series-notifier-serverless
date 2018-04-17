@@ -1,0 +1,52 @@
+{
+  "resource": "/webhook",
+  "path": "/webhook",
+  "httpMethod": "POST",
+  "headers": {
+    "Accept": "*/*",
+    "Accept-Encoding": "deflate, gzip",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-Country": "US",
+    "Content-Type": "application/json",
+    "Host": "3ld2mxlqoh.execute-api.us-east-1.amazonaws.com",
+    "Via": "1.1 f7d53beeb7e3b36236adcc55b507157f.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Id": "4dasHSIJrJ80gsyXEYp0h4XGQ1yF15qEULttSfiXZMUdWq6k_myeeg==",
+    "X-Forwarded-For": "66.220.152.164, 54.182.234.67",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https",
+    "X-Hub-Signature": "sha1=27c948bafeb1261628d95d5c5b1cdaa1a3848e48"
+  },
+  "queryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+    "accountId": "273899153117",
+    "resourceId": "cc1yej",
+    "stage": "dev",
+    "requestId": "16c17f2f-db13-11e6-9d2f-21af033d6d52",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "accountId": null,
+      "cognitoIdentityId": null,
+      "caller": null,
+      "apiKey": null,
+      "sourceIp": "66.220.152.164",
+      "accessKey": null,
+      "cognitoAuthenticationType": null,
+      "cognitoAuthenticationProvider": null,
+      "userArn": null,
+      "userAgent": null,
+      "user": null
+    },
+    "resourcePath": "/webhook",
+    "httpMethod": "POST",
+    "apiId": "3ld2mxlqoh"
+  },
+  "body":
+    "{\"object\":\"page\",\"entry\":[{\"id\":\"1159163917466162\",\"time\":1484478571101,\"messaging\":[{\"sender\":{\"id\":\"1243320392394962\"},\"recipient\":{\"id\":\"1159163917466162\"},\"timestamp\":1484478571056,\"message\":{\"mid\":\"mid.1484478571056:02b45ac971\",\"seq\":202836,\"text\":\"show trending\"}}]}]}",
+  "isBase64Encoded": false
+}

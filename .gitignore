@@ -8,6 +8,5 @@ secret-dev.yml
 secret-production.yml
 src/test.js
 event.js
-event.json
 webpack-stats.json
 coverage
