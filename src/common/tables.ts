@@ -5,7 +5,7 @@
 import { DynamoDB } from 'aws-sdk';
 import { isProd } from './environment';
 
-const getFullTableName = baseName => `${baseName}${isProd ? '' : '-dev'}`;
+const getFullTableName = (baseName: string) => `${baseName}${isProd ? '' : '-dev'}`;
 
 export const names = {
   users: getFullTableName('Users'),
@@ -17,7 +17,7 @@ export const names = {
 const usersTable = {
   TableName: names.users,
   KeySchema: [
-    { AttributeName: 'socialId', KeyType: 'HASH' }, //Partition key
+    { AttributeName: 'socialId', KeyType: 'HASH' }, // Partition key
   ],
   AttributeDefinitions: [{ AttributeName: 'socialId', AttributeType: 'S' }],
   ProvisionedThroughput: {
@@ -35,8 +35,8 @@ export const indexes = {
 const subscriptionsTable: DynamoDB.CreateTableInput = {
   TableName: names.subscriptions,
   KeySchema: [
-    { AttributeName: 'imdbId', KeyType: 'HASH' }, //Partition key
-    { AttributeName: 'socialId', KeyType: 'RANGE' }, //Sort key
+    { AttributeName: 'imdbId', KeyType: 'HASH' }, // Partition key
+    { AttributeName: 'socialId', KeyType: 'RANGE' }, // Sort key
   ],
   AttributeDefinitions: [
     { AttributeName: 'imdbId', AttributeType: 'S' },
@@ -46,8 +46,8 @@ const subscriptionsTable: DynamoDB.CreateTableInput = {
     {
       IndexName: indexes.subscriptions.socialId,
       KeySchema: [
-        { AttributeName: 'socialId', KeyType: 'HASH' }, //Partition key
-        { AttributeName: 'imdbId', KeyType: 'RANGE' }, //Sort key
+        { AttributeName: 'socialId', KeyType: 'HASH' }, // Partition key
+        { AttributeName: 'imdbId', KeyType: 'RANGE' }, // Sort key
       ],
       Projection: {
         ProjectionType: 'KEYS_ONLY',
@@ -67,7 +67,7 @@ const subscriptionsTable: DynamoDB.CreateTableInput = {
 const nextEpisodeCacheTable: DynamoDB.CreateTableInput = {
   TableName: names.nextEpisodeCache,
   KeySchema: [
-    { AttributeName: 'imdbId', KeyType: 'HASH' }, //Partition key
+    { AttributeName: 'imdbId', KeyType: 'HASH' }, // Partition key
   ],
   AttributeDefinitions: [{ AttributeName: 'imdbId', AttributeType: 'S' }],
   ProvisionedThroughput: {
@@ -79,7 +79,7 @@ const nextEpisodeCacheTable: DynamoDB.CreateTableInput = {
 const seriesCacheTable: DynamoDB.CreateTableInput = {
   TableName: names.seriesCache,
   KeySchema: [
-    { AttributeName: 'imdbId', KeyType: 'HASH' }, //Partition key
+    { AttributeName: 'imdbId', KeyType: 'HASH' }, // Partition key
   ],
   AttributeDefinitions: [{ AttributeName: 'imdbId', AttributeType: 'S' }],
   ProvisionedThroughput: {

@@ -2,15 +2,11 @@
  * An interface to TraktTV
  */
 
-import { AxiosPromise, AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig } from 'axios';
 import { isEmpty } from 'lodash';
-import { inspect } from 'util';
 import axios from '../../common/axios';
 import { errorMessages } from '../../common/constants';
 import { traktApiKey } from '../../common/environment';
-
-// types
-import { ITvShow } from '../../common/internal-message-types';
 import * as TraktType from './trakt.types';
 
 const BASE_URL = 'https://api.trakt.tv';
@@ -33,7 +29,9 @@ export async function searchShow(query: string): Promise<TraktType.ITraktSearchR
 /**
  * Searches a TV Show using IMDB id
  */
-export async function searchByImdbId(imdbId: string): Promise<TraktType.ITraktSearchResult | undefined> {
+export async function searchByImdbId(
+  imdbId: string,
+): Promise<TraktType.ITraktSearchResult | undefined> {
   const options = {
     method: 'GET',
     url: `${BASE_URL}/search/imdb/${imdbId}`,

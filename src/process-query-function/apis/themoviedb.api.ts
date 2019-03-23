@@ -5,8 +5,6 @@
 import { AxiosRequestConfig } from 'axios';
 import axios from '../../common/axios';
 import { theMovieDbApiKey } from '../../common/environment';
-
-// types
 import { IFindResult } from './themoviedb.types';
 
 const BASE_URL = 'https://api.themoviedb.org/3';

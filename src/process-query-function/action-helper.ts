@@ -4,8 +4,6 @@
 
 import { capitalize } from 'lodash';
 import { platformNames } from '../common/constants';
-
-// types
 import * as InternalTypes from '../common/internal-message-types';
 import * as TraktTypes from './apis/trakt.types';
 

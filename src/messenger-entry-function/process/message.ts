@@ -3,13 +3,13 @@
  */
 
 import { platformNames } from '../../common/constants';
-import { invokeProcessQuery } from '../../common/lambda-utils';
-
-// typees
 import * as InternalTypes from '../../common/internal-message-types';
+import { invokeProcessQuery } from '../../common/lambda-utils';
 import * as MessengerTypes from '../../common/messenger-types';
 
-export async function process(textMessagings: MessengerTypes.ITextMessageMessaging[]): Promise<any> {
+export async function process(
+  textMessagings: MessengerTypes.ITextMessageMessaging[],
+): Promise<any> {
   const promises = textMessagings.map((messaging: MessengerTypes.ITextMessageMessaging) => {
     const message: InternalTypes.ISearchAction = {
       type: InternalTypes.ActionTypes.Search,

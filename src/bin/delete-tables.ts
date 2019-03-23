@@ -2,17 +2,17 @@
  * Detetes tables in Dynamodb
  */
 
-import { prettyPrint } from '../common/common-utils';
 import { dynamodb } from '../common/dynamodb';
 import { env } from '../common/environment';
 import tables from '../common/tables';
 
 if (env === 'production') {
+  // tslint:disable-next-line: no-console
   console.error("can't drop tables in production");
   process.exit(0);
 }
 
-const getParams = tableName => ({
+const getParams = (tableName: string) => ({
   TableName: tableName,
 });
 

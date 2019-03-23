@@ -7,16 +7,15 @@ jest.mock('../common/lambda-utils');
 jest.mock('./controllers/trending.controller');
 jest.mock('../models/subscription');
 
-import { getTraktFullShow, getTraktSearchResult } from '../../test/test-data/trakt.data';
+import { mocked } from 'ts-jest/utils';
+import { getTraktFullShow } from '../../test/test-data/trakt.data';
 import { platformNames } from '../common/constants';
-import { invokeMessengerReply, invokeProcessQuery } from '../common/lambda-utils';
+import * as InternalTypes from '../common/internal-message-types';
+import { invokeMessengerReply } from '../common/lambda-utils';
 import * as Subscription from '../models/subscription';
 import * as SearchController from './controllers/search.controller';
 import * as TrendingController from './controllers/trending.controller';
 import * as ProcessQuery from './index';
-
-// types
-import * as InternalTypes from '../common/internal-message-types';
 
 const { ActionTypes, ReplyKind } = InternalTypes;
 
@@ -26,19 +25,19 @@ describe('Process Query Function', () => {
 
   beforeEach(() => {
     // clear mocks
-    (<jest.Mock<{}>>invokeMessengerReply).mockClear();
+    mocked(invokeMessengerReply).mockClear();
   });
 
   it('handles search query', async () => {
-    const action = <InternalTypes.ISearchAction>{
+    const action = {
       text: 'The Flash',
       type: ActionTypes.Search,
       platform: platformNames.FBMessenger,
       metaData: { fbMessenger: { sender: { id: senderId } } },
-    };
+    } as InternalTypes.ISearchAction;
     const callback = jest.fn();
     const shows = ['random', 'shows'];
-    (<jest.Mock<{}>>SearchController.search).mockReturnValueOnce(Promise.resolve(shows));
+    mocked(SearchController.search).mockReturnValueOnce(Promise.resolve(shows));
 
     // test
     await ProcessQuery.handler(action, {}, callback);
@@ -55,15 +54,15 @@ describe('Process Query Function', () => {
   });
 
   it('handles search query [error]', async () => {
-    const action = <InternalTypes.ISearchAction>{
+    const action = {
       text: 'The Flash',
       type: ActionTypes.Search,
       platform: platformNames.FBMessenger,
       metaData: { fbMessenger: { sender: { id: senderId } } },
-    };
+    } as InternalTypes.ISearchAction;
     const callback = jest.fn();
     const expectedError = new Error('expected error');
-    (<jest.Mock<{}>>SearchController.search).mockImplementationOnce(() => {
+    mocked(SearchController.search).mockImplementationOnce(() => {
       throw expectedError;
     });
 
@@ -74,14 +73,14 @@ describe('Process Query Function', () => {
   });
 
   it('handles get trending query', async () => {
-    const action = <InternalTypes.IShowTrendingAction>{
+    const action = {
       type: ActionTypes.ShowTrending,
       platform: platformNames.FBMessenger,
       metaData: { fbMessenger: { sender: { id: senderId } } },
-    };
+    } as InternalTypes.IShowTrendingAction;
     const callback = jest.fn();
     const shows = ['random', 'shows'];
-    (<jest.Mock<{}>>TrendingController.getTrending).mockReturnValueOnce(Promise.resolve(shows));
+    mocked(TrendingController.getTrending).mockReturnValueOnce(Promise.resolve(shows));
 
     // test
     await ProcessQuery.handler(action, {}, callback);
@@ -97,14 +96,14 @@ describe('Process Query Function', () => {
   });
 
   it('handles subscribe action', async () => {
-    const action = <InternalTypes.ISubscribeAction>{
+    const action = {
       type: ActionTypes.Subscribe,
       platform: platformNames.FBMessenger,
       metaData: { fbMessenger: { sender: { id: senderId } } },
       imdbId: 'tt5673782',
       tvdbId: 322399,
       title: 'Genius',
-    };
+    } as InternalTypes.ISubscribeAction;
     const callback = jest.fn();
 
     // test
@@ -124,14 +123,14 @@ describe('Process Query Function', () => {
   });
 
   it('handles un-subscribe action', async () => {
-    const action = <InternalTypes.IUnSubscribeAction>{
+    const action = {
       type: ActionTypes.UnSubscribe,
       platform: platformNames.FBMessenger,
       metaData: { fbMessenger: { sender: { id: senderId } } },
       imdbId: 'tt5673782',
       tvdbId: 322399,
       title: 'Genius',
-    };
+    } as InternalTypes.IUnSubscribeAction;
     const callback = jest.fn();
 
     // test
@@ -151,20 +150,20 @@ describe('Process Query Function', () => {
   });
 
   it('handles myShows', async () => {
-    const action = <InternalTypes.IMyShowsAction>{
+    const action = {
       type: ActionTypes.MyShows,
       platform: platformNames.FBMessenger,
       metaData: { fbMessenger: { sender: { id: senderId } } },
-    };
-    const subscriptionRows: Subscription.SubscriptionRecord[] = [
+    } as InternalTypes.IMyShowsAction;
+    const subscriptionRows: Subscription.ISubscriptionRecord[] = [
       { socialId, imdbId: 'tt123' },
       { socialId, imdbId: 'tt456' },
     ];
-    (<jest.Mock<{}>>Subscription.getSubscribedShows).mockReturnValueOnce(Promise.resolve(subscriptionRows));
-    (<jest.Mock<{}>>SearchController.searchByImdb).mockReturnValueOnce(
+    mocked(Subscription.getSubscribedShows).mockReturnValueOnce(Promise.resolve(subscriptionRows));
+    mocked(SearchController.searchByImdb).mockReturnValueOnce(
       Promise.resolve(getTraktFullShow({ running: true })),
     );
-    (<jest.Mock<{}>>SearchController.searchByImdb).mockReturnValueOnce(
+    mocked(SearchController.searchByImdb).mockReturnValueOnce(
       Promise.resolve(getTraktFullShow({ running: true })),
     );
     const callback = jest.fn();

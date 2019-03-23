@@ -13,7 +13,7 @@ import { platformNames } from './constants';
 export type Platform = 'FBMessenger' | 'AmazonAlexa' | 'GoogleHome';
 
 export function isPlatform(platform: string): platform is Platform {
-  return Object.values(<{ [key: string]: string }>platformNames).includes(platform);
+  return Object.values(platformNames as { [key: string]: string }).includes(platform);
 }
 
 /**

@@ -8,7 +8,9 @@ import { invokeProcessQuery } from '../../common/lambda-utils';
 import * as MessengerActionTypes from '../../common/messenger-actions-types';
 import * as MessengerTypes from '../../common/messenger-types';
 
-export async function process(postBackMessagings: MessengerTypes.IPostBackMessaging[]): Promise<(undefined | {})[]> {
+export async function process(
+  postBackMessagings: MessengerTypes.IPostBackMessaging[],
+): Promise<Array<undefined | {}>> {
   const promises = postBackMessagings.map(messaging => {
     const { payload } = messaging.postback;
     if (!payload) {
@@ -25,7 +27,7 @@ export async function process(postBackMessagings: MessengerTypes.IPostBackMessag
  * NOTE: keep metaData.fbMessenger empty for now, it will be attached by the process method
  */
 export function _getInternalAction(postbackPayload: string): InternalTypes.AnyAction {
-  const payloadJSON: MessengerTypes.TvShowPayLoad = JSON.parse(postbackPayload);
+  const payloadJSON: MessengerTypes.ITvShowPayLoad = JSON.parse(postbackPayload);
   switch (payloadJSON.action) {
     case MessengerActionTypes.showTrending.type: {
       return {

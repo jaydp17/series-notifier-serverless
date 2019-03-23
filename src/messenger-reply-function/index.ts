@@ -3,24 +3,34 @@
  * and sends it back to the source (in this case FB Messenger)
  */
 
-import 'babel-polyfill'; // tslint:disable-line:no-import-side-effect
+// @ts-ignore
+import AWSXRay from 'aws-xray-sdk-core';
 import { distanceInWords } from 'date-fns';
 import { chunk, get, isEmpty } from 'lodash';
 import { inspect } from 'util';
-import { getError, prettyPrint } from '../common/common-utils';
+import { LambdaCallback } from '../common/aws-lambda-types';
+import { getError } from '../common/common-utils';
 import { errorMessages } from '../common/constants';
 import { env } from '../common/environment';
-import * as MessengerAPI from '../common/messenger.api';
-import { GenericTemplate } from './messenger.formatter';
-
-// types
-import { LambdaCallback } from '../common/aws-lambda-types';
 import * as InternalTypes from '../common/internal-message-types';
 import * as MessengerTypes from '../common/messenger-types';
+import * as MessengerAPI from '../common/messenger.api';
+import { generateGenericTemplate } from './messenger.formatter';
 
 const { ReplyKind } = InternalTypes;
 
-export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, callback: LambdaCallback): Promise<void> {
+if (!process.env.IS_LOCAL) {
+  // tslint:disable-next-line: no-console
+  console.log('capturing outgoing http calls in X-Ray');
+  // tslint:disable-next-line no-var-requires
+  AWSXRay.captureHTTPsGlobal(require('http'));
+}
+
+export async function handler(
+  reply: InternalTypes.AnyReplyKind,
+  context: {},
+  callback: LambdaCallback,
+): Promise<void> {
   if (env !== 'test') {
     console.log('input', JSON.stringify(reply)); // tslint:disable-line:no-console
   }
@@ -46,7 +56,7 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
     switch (reply.kind) {
       case ReplyKind.SearchResults:
       case ReplyKind.TrendingShows: {
-        const message = GenericTemplate.generate(reply.shows);
+        const message = generateGenericTemplate(reply.shows);
         await MessengerAPI.sendMessage(senderId, message);
         break;
       }
@@ -72,7 +82,7 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
           await MessengerAPI.sendMessage(senderId, msgObj);
         } else {
           const showChunks = chunk(reply.shows, 10);
-          const messages = showChunks.map(GenericTemplate.generate);
+          const messages = showChunks.map(generateGenericTemplate);
           for (const message of messages) {
             // serially send each message
             await MessengerAPI.sendMessage(senderId, message);
@@ -107,6 +117,7 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
       }
       default:
         const errorMessage = `Not supported Kind: ${reply.kind}`;
+        // tslint:disable-next-line: no-console
         console.error(errorMessage);
         return callback(new Error(errorMessage));
     }

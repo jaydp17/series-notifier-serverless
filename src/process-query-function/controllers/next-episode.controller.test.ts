@@ -5,17 +5,13 @@
 jest.mock('../apis/trakt.api');
 jest.mock('../../models/next-episode-cache');
 
-// mocks
-import * as NextEpisodeCacheModel from '../../models/next-episode-cache';
-import * as TraktAPI from '../apis/trakt.api';
-
-// imports
+import { mocked } from 'ts-jest/utils';
 import { getTvEpisode } from '../../../test/test-data/common.data';
 import { getTraktEpisode, getTraktEpisodeFull } from '../../../test/test-data/trakt.data';
-import * as NextEpisodeController from './next-episode.controller';
-
-// types
 import * as InternalTypes from '../../common/internal-message-types';
+import * as NextEpisodeCacheModel from '../../models/next-episode-cache';
+import * as TraktAPI from '../apis/trakt.api';
+import * as NextEpisodeController from './next-episode.controller';
 
 describe('Next Episode Controller', () => {
   beforeEach(() => {
@@ -27,8 +23,8 @@ describe('Next Episode Controller', () => {
     const originalImdbId = 'tt122';
     const expectedNextEp = getTraktEpisode({ imdbId: originalImdbId });
     const expectedFullEpisode = getTraktEpisodeFull({ imdbId: originalImdbId });
-    (<jest.Mock<{}>>TraktAPI.nextEpisode).mockImplementationOnce(() => expectedNextEp);
-    (<jest.Mock<{}>>TraktAPI.episodeSummary).mockImplementationOnce(() => expectedFullEpisode);
+    mocked(TraktAPI.nextEpisode).mockImplementationOnce(() => expectedNextEp);
+    mocked(TraktAPI.episodeSummary).mockImplementationOnce(() => expectedFullEpisode);
     const nextEpisode: InternalTypes.ITvEpisode = {
       seasonNumber: expectedFullEpisode.season,
       epNumber: expectedFullEpisode.number,
@@ -51,7 +47,11 @@ describe('Next Episode Controller', () => {
     expect(NextEpisodeCacheModel.updateCache).toHaveBeenCalledTimes(1);
 
     expect(TraktAPI.nextEpisode).toHaveBeenCalledWith(originalImdbId);
-    expect(TraktAPI.episodeSummary).toHaveBeenCalledWith(originalImdbId, expectedNextEp.season, expectedNextEp.number);
+    expect(TraktAPI.episodeSummary).toHaveBeenCalledWith(
+      originalImdbId,
+      expectedNextEp.season,
+      expectedNextEp.number,
+    );
     expect(NextEpisodeCacheModel.updateCache).toHaveBeenCalledWith(originalImdbId, nextEpisode);
   });
 
@@ -59,7 +59,7 @@ describe('Next Episode Controller', () => {
     // prepare
     const originalImdbId = 'tt123';
     const nextEpisode: InternalTypes.ITvEpisode = getTvEpisode({ imdbId: originalImdbId });
-    (<jest.Mock<{}>>NextEpisodeCacheModel.getCache).mockImplementationOnce(async () => nextEpisode);
+    mocked(NextEpisodeCacheModel.getCache).mockImplementationOnce(async () => nextEpisode);
 
     // execute
     const result = await NextEpisodeController.getNextEpisode(originalImdbId);
@@ -75,11 +75,11 @@ describe('Next Episode Controller', () => {
     // prepare
     const originalImdbId = 'tt124';
     const nextEpisodeCache: InternalTypes.ITvEpisode = getTvEpisode({ imdbId: originalImdbId });
-    (<jest.Mock<{}>>NextEpisodeCacheModel.getCache).mockImplementationOnce(async () => nextEpisodeCache);
+    mocked(NextEpisodeCacheModel.getCache).mockImplementationOnce(async () => nextEpisodeCache);
     const expectedNextEp = getTraktEpisode({ imdbId: originalImdbId });
     const expectedFullEpisode = getTraktEpisodeFull({ imdbId: originalImdbId });
-    (<jest.Mock<{}>>TraktAPI.nextEpisode).mockImplementationOnce(() => expectedNextEp);
-    (<jest.Mock<{}>>TraktAPI.episodeSummary).mockImplementationOnce(() => expectedFullEpisode);
+    mocked(TraktAPI.nextEpisode).mockImplementationOnce(() => expectedNextEp);
+    mocked(TraktAPI.episodeSummary).mockImplementationOnce(() => expectedFullEpisode);
     const nextEpisode: InternalTypes.ITvEpisode = {
       seasonNumber: expectedFullEpisode.season,
       epNumber: expectedFullEpisode.number,
@@ -93,7 +93,9 @@ describe('Next Episode Controller', () => {
     };
 
     // execute
-    const result = await NextEpisodeController.getNextEpisode(originalImdbId, { skipCacheRead: true });
+    const result = await NextEpisodeController.getNextEpisode(originalImdbId, {
+      skipCacheRead: true,
+    });
 
     // test
     expect(result).toEqual(nextEpisode);

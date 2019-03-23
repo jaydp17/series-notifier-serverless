@@ -7,31 +7,27 @@ jest.mock('../apis/trakt.api');
 jest.mock('../../models/subscription');
 jest.mock('../../models/series-cache');
 
-import * as deepFreeze from 'deep-freeze';
+import deepFreeze from 'deep-freeze';
+import { mocked } from 'ts-jest/utils';
 import { getSocialId } from '../../../test/test-data/common.data';
 import { getTraktFullShow, getTraktSearchResult } from '../../../test/test-data/trakt.data';
-import * as SeriesCacheModel from '../../models/series-cache';
 import * as SubscriptionModel from '../../models/subscription';
-import * as ActionHelper from '../action-helper';
 import * as TheMovieDbAPI from '../apis/themoviedb.api';
 import * as TraktAPI from '../apis/trakt.api';
-import * as SearchController from './search.controller';
-
-// types
-import * as InternalTypes from '../../common/internal-message-types';
 import * as TraktTypes from '../apis/trakt.types';
+import * as SearchController from './search.controller';
 
 describe('Search Controller', () => {
   const dummyShowFull: TraktTypes.ITraktShowFull = deepFreeze(getTraktFullShow({ running: true }));
 
-  const dummyShow: InternalTypes.ITvShow = deepFreeze({
-    title: 'dummyShow',
-    year: '2017',
-    tvdbId: 279121,
-    imdbId: 'tt3107288',
-    overview: 'dummy overview',
-    genres: [],
-  });
+  // const dummyShow: InternalTypes.ITvShow = deepFreeze({
+  //   title: 'dummyShow',
+  //   year: '2017',
+  //   tvdbId: 279121,
+  //   imdbId: 'tt3107288',
+  //   overview: 'dummy overview',
+  //   genres: [],
+  // });
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -51,8 +47,11 @@ describe('Search Controller', () => {
     // prepare
     const imdbIds = ['t123', 't456'];
     const images = ['https://image.tmdb.org/abc.jpg', 'https://image.tmdb.org/def.jpg'];
-    const expectedResults = imdbIds.reduce((finalObj, imdbId, index) => ({ ...finalObj, [imdbId]: images[index] }), {});
-    (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl)
+    const expectedResults = imdbIds.reduce(
+      (finalObj, imdbId, index) => ({ ...finalObj, [imdbId]: images[index] }),
+      {},
+    );
+    mocked(TheMovieDbAPI.getBackDropImageUrl)
       .mockReturnValueOnce(Promise.resolve(images[0]))
       .mockReturnValueOnce(Promise.resolve(images[1]));
 
@@ -62,7 +61,7 @@ describe('Search Controller', () => {
   });
 
   describe('Search', () => {
-    const mockSearchResults: TraktTypes.ITraktSearchResult[] = deepFreeze([
+    const mockSearchResults: ReadonlyArray<TraktTypes.ITraktSearchResult> = deepFreeze([
       getTraktSearchResult({ running: true }),
       getTraktSearchResult({ running: true }),
       getTraktSearchResult({ running: false }),
@@ -74,16 +73,16 @@ describe('Search Controller', () => {
 
     beforeEach(() => {
       jest.resetAllMocks();
-      (<jest.Mock<{}>>TraktAPI.searchShow).mockReturnValueOnce(Promise.resolve(mockSearchResults));
+      mocked(TraktAPI.searchShow).mockReturnValueOnce(Promise.resolve(mockSearchResults));
       // becuase of the below mock, the 1st imdbid is subscribed
-      (<jest.Mock<{}>>SubscriptionModel.getSubscribedShows).mockReturnValueOnce(
+      mocked(SubscriptionModel.getSubscribedShows).mockReturnValueOnce(
         Promise.resolve([{ imdbId: mockSearchImdbIds[0] }]),
       );
     });
 
     it('filters out non running shows', async () => {
       // prepare
-      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl).mockReturnValue(Promise.resolve(imageUrl));
+      mocked(TheMovieDbAPI.getBackDropImageUrl).mockReturnValue(Promise.resolve(imageUrl));
 
       // test
       // console.log('SearchController.search', SearchController.search);
@@ -96,8 +95,8 @@ describe('Search Controller', () => {
     it('filters out shows without backDropUrl', async () => {
       // prepare
       const expectedResultIndex = 1;
-      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl).mockImplementation(
-        imdbId => (imdbId === mockSearchImdbIds[expectedResultIndex] ? imageUrl : undefined),
+      mocked(TheMovieDbAPI.getBackDropImageUrl).mockImplementation(imdbId =>
+        imdbId === mockSearchImdbIds[expectedResultIndex] ? imageUrl : undefined,
       );
 
       // test
@@ -108,7 +107,7 @@ describe('Search Controller', () => {
 
     it('checks isSubscribed field', async () => {
       // prepare
-      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl).mockReturnValue(Promise.resolve(imageUrl));
+      mocked(TheMovieDbAPI.getBackDropImageUrl).mockReturnValue(Promise.resolve(imageUrl));
 
       // test
       const results = await SearchController.search(query, socialId);
@@ -119,7 +118,9 @@ describe('Search Controller', () => {
   });
 
   describe('Search by Imdb', () => {
-    const mockSearchResult: TraktTypes.ITraktSearchResult = deepFreeze(getTraktSearchResult({ running: true }));
+    const mockSearchResult: TraktTypes.ITraktSearchResult = deepFreeze(
+      getTraktSearchResult({ running: true }),
+    );
     const imdbId = 'tt123423';
     const imageUrl = 'https://image.tmdb.org/abc.jpg';
 
@@ -128,15 +129,15 @@ describe('Search Controller', () => {
     });
 
     it('returns undefined if show not found', async () => {
-      (<jest.Mock<{}>>TraktAPI.searchByImdbId).mockReturnValueOnce(Promise.resolve(undefined));
+      mocked(TraktAPI.searchByImdbId).mockReturnValueOnce(Promise.resolve(undefined));
 
       const result = await SearchController.searchByImdb(imdbId);
       expect(result).toEqual(undefined);
     });
 
     it('contains backdropUrl', async () => {
-      (<jest.Mock<{}>>TraktAPI.searchByImdbId).mockReturnValueOnce(Promise.resolve(mockSearchResult));
-      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl).mockReturnValueOnce(Promise.resolve(imageUrl));
+      mocked(TraktAPI.searchByImdbId).mockReturnValueOnce(Promise.resolve(mockSearchResult));
+      mocked(TheMovieDbAPI.getBackDropImageUrl).mockReturnValueOnce(Promise.resolve(imageUrl));
 
       const result = await SearchController.searchByImdb(imdbId);
       expect(result).not.toBeUndefined();
@@ -144,8 +145,8 @@ describe('Search Controller', () => {
     });
 
     it('passes on the isSubscribed flag [true]', async () => {
-      (<jest.Mock<{}>>TraktAPI.searchByImdbId).mockReturnValueOnce(Promise.resolve(mockSearchResult));
-      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl).mockReturnValueOnce(Promise.resolve(imageUrl));
+      mocked(TraktAPI.searchByImdbId).mockReturnValueOnce(Promise.resolve(mockSearchResult));
+      mocked(TheMovieDbAPI.getBackDropImageUrl).mockReturnValueOnce(Promise.resolve(imageUrl));
 
       const result = await SearchController.searchByImdb(imdbId, true);
       expect(result).not.toBeUndefined();
@@ -153,8 +154,8 @@ describe('Search Controller', () => {
     });
 
     it('passes on the isSubscribed flag [false]', async () => {
-      (<jest.Mock<{}>>TraktAPI.searchByImdbId).mockReturnValueOnce(Promise.resolve(mockSearchResult));
-      (<jest.Mock<{}>>TheMovieDbAPI.getBackDropImageUrl).mockReturnValueOnce(Promise.resolve(imageUrl));
+      mocked(TraktAPI.searchByImdbId).mockReturnValueOnce(Promise.resolve(mockSearchResult));
+      mocked(TheMovieDbAPI.getBackDropImageUrl).mockReturnValueOnce(Promise.resolve(imageUrl));
 
       const result = await SearchController.searchByImdb(imdbId, false);
       expect(result).not.toBeUndefined();

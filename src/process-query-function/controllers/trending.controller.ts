@@ -2,16 +2,10 @@
  * Trending Controller
  */
 
-import { prettyPrint } from '../../common/common-utils';
+import * as InternalTypes from '../../common/internal-message-types';
 import * as Subscription from '../../models/subscription';
-import { convertToITvShow } from '../action-helper';
 import * as TraktApi from '../apis/trakt.api';
 import * as SearchController from '../controllers/search.controller';
-import { _getBackDropUrls } from './search.controller';
-
-// types
-import * as InternalTypes from '../../common/internal-message-types';
-import * as TraktType from '../apis/trakt.types';
 
 export async function getTrending(socialId: string): Promise<InternalTypes.ITvShow[]> {
   const [trendingResults, subscriptionRecords] = await Promise.all([
@@ -24,11 +18,13 @@ export async function getTrending(socialId: string): Promise<InternalTypes.ITvSh
   const traktShowsWithNull = await Promise.all(
     trendingImdbIds.map(imdbId =>
       SearchController.searchByImdb(imdbId, subscribedImdbIds.includes(imdbId)).catch(err => {
+        // tslint:disable-next-line: no-console
         console.error(`Error while fetching TraktApi.searchByImdbId(${imdbId})`);
+        // tslint:disable-next-line: no-console
         console.error(err);
       }),
     ),
   );
 
-  return <InternalTypes.ITvShow[]>traktShowsWithNull.filter(show => show && show.backDropUrl); // keep shows with backdrop only;
+  return traktShowsWithNull.filter(show => show && show.backDropUrl) as InternalTypes.ITvShow[]; // keep shows with backdrop only;
 }

@@ -1,29 +1,35 @@
 /**
  * The main file that starts the Process Query function
  */
-
-import 'babel-polyfill'; // tslint:disable-line:no-import-side-effect
+// @ts-ignore
+import AWSXRay from 'aws-xray-sdk-core';
 import { inspect } from 'util';
+import { LambdaCallback } from '../common/aws-lambda-types';
 import { prettyPrint } from '../common/common-utils';
-import { errorMessages, platformNames } from '../common/constants';
+import { platformNames } from '../common/constants';
 import { env } from '../common/environment';
-import { invokeMessengerReply, invokeProcessQuery } from '../common/lambda-utils';
-import * as MessengerAPI from '../common/messenger.api';
+import * as InternalTypes from '../common/internal-message-types';
+import { invokeMessengerReply } from '../common/lambda-utils';
 import * as Subscription from '../models/subscription';
 import * as ActionHelper from './action-helper';
-import * as TraktAPI from './apis/trakt.api';
 import * as NextEpisodeController from './controllers/next-episode.controller';
 import * as SearchController from './controllers/search.controller';
 import * as TrendingController from './controllers/trending.controller';
 
-// types
-import { LambdaCallback, LambdaEvent } from '../common/aws-lambda-types';
-import * as InternalTypes from '../common/internal-message-types';
-import { AnyMessagingObject, ITextMessageMessaging } from '../common/messenger-types';
-
 const { ActionTypes, ReplyKind } = InternalTypes;
 
-export async function handler(action: InternalTypes.AnyAction, context: {}, callback: LambdaCallback): Promise<void> {
+if (!process.env.IS_LOCAL) {
+  // tslint:disable-next-line: no-console
+  console.log('capturing outgoing http calls in X-Ray');
+  // tslint:disable-next-line no-var-requires
+  AWSXRay.captureHTTPsGlobal(require('http'));
+}
+
+export async function handler(
+  action: InternalTypes.AnyAction,
+  context: {},
+  callback: LambdaCallback,
+): Promise<void> {
   if (env !== 'test') {
     console.log('entry'); // tslint:disable-line:no-console
     prettyPrint(action);
@@ -42,6 +48,7 @@ export async function handler(action: InternalTypes.AnyAction, context: {}, call
   // in case for some reason reply wasn't computed
   // and it reached here
   if (!reply) {
+    // tslint:disable-next-line: no-console
     console.error('No reply computed, action:', inspect(action, false, 100, false));
     callback(new Error(`No reply computed, action: ${inspect(action, false, 100, false)}`));
     return;
@@ -53,6 +60,7 @@ export async function handler(action: InternalTypes.AnyAction, context: {}, call
       break;
     }
     default:
+      // tslint:disable-next-line: no-console
       console.error(`Platform: ${action.platform} isn't supported yet`);
       callback(new Error(`un supported platform : ${action.platform}`));
       return;
@@ -103,8 +111,10 @@ async function getReply(action: InternalTypes.AnyAction): Promise<InternalTypes.
     case ActionTypes.MyShows: {
       const subscribtionRows = await Subscription.getSubscribedShows(socialId);
       const imdbIds = subscribtionRows.map(row => row.imdbId);
-      const shows = await Promise.all(imdbIds.map(imdbId => SearchController.searchByImdb(imdbId, true)));
-      const filteredShows = <InternalTypes.ITvShow[]>shows.filter(row => !!row);
+      const shows = await Promise.all(
+        imdbIds.map(imdbId => SearchController.searchByImdb(imdbId, true)),
+      );
+      const filteredShows = shows.filter(row => !!row) as InternalTypes.ITvShow[];
       return {
         kind: ReplyKind.MyShows,
         shows: filteredShows,
@@ -132,6 +142,7 @@ async function getReply(action: InternalTypes.AnyAction): Promise<InternalTypes.
     }
     default:
       const message = `Unknows Action: ${action}`;
+      // tslint:disable-next-line: no-console
       console.error(message);
       throw new Error(message);
   }

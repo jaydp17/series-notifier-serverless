@@ -2,13 +2,14 @@ service: snbot
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
   stage: ${opt:stage, 'dev'}
   region: us-east-1
   memorySize: 256
   variables: ${file(secret-${self:provider.stage}.yml)}
   deploymentBucket: snbot-sls-deploy
   timeout: 60 # 60 seconds
+  tracing: true
   environment:
     NODE_ENV: ${self:provider.variables.NODE_ENV}
     FB_PAGE_TOKEN: ${self:provider.variables.FB_PAGE_TOKEN}
@@ -19,20 +20,26 @@ provider:
     WITAI_TOKEN: ${self:provider.variables.WITAI_TOKEN}
     FAN_ART_API_KEY: ${self:provider.variables.FAN_ART_API_KEY}
     THE_MOVIE_DB_API_KEY: ${self:provider.variables.THE_MOVIE_DB_API_KEY}
-    DEBUG: "dispatch-notif:*"
+    DEBUG: 'dispatch-notif:*'
   iamRoleStatements:
-    - Effect: "Allow"
+    - Effect: 'Allow' # xray permissions (required)
       Action:
-        - "lambda:InvokeFunction"
+        - 'xray:PutTraceSegments'
+        - 'xray:PutTelemetryRecords'
+      Resource:
+        - '*'
+    - Effect: 'Allow'
+      Action:
+        - 'lambda:InvokeFunction'
       Resource:
         Fn::Join:
-          - ":"
-          - - "arn:aws:lambda"
+          - ':'
+          - - 'arn:aws:lambda'
             - Ref: 'AWS::Region'
             - Ref: 'AWS::AccountId'
-            - "function"
-            - "${self:service}-${self:provider.stage}-*"
-    - Effect: "Allow"
+            - 'function'
+            - '${self:service}-${self:provider.stage}-*'
+    - Effect: 'Allow'
       Action:
         - dynamodb:Query
         - dynamodb:Scan
@@ -42,25 +49,22 @@ provider:
         - dynamodb:DeleteItem
       Resource:
         Fn::Join:
-          - ":"
-          - - "arn:aws:dynamodb"
+          - ':'
+          - - 'arn:aws:dynamodb'
             - Ref: 'AWS::Region'
             - Ref: 'AWS::AccountId'
-            - "table/*"
+            - 'table/*'
 
 # you can add packaging information here
 package:
   individually: true
   exclude:
-    - "*/**"
+    - '*/**'
 
 functions:
   messengerEntryPoint:
-    handler: build/messengerEntryFunction.handler
+    handler: src/messenger-entry-function/index.handler
     description: The main entry point for FB Messenger, whatever a user sends to the Messenger, it is forwarded here by the Messenger Platform
-    package:
-      include:
-        - build/messengerEntryFunction.js
     events:
       - http:
           path: webhook
@@ -70,25 +74,16 @@ functions:
           method: post
 
   messengerReply:
-    handler: build/messengerReplyFunction.handler
+    handler: src/messenger-reply-function/index.handler
     description: Whenver the bot wants to reply something, this function converts it into messenger friendly format and sends
-    package:
-      include:
-        - build/messengerReplyFunction.js
 
   processQuery:
-    handler: build/processQueryFunction.handler
+    handler: src/process-query-function/index.handler
     description: The actual brain of the Series Notifier bot
-    package:
-      include:
-        - build/processQueryFunction.js
-  
+
   notificationCron:
-    handler: build/dispatch-notif.main
+    handler: src/cron/dispatch-notif.main
     description: A cron that sends notifications to users when an episode is live
-    package:
-      include:
-        - build/dispatch-notif.js
     events:
       - schedule:
           name: series-notifier-dispatch-notif-cron-${self:provider.stage}
@@ -96,13 +91,24 @@ functions:
           rate: rate(15 minutes)
 
   nextEpCacheUpdateCron:
-    handler: build/update-next-episode-cache.main
+    handler: src/cron/update-next-episode-cache.main
     description: A cron that updates the cache in DB of Next Episode Cache model
-    package:
-      include:
-        - build/update-next-episode-cache.js
     events:
       - schedule:
           name: series-notifier-update-next-episode-cache-cron-${self:provider.stage}
           description: A cron that updates the cache in DB of Next Episode Cache model
           rate: rate(12 hours)
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+  - serverless-plugin-tracing
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  webpack:
+    packager: 'yarn' # Defaults to npm
+    keepOutputDirectory: true
+    builtAssetIncludeGlob: '**/*.{js,json}'
+  serverless-offline:
+    location: ./.webpack/service

@@ -30,5 +30,5 @@ export async function getCache(imdbId: string): Promise<ITvEpisode> {
     Key: { imdbId },
   };
   const result = await dynamodb.get(params);
-  return <ITvEpisode>result.Item;
+  return result.Item as ITvEpisode;
 }
