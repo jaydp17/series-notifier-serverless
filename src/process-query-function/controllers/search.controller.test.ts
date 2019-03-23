@@ -7,31 +7,26 @@ jest.mock('../apis/trakt.api');
 jest.mock('../../models/subscription');
 jest.mock('../../models/series-cache');
 
-import * as deepFreeze from 'deep-freeze';
+import deepFreeze from 'deep-freeze';
 import { getSocialId } from '../../../test/test-data/common.data';
 import { getTraktFullShow, getTraktSearchResult } from '../../../test/test-data/trakt.data';
-import * as SeriesCacheModel from '../../models/series-cache';
 import * as SubscriptionModel from '../../models/subscription';
-import * as ActionHelper from '../action-helper';
 import * as TheMovieDbAPI from '../apis/themoviedb.api';
 import * as TraktAPI from '../apis/trakt.api';
-import * as SearchController from './search.controller';
-
-// types
-import * as InternalTypes from '../../common/internal-message-types';
 import * as TraktTypes from '../apis/trakt.types';
+import * as SearchController from './search.controller';
 
 describe('Search Controller', () => {
   const dummyShowFull: TraktTypes.ITraktShowFull = deepFreeze(getTraktFullShow({ running: true }));
 
-  const dummyShow: InternalTypes.ITvShow = deepFreeze({
-    title: 'dummyShow',
-    year: '2017',
-    tvdbId: 279121,
-    imdbId: 'tt3107288',
-    overview: 'dummy overview',
-    genres: [],
-  });
+  // const dummyShow: InternalTypes.ITvShow = deepFreeze({
+  //   title: 'dummyShow',
+  //   year: '2017',
+  //   tvdbId: 279121,
+  //   imdbId: 'tt3107288',
+  //   overview: 'dummy overview',
+  //   genres: [],
+  // });
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -62,7 +57,7 @@ describe('Search Controller', () => {
   });
 
   describe('Search', () => {
-    const mockSearchResults: TraktTypes.ITraktSearchResult[] = deepFreeze([
+    const mockSearchResults: ReadonlyArray<TraktTypes.ITraktSearchResult> = deepFreeze([
       getTraktSearchResult({ running: true }),
       getTraktSearchResult({ running: true }),
       getTraktSearchResult({ running: false }),

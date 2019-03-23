@@ -2,12 +2,10 @@
  * Updates the cache of Next Episode
  */
 
-import * as Bluebird from 'bluebird';
+import Bluebird from 'bluebird';
+import * as InternalTypes from '../common/internal-message-types';
 import * as SubscriptionModel from '../models/subscription';
 import * as NextEpisodeController from '../process-query-function/controllers/next-episode.controller';
-
-// types
-import * as InternalTypes from '../common/internal-message-types';
 
 export async function main() {
   const imdbIds = await SubscriptionModel.getAllUniqShows();

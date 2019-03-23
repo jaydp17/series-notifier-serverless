@@ -4,7 +4,7 @@
 
 jest.mock('../../common/lambda-utils');
 
-import * as deepFreeze from 'deep-freeze';
+import deepFreeze from 'deep-freeze';
 import { platformNames } from '../../common/constants';
 import * as InternalTypes from '../../common/internal-message-types';
 import { invokeProcessQuery } from '../../common/lambda-utils';

@@ -4,12 +4,13 @@
 
 // tslint:disable no-console
 
-import * as Bluebird from 'bluebird';
+import { DynamoDB } from 'aws-sdk';
+import Bluebird from 'bluebird';
 import { prettyPrint } from '../common/common-utils';
 import { dynamodb } from '../common/dynamodb';
 import tables from '../common/tables';
 
-const createTable = async tableSchema => {
+const createTable = async (tableSchema: DynamoDB.Types.CreateTableInput) => {
   try {
     const result = await dynamodb.createTable(tableSchema).promise();
     prettyPrint(result);

@@ -1,19 +1,12 @@
 /**
  * The main file that starts the function
  */
-import { platformNames } from '../common/constants';
-import { env } from '../common/environment';
-import { verifyToken } from '../common/environment';
-import { invokeProcessQuery } from '../common/lambda-utils';
+import { LambdaEvent, LambdaHttpCallback } from '../common/aws-lambda-types';
+import { env, verifyToken } from '../common/environment';
+import * as MessengerTypes from '../common/messenger-types';
 import { messengerAuth } from '../common/messenger.api';
 import { process as processMessage } from './process/message';
 import { process as processPostBack } from './process/postback';
-
-// types
-import { LambdaEvent, LambdaHttpCallback } from '../common/aws-lambda-types';
-import { Callback } from '../common/common-types';
-import { ActionTypes, AnyAction, IMessage, ISearchAction, Platform } from '../common/internal-message-types';
-import * as MessengerTypes from '../common/messenger-types';
 
 export function processPostBody(body: MessengerTypes.FBWebHookMessage) {
   // get the messaging objects out
@@ -38,7 +31,7 @@ export async function handler(event: LambdaEvent, context: {}, callback: LambdaH
     if (!event.queryStringParameters) {
       return callback(null, { statusCode: 200, body: 'ping' });
     }
-    return messengerAuth(event.queryStringParameters, verifyToken, callback);
+    return messengerAuth(event.queryStringParameters as any, verifyToken, callback);
   }
 
   // Actual Message

@@ -4,21 +4,15 @@
  * and sends out a notification for all those
  */
 
-import { DynamoDB } from 'aws-sdk';
-import * as Bluebird from 'bluebird';
+import Bluebird from 'bluebird';
 import { addMinutes } from 'date-fns';
-import { keyBy } from 'lodash';
-import dynamodb from '../common/dynamodb';
 import { env } from '../common/environment';
+import * as InternalTypes from '../common/internal-message-types';
 import * as LambdaUtils from '../common/lambda-utils';
 import Logger from '../common/logger';
-import tables from '../common/tables';
 import * as SubscriptionModel from '../models/subscription';
 import * as NextEpisodeController from '../process-query-function/controllers/next-episode.controller';
 import * as SearchController from '../process-query-function/controllers/search.controller';
-
-// types
-import * as InternalTypes from '../common/internal-message-types';
 
 const MINUTE = 60 * 1000;
 const logger = Logger('dispatch-notif');

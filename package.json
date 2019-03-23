@@ -41,8 +41,9 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
     "@babel/preset-typescript": "^7.3.3",
-    "@types/bluebird": "3.5.19",
+    "@types/bluebird": "3.5.26",
     "@types/debug": "0.0.30",
+    "@types/deep-freeze": "0.1.1",
     "@types/faker": "^4.1.2",
     "@types/jest": "22.0.0",
     "@types/lodash": "4.14.91",
@@ -70,7 +71,7 @@
   },
   "dependencies": {
     "axios": "0.17.1",
-    "bluebird": "3.5.1",
+    "bluebird": "3.5.3",
     "date-fns": "1.29.0",
     "debug": "3.1.0",
     "lodash": "^4.17.4"

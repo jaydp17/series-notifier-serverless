@@ -2,9 +2,9 @@
  * Just a simple logger
  */
 
-import * as debug from 'debug';
+import debug from 'debug';
 
-export default tag => {
+export default (tag: string) => {
   const log = debug(`${tag}:log`);
   const error = debug(`${tag}:error`);
   log.log = console.log.bind(console);

@@ -5,7 +5,7 @@
 import { DynamoDB } from 'aws-sdk';
 import { isProd } from './environment';
 
-const getFullTableName = baseName => `${baseName}${isProd ? '' : '-dev'}`;
+const getFullTableName = (baseName: string) => `${baseName}${isProd ? '' : '-dev'}`;
 
 export const names = {
   users: getFullTableName('Users'),

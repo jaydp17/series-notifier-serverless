@@ -5,19 +5,14 @@
 jest.mock('../common/lambda-utils');
 jest.mock('../common/messenger.api');
 
-// mocks
-import { invokeProcessQuery } from '../common/lambda-utils';
-import { messengerAuth } from '../common/messenger.api';
-
-// types
-import { LambdaEvent, LambdaHttpCallback } from '../common/aws-lambda-types';
-import * as InternalTypes from '../common/internal-message-types';
-import * as MessengerTypes from '../common/messenger-types';
-
-// other imports
-import * as deepFreeze from 'deep-freeze';
+import deepFreeze from 'deep-freeze';
+import { LambdaEvent } from '../common/aws-lambda-types';
 import { platformNames } from '../common/constants';
+import * as InternalTypes from '../common/internal-message-types';
 import { ActionTypes } from '../common/internal-message-types';
+import { invokeProcessQuery } from '../common/lambda-utils';
+import * as MessengerTypes from '../common/messenger-types';
+import { messengerAuth } from '../common/messenger.api';
 import * as indexFile from './index';
 import { getFacebookMessage, getMessageTexts } from './index.data';
 

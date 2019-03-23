@@ -2,12 +2,12 @@
   "compilerOptions": {
     "module": "esnext",
     "target": "esnext",
+    "lib": ["esnext"],
     "moduleResolution": "node",
-    "noImplicitAny": false,
+    "esModuleInterop": true,
     "sourceMap": true,
     "inlineSources": true,
-    "strict": true,
-    "lib": ["esnext"]
+    "strict": true
   },
   "exclude": ["node_modules"]
 }

@@ -2,7 +2,6 @@
  * Detetes tables in Dynamodb
  */
 
-import { prettyPrint } from '../common/common-utils';
 import { dynamodb } from '../common/dynamodb';
 import { env } from '../common/environment';
 import tables from '../common/tables';
@@ -12,7 +11,7 @@ if (env === 'production') {
   process.exit(0);
 }
 
-const getParams = tableName => ({
+const getParams = (tableName: string) => ({
   TableName: tableName,
 });
 

@@ -7,21 +7,19 @@ jest.mock('../apis/trakt.api');
 jest.mock('./search.controller');
 jest.mock('../../models/subscription');
 
-// types
-import * as TraktType from '../apis/trakt.types';
-
-import * as deepFreeze from 'deep-freeze';
+import deepFreeze from 'deep-freeze';
 import * as faker from 'faker';
 import { getTVShow } from '../../../test/test-data/common.data';
 import { getTraktSearchResult, getTraktShow } from '../../../test/test-data/trakt.data';
 import * as Subscription from '../../models/subscription';
 import * as TraktApi from '../apis/trakt.api';
-import { _getBackDropUrls } from './search.controller';
+import * as TraktType from '../apis/trakt.types';
 import * as SearchController from './search.controller';
+import { _getBackDropUrls } from './search.controller';
 import * as TrendingController from './trending.controller';
 
 describe('Trending Controller', () => {
-  const dummyResults: TraktType.ITraktTrendingResult[] = deepFreeze([getDummyResult(), getDummyResult()]);
+  const dummyResults: ReadonlyArray<TraktType.ITraktTrendingResult> = deepFreeze([getDummyResult(), getDummyResult()]);
   beforeEach(() => {
     jest.resetAllMocks();
     (<jest.Mock<{}>>TraktApi.showTrending).mockReturnValueOnce(Promise.resolve(dummyResults));
