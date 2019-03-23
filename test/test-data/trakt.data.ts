@@ -30,7 +30,9 @@ interface IOverride {
 /**
  * Retuns a value equalant to what a Trakt api search result would look
  */
-export function getTraktSearchResult(overrides: {} = { running: true }): TraktTypes.ITraktSearchResult {
+export function getTraktSearchResult(
+  overrides: {} = { running: true },
+): TraktTypes.ITraktSearchResult {
   return {
     type: 'show',
     score: null,
@@ -55,13 +57,17 @@ export function getTraktShow(overrides: IOverride = {}): TraktTypes.ITraktShow {
   };
 }
 
-export function getTraktFullShow(overrides: IOverride = { running: true }): TraktTypes.ITraktShowFull {
+export function getTraktFullShow(
+  overrides: IOverride = { running: true },
+): TraktTypes.ITraktShowFull {
   const miniShow = getTraktShow(overrides);
   return {
     ...miniShow,
     overview: overrides.overview || faker.hacker.phrase(),
     first_aired: overrides.first_aired || faker.date.past().toISOString(),
-    status: overrides.status || faker.random.arrayElement(overrides.running ? runningSeriesStatus : endedSeriesStatus),
+    status:
+      overrides.status ||
+      faker.random.arrayElement(overrides.running ? runningSeriesStatus : endedSeriesStatus),
     rating: overrides.rating || 8.28726,
     genres: overrides.genres || ['drama', 'fantasy', 'science-fiction'],
   };
@@ -82,7 +88,9 @@ export function getTraktEpisode(overrides: { [key: string]: any } = {}): TraktTy
 }
 
 // tslint:disable-next-line:no-any
-export function getTraktEpisodeFull(overrides: { [key: string]: any } = {}): TraktTypes.ITraktEpisodeFull {
+export function getTraktEpisodeFull(
+  overrides: { [key: string]: any } = {},
+): TraktTypes.ITraktEpisodeFull {
   const episode = getTraktEpisode(overrides);
   return {
     ...episode,

@@ -8,20 +8,20 @@ Series Notifier is a Facebook Messenger bot 🤖 that notifies you when your fav
 
 ## ✨ Features
 
-* Allows subscribing TV Shows, and then notifies 🔔 when new episode releases
-* Shows currently Trending 📈 Shows
-* Find the release date 🗓 of next episode of any TV Show
-* UnSubscribe anytime 🙈
+- Allows subscribing TV Shows, and then notifies 🔔 when new episode releases
+- Shows currently Trending 📈 Shows
+- Find the release date 🗓 of next episode of any TV Show
+- UnSubscribe anytime 🙈
 
 ## 🔮 Upcoming features
 
-* Google Assistant Support
-* Amazon Alexa Support
+- Google Assistant Support
+- Amazon Alexa Support
 
 ## ❤️ Credits
 
-* [Serverless](https://serverless.com)
-* [Trakt.tv](https://trakt.tv)
+- [Serverless](https://serverless.com)
+- [Trakt.tv](https://trakt.tv)
 
 ## 🎓 License
 

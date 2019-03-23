@@ -17,7 +17,11 @@ import { generateGenericTemplate } from './messenger.formatter';
 
 const { ReplyKind } = InternalTypes;
 
-export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, callback: LambdaCallback): Promise<void> {
+export async function handler(
+  reply: InternalTypes.AnyReplyKind,
+  context: {},
+  callback: LambdaCallback,
+): Promise<void> {
   if (env !== 'test') {
     console.log('input', JSON.stringify(reply)); // tslint:disable-line:no-console
   }

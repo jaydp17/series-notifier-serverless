@@ -160,8 +160,12 @@ describe('Process Query Function', () => {
       { socialId, imdbId: 'tt456' },
     ];
     mocked(Subscription.getSubscribedShows).mockReturnValueOnce(Promise.resolve(subscriptionRows));
-    mocked(SearchController.searchByImdb).mockReturnValueOnce(Promise.resolve(getTraktFullShow({ running: true })));
-    mocked(SearchController.searchByImdb).mockReturnValueOnce(Promise.resolve(getTraktFullShow({ running: true })));
+    mocked(SearchController.searchByImdb).mockReturnValueOnce(
+      Promise.resolve(getTraktFullShow({ running: true })),
+    );
+    mocked(SearchController.searchByImdb).mockReturnValueOnce(
+      Promise.resolve(getTraktFullShow({ running: true })),
+    );
     const callback = jest.fn();
 
     // test

@@ -46,7 +46,6 @@
     "httpMethod": "POST",
     "apiId": "3ld2mxlqoh"
   },
-  "body":
-    "{\"object\":\"page\",\"entry\":[{\"id\":\"1159163917466162\",\"time\":1484478571101,\"messaging\":[{\"sender\":{\"id\":\"1243320392394962\"},\"recipient\":{\"id\":\"1159163917466162\"},\"timestamp\":1484478571056,\"message\":{\"mid\":\"mid.1484478571056:02b45ac971\",\"seq\":202836,\"text\":\"show trending\"}}]}]}",
+  "body": "{\"object\":\"page\",\"entry\":[{\"id\":\"1159163917466162\",\"time\":1484478571101,\"messaging\":[{\"sender\":{\"id\":\"1243320392394962\"},\"recipient\":{\"id\":\"1159163917466162\"},\"timestamp\":1484478571056,\"message\":{\"mid\":\"mid.1484478571056:02b45ac971\",\"seq\":202836,\"text\":\"show trending\"}}]}]}",
   "isBase64Encoded": false
 }

@@ -20,15 +20,22 @@ import { _getBackDropUrls } from './search.controller';
 import * as TrendingController from './trending.controller';
 
 describe('Trending Controller', () => {
-  const dummyResults: ReadonlyArray<TraktType.ITraktTrendingResult> = deepFreeze([getDummyResult(), getDummyResult()]);
+  const dummyResults: ReadonlyArray<TraktType.ITraktTrendingResult> = deepFreeze([
+    getDummyResult(),
+    getDummyResult(),
+  ]);
   beforeEach(() => {
     jest.resetAllMocks();
     mocked(TraktApi.showTrending).mockReturnValueOnce(Promise.resolve(dummyResults));
-    mocked(TraktApi.searchByImdbId).mockImplementation(imdb => Promise.resolve(getTraktSearchResult({ imdb })));
+    mocked(TraktApi.searchByImdbId).mockImplementation(imdb =>
+      Promise.resolve(getTraktSearchResult({ imdb })),
+    );
     mocked(SearchController.searchByImdb).mockImplementation(imdb =>
       Promise.resolve(getTVShow({ imdb, backDropUrl: faker.image.imageUrl() })),
     );
-    mocked(_getBackDropUrls).mockImplementationOnce(imdbIds => Promise.resolve(getDummyBackDropUrls(imdbIds)));
+    mocked(_getBackDropUrls).mockImplementationOnce(imdbIds =>
+      Promise.resolve(getDummyBackDropUrls(imdbIds)),
+    );
   });
   afterAll(() => jest.resetAllMocks());
 

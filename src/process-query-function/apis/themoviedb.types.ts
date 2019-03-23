@@ -12,9 +12,9 @@ export interface IFindTvResult {
 }
 
 export interface IFindResult {
-  movie_results: Array<{}>,
-  person_results: Array<{}>,
-  tv_results: IFindTvResult[],
-  tv_episode_results: Array<{}>,
-  tv_season_results: Array<{}>,
+  movie_results: Array<{}>;
+  person_results: Array<{}>;
+  tv_results: IFindTvResult[];
+  tv_episode_results: Array<{}>;
+  tv_season_results: Array<{}>;
 }

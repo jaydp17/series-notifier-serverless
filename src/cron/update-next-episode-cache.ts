@@ -16,7 +16,9 @@ export async function main() {
   });
 }
 
-export async function getNextEpisode(imdbId: string): Promise<InternalTypes.ITvEpisode | undefined> {
+export async function getNextEpisode(
+  imdbId: string,
+): Promise<InternalTypes.ITvEpisode | undefined> {
   try {
     // there's await over here because I wanna catch the error here
     // and not at one level up

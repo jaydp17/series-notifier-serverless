@@ -97,7 +97,9 @@ describe('Subscription Model', () => {
     const expectedImdbIds = ['tt2234222', 'tt4159076', 'tt0898266'];
     mocked(dynamodb.scan).mockReturnValueOnce({
       // this output contains duplicate imdb ids
-      Items: [...expectedImdbIds, expectedImdbIds[0], expectedImdbIds[1]].map(imdbId => ({ imdbId })),
+      Items: [...expectedImdbIds, expectedImdbIds[0], expectedImdbIds[1]].map(imdbId => ({
+        imdbId,
+      })),
     });
 
     // execute

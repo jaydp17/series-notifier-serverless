@@ -17,7 +17,11 @@ import * as TrendingController from './controllers/trending.controller';
 
 const { ActionTypes, ReplyKind } = InternalTypes;
 
-export async function handler(action: InternalTypes.AnyAction, context: {}, callback: LambdaCallback): Promise<void> {
+export async function handler(
+  action: InternalTypes.AnyAction,
+  context: {},
+  callback: LambdaCallback,
+): Promise<void> {
   if (env !== 'test') {
     console.log('entry'); // tslint:disable-line:no-console
     prettyPrint(action);
@@ -99,7 +103,9 @@ async function getReply(action: InternalTypes.AnyAction): Promise<InternalTypes.
     case ActionTypes.MyShows: {
       const subscribtionRows = await Subscription.getSubscribedShows(socialId);
       const imdbIds = subscribtionRows.map(row => row.imdbId);
-      const shows = await Promise.all(imdbIds.map(imdbId => SearchController.searchByImdb(imdbId, true)));
+      const shows = await Promise.all(
+        imdbIds.map(imdbId => SearchController.searchByImdb(imdbId, true)),
+      );
       const filteredShows = shows.filter(row => !!row) as InternalTypes.ITvShow[];
       return {
         kind: ReplyKind.MyShows,

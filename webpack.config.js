@@ -8,7 +8,9 @@ const env = process.env.NODE_ENV || 'development';
 const isDebug = env === 'development';
 const isProd = !isDebug;
 
-const entries = _.isEmpty(slsw.lib.entries) ? './src/messenger-entry-function/index.ts' : slsw.lib.entries;
+const entries = _.isEmpty(slsw.lib.entries)
+  ? './src/messenger-entry-function/index.ts'
+  : slsw.lib.entries;
 
 module.exports = {
   entry: entries,

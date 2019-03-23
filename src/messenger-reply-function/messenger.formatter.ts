@@ -6,8 +6,12 @@ import * as InternalTypes from '../common/internal-message-types';
 import * as MessengerActionTypes from '../common/messenger-actions-types';
 import * as MessengerTypes from '../common/messenger-types';
 
-export function getSubscribeButton(show: InternalTypes.ITvShow): MessengerTypes.IGenericTemplatePostBackButton {
-  const action = show.isSubscribed ? MessengerActionTypes.unSubscribe : MessengerActionTypes.subscribe;
+export function getSubscribeButton(
+  show: InternalTypes.ITvShow,
+): MessengerTypes.IGenericTemplatePostBackButton {
+  const action = show.isSubscribed
+    ? MessengerActionTypes.unSubscribe
+    : MessengerActionTypes.subscribe;
   return {
     type: 'postback',
     title: action.label,
@@ -15,7 +19,9 @@ export function getSubscribeButton(show: InternalTypes.ITvShow): MessengerTypes.
   };
 }
 
-export function getNextEpisodeButton(show: InternalTypes.ITvShow): MessengerTypes.IGenericTemplatePostBackButton {
+export function getNextEpisodeButton(
+  show: InternalTypes.ITvShow,
+): MessengerTypes.IGenericTemplatePostBackButton {
   const action = MessengerActionTypes.nextEpisode;
   return {
     type: 'postback',
@@ -28,7 +34,10 @@ export function getNextEpisodeButton(show: InternalTypes.ITvShow): MessengerType
  * Generates a single element in the generic template
  */
 export function getElement(show: InternalTypes.ITvShow): MessengerTypes.IGenericTemplateElement {
-  const buttons: MessengerTypes.GenericTemplateButton[] = [getSubscribeButton(show), getNextEpisodeButton(show)];
+  const buttons: MessengerTypes.GenericTemplateButton[] = [
+    getSubscribeButton(show),
+    getNextEpisodeButton(show),
+  ];
   return {
     title: show.title,
     subtitle: show.genres.join(', '),
@@ -40,7 +49,9 @@ export function getElement(show: InternalTypes.ITvShow): MessengerTypes.IGeneric
 /**
  * Generates the entire content to be sent as generic template
  */
-export function generateGenericTemplate(shows: InternalTypes.ITvShow[]): MessengerTypes.ISendGenericTemplateMessage {
+export function generateGenericTemplate(
+  shows: InternalTypes.ITvShow[],
+): MessengerTypes.ISendGenericTemplateMessage {
   return {
     attachment: {
       type: 'template',
@@ -52,7 +63,10 @@ export function generateGenericTemplate(shows: InternalTypes.ITvShow[]): Messeng
   };
 }
 
-export function convertToTvShowPayload(show: InternalTypes.ITvShow, actionType: string): MessengerTypes.ITvShowPayLoad {
+export function convertToTvShowPayload(
+  show: InternalTypes.ITvShow,
+  actionType: string,
+): MessengerTypes.ITvShowPayLoad {
   return {
     action: actionType,
     tvdbId: show.tvdbId,

@@ -92,7 +92,10 @@ export interface ISendGenericTemplateMessage {
   };
 }
 
-export type AnyMessagingObject = ITextMessageMessaging | IDeliveryMessageMessaging | IPostBackMessaging;
+export type AnyMessagingObject =
+  | ITextMessageMessaging
+  | IDeliveryMessageMessaging
+  | IPostBackMessaging;
 
 /**
  * The data that will be send in the payload of a postback Button

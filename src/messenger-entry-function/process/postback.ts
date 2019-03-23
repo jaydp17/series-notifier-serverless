@@ -8,7 +8,9 @@ import { invokeProcessQuery } from '../../common/lambda-utils';
 import * as MessengerActionTypes from '../../common/messenger-actions-types';
 import * as MessengerTypes from '../../common/messenger-types';
 
-export async function process(postBackMessagings: MessengerTypes.IPostBackMessaging[]): Promise<Array<undefined | {}>> {
+export async function process(
+  postBackMessagings: MessengerTypes.IPostBackMessaging[],
+): Promise<Array<undefined | {}>> {
   const promises = postBackMessagings.map(messaging => {
     const { payload } = messaging.postback;
     if (!payload) {

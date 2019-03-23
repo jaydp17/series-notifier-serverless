@@ -47,7 +47,11 @@ describe('Next Episode Controller', () => {
     expect(NextEpisodeCacheModel.updateCache).toHaveBeenCalledTimes(1);
 
     expect(TraktAPI.nextEpisode).toHaveBeenCalledWith(originalImdbId);
-    expect(TraktAPI.episodeSummary).toHaveBeenCalledWith(originalImdbId, expectedNextEp.season, expectedNextEp.number);
+    expect(TraktAPI.episodeSummary).toHaveBeenCalledWith(
+      originalImdbId,
+      expectedNextEp.season,
+      expectedNextEp.number,
+    );
     expect(NextEpisodeCacheModel.updateCache).toHaveBeenCalledWith(originalImdbId, nextEpisode);
   });
 
@@ -89,7 +93,9 @@ describe('Next Episode Controller', () => {
     };
 
     // execute
-    const result = await NextEpisodeController.getNextEpisode(originalImdbId, { skipCacheRead: true });
+    const result = await NextEpisodeController.getNextEpisode(originalImdbId, {
+      skipCacheRead: true,
+    });
 
     // test
     expect(result).toEqual(nextEpisode);

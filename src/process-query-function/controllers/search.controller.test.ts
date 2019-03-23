@@ -47,7 +47,10 @@ describe('Search Controller', () => {
     // prepare
     const imdbIds = ['t123', 't456'];
     const images = ['https://image.tmdb.org/abc.jpg', 'https://image.tmdb.org/def.jpg'];
-    const expectedResults = imdbIds.reduce((finalObj, imdbId, index) => ({ ...finalObj, [imdbId]: images[index] }), {});
+    const expectedResults = imdbIds.reduce(
+      (finalObj, imdbId, index) => ({ ...finalObj, [imdbId]: images[index] }),
+      {},
+    );
     mocked(TheMovieDbAPI.getBackDropImageUrl)
       .mockReturnValueOnce(Promise.resolve(images[0]))
       .mockReturnValueOnce(Promise.resolve(images[1]));
@@ -92,8 +95,8 @@ describe('Search Controller', () => {
     it('filters out shows without backDropUrl', async () => {
       // prepare
       const expectedResultIndex = 1;
-      mocked(TheMovieDbAPI.getBackDropImageUrl).mockImplementation(
-        imdbId => (imdbId === mockSearchImdbIds[expectedResultIndex] ? imageUrl : undefined),
+      mocked(TheMovieDbAPI.getBackDropImageUrl).mockImplementation(imdbId =>
+        imdbId === mockSearchImdbIds[expectedResultIndex] ? imageUrl : undefined,
       );
 
       // test
@@ -115,7 +118,9 @@ describe('Search Controller', () => {
   });
 
   describe('Search by Imdb', () => {
-    const mockSearchResult: TraktTypes.ITraktSearchResult = deepFreeze(getTraktSearchResult({ running: true }));
+    const mockSearchResult: TraktTypes.ITraktSearchResult = deepFreeze(
+      getTraktSearchResult({ running: true }),
+    );
     const imdbId = 'tt123423';
     const imageUrl = 'https://image.tmdb.org/abc.jpg';
 

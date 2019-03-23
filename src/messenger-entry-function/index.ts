@@ -10,18 +10,26 @@ import { process as processPostBack } from './process/postback';
 
 export function processPostBody(body: MessengerTypes.IFBWebHookMessage) {
   // get the messaging objects out
-  const messagingObjs = body.entry.map(entry => entry.messaging).reduce((acc, messaging) => [...acc, ...messaging]);
+  const messagingObjs = body.entry
+    .map(entry => entry.messaging)
+    .reduce((acc, messaging) => [...acc, ...messaging]);
 
-  const postBackMessaging = (messagingObjs as MessengerTypes.IPostBackMessaging[]).filter(messaging =>
-    MessengerTypes.isPostBackMessagingObj(messaging),
+  const postBackMessaging = (messagingObjs as MessengerTypes.IPostBackMessaging[]).filter(
+    messaging => MessengerTypes.isPostBackMessagingObj(messaging),
   );
 
-  const textMessaging = (messagingObjs as MessengerTypes.ITextMessageMessaging[]).filter(filterTextMessages);
+  const textMessaging = (messagingObjs as MessengerTypes.ITextMessageMessaging[]).filter(
+    filterTextMessages,
+  );
 
   return Promise.all([processMessage(textMessaging), processPostBack(postBackMessaging)]);
 }
 
-export async function handler(event: ILambdaEvent, context: {}, callback: LambdaHttpCallback): Promise<void> {
+export async function handler(
+  event: ILambdaEvent,
+  context: {},
+  callback: LambdaHttpCallback,
+): Promise<void> {
   if (env !== 'test') {
     console.log('input', JSON.stringify(event)); // tslint:disable-line no-console
   }

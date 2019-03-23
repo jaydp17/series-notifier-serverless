@@ -29,7 +29,9 @@ export async function searchShow(query: string): Promise<TraktType.ITraktSearchR
 /**
  * Searches a TV Show using IMDB id
  */
-export async function searchByImdbId(imdbId: string): Promise<TraktType.ITraktSearchResult | undefined> {
+export async function searchByImdbId(
+  imdbId: string,
+): Promise<TraktType.ITraktSearchResult | undefined> {
   const options = {
     method: 'GET',
     url: `${BASE_URL}/search/imdb/${imdbId}`,
