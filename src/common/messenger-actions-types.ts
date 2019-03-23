@@ -26,3 +26,8 @@ export const nextEpisode = {
   label: 'Next Episode',
   type: 'next-episode',
 };
+
+export const getStarted = {
+  label: 'Get Started',
+  type: 'get-started',
+};

@@ -115,7 +115,15 @@ export async function handler(
         await MessengerAPI.sendMessage(senderId, msgObj);
         break;
       }
+      case ReplyKind.Text: {
+        const msgObj: MessengerTypes.ISendTextMessage = {
+          text: reply.text,
+        };
+        await MessengerAPI.sendMessage(senderId, msgObj);
+        break;
+      }
       default:
+        // @ts-ignore
         const errorMessage = `Not supported Kind: ${reply.kind}`;
         // tslint:disable-next-line: no-console
         console.error(errorMessage);

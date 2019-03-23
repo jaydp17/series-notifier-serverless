@@ -140,6 +140,13 @@ async function getReply(action: InternalTypes.AnyAction): Promise<InternalTypes.
         metaData: action.metaData,
       };
     }
+    case ActionTypes.GetStarted: {
+      return {
+        kind: ReplyKind.Text,
+        text: "Send me your favorite TV Show's name!",
+        metaData: action.metaData,
+      };
+    }
     default:
       const message = `Unknows Action: ${action}`;
       // tslint:disable-next-line: no-console

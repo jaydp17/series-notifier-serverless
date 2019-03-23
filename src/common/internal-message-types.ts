@@ -27,6 +27,7 @@ export enum ActionTypes {
   ShowTrending,
   MyShows,
   NextEpisodeDate,
+  GetStarted,
 }
 
 /**
@@ -95,6 +96,10 @@ export interface INextEpisodeDateAction extends IAction {
   title: string;
 }
 
+export interface IGetStartedAction extends IAction {
+  type: ActionTypes.GetStarted;
+}
+
 /**
  * Generic Action Type
  */
@@ -104,7 +109,8 @@ export type AnyAction =
   | ISubscribeAction
   | IUnSubscribeAction
   | IMyShowsAction
-  | INextEpisodeDateAction;
+  | INextEpisodeDateAction
+  | IGetStartedAction;
 
 /**
  * Message that is sent to the ProcessQuery function
