@@ -1,7 +1,8 @@
 /**
  * The main file that starts the Process Query function
  */
-
+// @ts-ignore
+import AWSXRay from 'aws-xray-sdk-core';
 import { inspect } from 'util';
 import { LambdaCallback } from '../common/aws-lambda-types';
 import { prettyPrint } from '../common/common-utils';
@@ -16,6 +17,13 @@ import * as SearchController from './controllers/search.controller';
 import * as TrendingController from './controllers/trending.controller';
 
 const { ActionTypes, ReplyKind } = InternalTypes;
+
+if (!process.env.IS_LOCAL) {
+  // tslint:disable-next-line: no-console
+  console.log('capturing outgoing http calls in X-Ray');
+  // tslint:disable-next-line no-var-requires
+  AWSXRay.captureHTTPsGlobal(require('http'));
+}
 
 export async function handler(
   action: InternalTypes.AnyAction,

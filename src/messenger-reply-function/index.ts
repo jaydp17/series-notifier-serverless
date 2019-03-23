@@ -3,6 +3,8 @@
  * and sends it back to the source (in this case FB Messenger)
  */
 
+// @ts-ignore
+import AWSXRay from 'aws-xray-sdk-core';
 import { distanceInWords } from 'date-fns';
 import { chunk, get, isEmpty } from 'lodash';
 import { inspect } from 'util';
@@ -16,6 +18,13 @@ import * as MessengerAPI from '../common/messenger.api';
 import { generateGenericTemplate } from './messenger.formatter';
 
 const { ReplyKind } = InternalTypes;
+
+if (!process.env.IS_LOCAL) {
+  // tslint:disable-next-line: no-console
+  console.log('capturing outgoing http calls in X-Ray');
+  // tslint:disable-next-line no-var-requires
+  AWSXRay.captureHTTPsGlobal(require('http'));
+}
 
 export async function handler(
   reply: InternalTypes.AnyReplyKind,

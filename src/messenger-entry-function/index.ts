@@ -1,12 +1,22 @@
 /**
  * The main file that starts the function
  */
+// @ts-ignore
+import AWSXRay from 'aws-xray-sdk-core';
 import { ILambdaEvent } from '../common/aws-lambda-types';
 import { env, verifyToken } from '../common/environment';
 import * as MessengerTypes from '../common/messenger-types';
 import { messengerAuth } from '../common/messenger.api';
 import { process as processMessage } from './process/message';
 import { process as processPostBack } from './process/postback';
+
+// Configure AWS X-Ray
+if (!process.env.IS_LOCAL) {
+  // tslint:disable-next-line: no-console
+  console.log('capturing outgoing http calls in X-Ray');
+  // tslint:disable-next-line no-var-requires
+  AWSXRay.captureHTTPsGlobal(require('http'));
+}
 
 export function processPostBody(body: MessengerTypes.IFBWebHookMessage) {
   // get the messaging objects out
@@ -47,10 +57,18 @@ export async function handler(event: ILambdaEvent): Promise<{ statusCode: number
       return { statusCode: 403, body: 'Invalid Object Type' };
     }
 
-    await processPostBody(body);
-    return { statusCode: 200 };
+    try {
+      await processPostBody(body);
+      return { statusCode: 200 };
+    } catch (error) {
+      // tslint:disable-next-line: no-console
+      console.error('processPostBody Error', error);
+      return { statusCode: 500 };
+    }
   }
 
+  // tslint:disable-next-line: no-console
+  console.warn(`Invalid httpMethod: ${event.httpMethod}`);
   return { statusCode: 403, body: `Invalid httpMethod: ${event.httpMethod}` };
 }
 

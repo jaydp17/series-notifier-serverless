@@ -3,10 +3,7 @@ const slsw = require('serverless-webpack');
 const webpack = require('webpack');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const _ = require('lodash');
-
-const env = process.env.NODE_ENV || 'development';
-const isDebug = env === 'development';
-const isProd = !isDebug;
+const isProd = !slsw.lib.webpack.isLocal;
 
 const entries = _.isEmpty(slsw.lib.entries)
   ? './src/messenger-entry-function/index.ts'

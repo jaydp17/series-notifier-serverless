@@ -9,6 +9,7 @@ provider:
   variables: ${file(secret-${self:provider.stage}.yml)}
   deploymentBucket: snbot-sls-deploy
   timeout: 60 # 60 seconds
+  tracing: true
   environment:
     NODE_ENV: ${self:provider.variables.NODE_ENV}
     FB_PAGE_TOKEN: ${self:provider.variables.FB_PAGE_TOKEN}
@@ -21,6 +22,12 @@ provider:
     THE_MOVIE_DB_API_KEY: ${self:provider.variables.THE_MOVIE_DB_API_KEY}
     DEBUG: 'dispatch-notif:*'
   iamRoleStatements:
+    - Effect: 'Allow' # xray permissions (required)
+      Action:
+        - 'xray:PutTraceSegments'
+        - 'xray:PutTelemetryRecords'
+      Resource:
+        - '*'
     - Effect: 'Allow'
       Action:
         - 'lambda:InvokeFunction'
@@ -95,6 +102,7 @@ functions:
 plugins:
   - serverless-webpack
   - serverless-offline
+  - serverless-plugin-tracing
 
 custom:
   stage: ${opt:stage, self:provider.stage}
