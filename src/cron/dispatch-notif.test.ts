@@ -21,20 +21,20 @@ describe('Dispatch Notification Cron', () => {
   it('verifies main flow', async () => {
     // prepare
     const imdbIds = ['tt123', 'tt234', 'tt345'];
-    (<jest.Mock<{}>>SubscriptionModel.getAllUniqShows).mockReturnValueOnce(Promise.resolve(imdbIds));
-    (<jest.Mock<{}>>NextEpisodeController.getNextEpisode)
+    (SubscriptionModel.getAllUniqShows as jest.Mock<{}>).mockReturnValueOnce(Promise.resolve(imdbIds));
+    (NextEpisodeController.getNextEpisode as jest.Mock<{}>)
       .mockImplementationOnce(async imdbId => getTvEpisode({ imdbId, firstAired: Date.now() }))
       .mockImplementation(async imdbId => getTvEpisode({ imdbId }));
-    (<jest.Mock<{}>>SubscriptionModel.getUsersWhoSubscribed)
+    (SubscriptionModel.getUsersWhoSubscribed as jest.Mock<{}>)
       .mockReturnValueOnce(Promise.resolve([{ socialId: '123' }]))
       .mockReturnValue(Promise.resolve([]));
-    (<jest.Mock<{}>>SearchController.searchByImdb).mockImplementation(async imdbId => getTVShow({ imdbId }));
+    (SearchController.searchByImdb as jest.Mock<{}>).mockImplementation(async imdbId => getTVShow({ imdbId }));
 
     // execute
     await cron.main();
 
     // test
-    expect(<jest.Mock<{}>>NextEpisodeController.getNextEpisode).toHaveBeenCalledTimes(imdbIds.length);
-    expect(<jest.Mock<{}>>LambdaUtils.invokeMessengerReply).toHaveBeenCalledTimes(1);
+    expect(NextEpisodeController.getNextEpisode as jest.Mock<{}>).toHaveBeenCalledTimes(imdbIds.length);
+    expect(LambdaUtils.invokeMessengerReply as jest.Mock<{}>).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,27 +1,27 @@
 /**
  * The main file that starts the function
  */
-import { LambdaEvent, LambdaHttpCallback } from '../common/aws-lambda-types';
+import { ILambdaEvent, LambdaHttpCallback } from '../common/aws-lambda-types';
 import { env, verifyToken } from '../common/environment';
 import * as MessengerTypes from '../common/messenger-types';
 import { messengerAuth } from '../common/messenger.api';
 import { process as processMessage } from './process/message';
 import { process as processPostBack } from './process/postback';
 
-export function processPostBody(body: MessengerTypes.FBWebHookMessage) {
+export function processPostBody(body: MessengerTypes.IFBWebHookMessage) {
   // get the messaging objects out
   const messagingObjs = body.entry.map(entry => entry.messaging).reduce((acc, messaging) => [...acc, ...messaging]);
 
-  const postBackMessaging = (<MessengerTypes.IPostBackMessaging[]>messagingObjs).filter(messaging =>
+  const postBackMessaging = (messagingObjs as MessengerTypes.IPostBackMessaging[]).filter(messaging =>
     MessengerTypes.isPostBackMessagingObj(messaging),
   );
 
-  const textMessaging = (<MessengerTypes.ITextMessageMessaging[]>messagingObjs).filter(filterTextMessages);
+  const textMessaging = (messagingObjs as MessengerTypes.ITextMessageMessaging[]).filter(filterTextMessages);
 
   return Promise.all([processMessage(textMessaging), processPostBack(postBackMessaging)]);
 }
 
-export async function handler(event: LambdaEvent, context: {}, callback: LambdaHttpCallback): Promise<void> {
+export async function handler(event: ILambdaEvent, context: {}, callback: LambdaHttpCallback): Promise<void> {
   if (env !== 'test') {
     console.log('input', JSON.stringify(event)); // tslint:disable-line no-console
   }
@@ -36,7 +36,7 @@ export async function handler(event: LambdaEvent, context: {}, callback: LambdaH
 
   // Actual Message
   if (event.httpMethod === 'POST') {
-    const body: MessengerTypes.FBWebHookMessage = JSON.parse(event.body);
+    const body: MessengerTypes.IFBWebHookMessage = JSON.parse(event.body);
 
     const { object: objectType } = body;
     if (objectType !== 'page') {

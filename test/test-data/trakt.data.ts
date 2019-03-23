@@ -5,13 +5,11 @@
 import * as faker from 'faker';
 import * as TraktTypes from '../../src/process-query-function/apis/trakt.types';
 
-import { prettyPrint } from '../../src/common/common-utils';
-
 const runningSeriesStatus = ['running', 'returning series'];
 const endedSeriesStatus = ['canceled', 'ended', ''];
 const seriesStatus = [...runningSeriesStatus, ...endedSeriesStatus];
 
-type Override = {
+interface IOverride {
   title?: string;
   year?: number;
   trakt?: number;
@@ -27,7 +25,7 @@ type Override = {
   status?: string;
   rating?: number;
   genres?: string[];
-};
+}
 
 /**
  * Retuns a value equalant to what a Trakt api search result would look
@@ -40,7 +38,7 @@ export function getTraktSearchResult(overrides: {} = { running: true }): TraktTy
   };
 }
 
-export function getTraktShow(overrides: Override = {}): TraktTypes.ITraktShow {
+export function getTraktShow(overrides: IOverride = {}): TraktTypes.ITraktShow {
   const title = `${faker.hacker.adjective()} ${faker.hacker.noun()}`;
   const slug = faker.helpers.slugify(title.toLowerCase());
   return {
@@ -57,7 +55,7 @@ export function getTraktShow(overrides: Override = {}): TraktTypes.ITraktShow {
   };
 }
 
-export function getTraktFullShow(overrides: Override = { running: true }): TraktTypes.ITraktShowFull {
+export function getTraktFullShow(overrides: IOverride = { running: true }): TraktTypes.ITraktShowFull {
   const miniShow = getTraktShow(overrides);
   return {
     ...miniShow,

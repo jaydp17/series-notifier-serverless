@@ -2,11 +2,11 @@
  * Contains types that are related to AWS Lambda
  */
 
-export type LambdaEvent = {
+export interface ILambdaEvent {
   httpMethod: string;
   body: string;
   queryStringParameters: {} | null;
-};
+}
 
 /**
  * Callback type that should be used when the lambda is gonna be invoked with an HTTP req

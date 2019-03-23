@@ -6,16 +6,14 @@
 import { distanceInWords } from 'date-fns';
 import { chunk, get, isEmpty } from 'lodash';
 import { inspect } from 'util';
-import { getError, prettyPrint } from '../common/common-utils';
+import { LambdaCallback } from '../common/aws-lambda-types';
+import { getError } from '../common/common-utils';
 import { errorMessages } from '../common/constants';
 import { env } from '../common/environment';
-import * as MessengerAPI from '../common/messenger.api';
-import { generateGenericTemplate } from './messenger.formatter';
-
-// types
-import { LambdaCallback } from '../common/aws-lambda-types';
 import * as InternalTypes from '../common/internal-message-types';
 import * as MessengerTypes from '../common/messenger-types';
+import * as MessengerAPI from '../common/messenger.api';
+import { generateGenericTemplate } from './messenger.formatter';
 
 const { ReplyKind } = InternalTypes;
 
@@ -106,6 +104,7 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
       }
       default:
         const errorMessage = `Not supported Kind: ${reply.kind}`;
+        // tslint:disable-next-line: no-console
         console.error(errorMessage);
         return callback(new Error(errorMessage));
     }

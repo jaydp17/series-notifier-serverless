@@ -2,15 +2,11 @@
  * An interface to TraktTV
  */
 
-import { AxiosPromise, AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig } from 'axios';
 import { isEmpty } from 'lodash';
-import { inspect } from 'util';
 import axios from '../../common/axios';
 import { errorMessages } from '../../common/constants';
 import { traktApiKey } from '../../common/environment';
-
-// types
-import { ITvShow } from '../../common/internal-message-types';
 import * as TraktType from './trakt.types';
 
 const BASE_URL = 'https://api.trakt.tv';

@@ -22,6 +22,7 @@ export async function getNextEpisode(imdbId: string): Promise<InternalTypes.ITvE
     // and not at one level up
     return await NextEpisodeController.getNextEpisode(imdbId, { skipCacheRead: true });
   } catch (err) {
+    // tslint:disable-next-line: no-console
     console.error(err);
   }
   return Promise.resolve(undefined);

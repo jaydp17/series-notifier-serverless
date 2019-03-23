@@ -6,7 +6,6 @@ jest.mock('../common/messenger.api');
 jest.mock('./messenger.formatter');
 
 import * as dummyCommonData from '../../test/test-data/common.data';
-// types
 import * as InternalTypes from '../common/internal-message-types';
 import * as MessengerTypes from '../common/messenger-types';
 import * as MessengerAPI from '../common/messenger.api';
@@ -16,22 +15,22 @@ import { generateGenericTemplate } from './messenger.formatter';
 describe('Messenger Reply Function', () => {
   const senderId = '2342388586';
   const metaData: InternalTypes.IMetaData = {
-    fbMessenger: <MessengerTypes.AnyMessagingObject>{
+    fbMessenger: {
       sender: { id: senderId },
-    },
+    } as MessengerTypes.AnyMessagingObject,
   };
 
   beforeEach(() => {
     // clear mocks
-    (<jest.Mock<{}>>MessengerAPI.sendMessage).mockClear();
-    (<jest.Mock<{}>>generateGenericTemplate).mockClear();
+    (MessengerAPI.sendMessage as jest.Mock<{}>).mockClear();
+    (generateGenericTemplate as jest.Mock<{}>).mockClear();
   });
 
   it('checks for metaData [no metaData]', async () => {
-    const reply = <InternalTypes.ITextReply>{
+    const reply = {
       kind: InternalTypes.ReplyKind.Text,
       text: 'hello',
-    };
+    } as InternalTypes.ITextReply;
     const callback = jest.fn();
 
     // test
@@ -41,11 +40,11 @@ describe('Messenger Reply Function', () => {
   });
 
   it('checks for metaData [no fbMessenger metaData]', async () => {
-    const reply = <InternalTypes.ITextReply>{
+    const reply = {
       kind: InternalTypes.ReplyKind.Text,
       metaData: { fbMessenger: {} },
       text: 'hello',
-    };
+    } as InternalTypes.ITextReply;
     const callback = jest.fn();
 
     // test
@@ -55,7 +54,7 @@ describe('Messenger Reply Function', () => {
   });
 
   it('checks for senderId', async () => {
-    const reply = <InternalTypes.ITextReply>{
+    const reply = {
       kind: InternalTypes.ReplyKind.Text,
       metaData: {
         fbMessenger: {
@@ -63,47 +62,47 @@ describe('Messenger Reply Function', () => {
         },
       },
       text: 'hello',
-    };
+    } as InternalTypes.ITextReply;
     const callback = jest.fn();
 
     // test
     await MessengerReply.handler(reply, {}, callback);
     expect(callback).toHaveBeenCalledTimes(1);
-    const error = (<jest.Mock<{}>>callback).mock.calls[0][0];
+    const error = (callback as jest.Mock<{}>).mock.calls[0][0];
     expect(error).toBeInstanceOf(Error);
     expect(error.message).toMatch(/No senderId in metaData:/);
   });
 
   it('sends subscription result', async () => {
     const title = 'The Flash';
-    const reply = <InternalTypes.ISubscribeReply>{
+    const reply = {
       kind: InternalTypes.ReplyKind.SubscribeResult,
       metaData,
       title,
-    };
+    } as InternalTypes.ISubscribeReply;
     const callback = jest.fn();
 
     // test
     await MessengerReply.handler(reply, {}, callback);
     expect(MessengerAPI.sendMessage).toHaveBeenCalledTimes(1);
-    expect((<jest.Mock<{}>>MessengerAPI.sendMessage).mock.calls[0]).toMatchSnapshot();
+    expect((MessengerAPI.sendMessage as jest.Mock<{}>).mock.calls[0]).toMatchSnapshot();
     expect(callback).toHaveBeenCalledTimes(1);
     expect(callback).toHaveBeenCalledWith(null, { status: true });
   });
 
   it('sends un-subscription result', async () => {
     const title = 'The Flash';
-    const reply = <InternalTypes.IUnSubscribeReply>{
+    const reply = {
       kind: InternalTypes.ReplyKind.UnSubscribeResult,
       metaData,
       title,
-    };
+    } as InternalTypes.IUnSubscribeReply;
     const callback = jest.fn();
 
     // test
     await MessengerReply.handler(reply, {}, callback);
     expect(MessengerAPI.sendMessage).toHaveBeenCalledTimes(1);
-    expect((<jest.Mock<{}>>MessengerAPI.sendMessage).mock.calls[0]).toMatchSnapshot();
+    expect((MessengerAPI.sendMessage as jest.Mock<{}>).mock.calls[0]).toMatchSnapshot();
     expect(callback).toHaveBeenCalledTimes(1);
     expect(callback).toHaveBeenCalledWith(null, { status: true });
   });
@@ -111,13 +110,13 @@ describe('Messenger Reply Function', () => {
   it('sends search results', async () => {
     const shows = [dummyCommonData.getTVShow()];
     const message = { payload: 'some-random-payload' };
-    const reply = <InternalTypes.ISearchResultsReply>{
+    const reply = {
       kind: InternalTypes.ReplyKind.SearchResults,
       metaData,
       shows,
-    };
+    } as InternalTypes.ISearchResultsReply;
     const callback = jest.fn();
-    (<jest.Mock<{}>>generateGenericTemplate).mockReturnValueOnce(message);
+    (generateGenericTemplate as jest.Mock<{}>).mockReturnValueOnce(message);
 
     // test
     await MessengerReply.handler(reply, {}, callback);
@@ -132,13 +131,13 @@ describe('Messenger Reply Function', () => {
   it('sends trending shows', async () => {
     const shows = [dummyCommonData.getTVShow()];
     const message = { payload: 'some-random-payload' };
-    const reply = <InternalTypes.ITrendingShowsReply>{
+    const reply = {
       kind: InternalTypes.ReplyKind.TrendingShows,
       metaData,
       shows,
-    };
+    } as InternalTypes.ITrendingShowsReply;
     const callback = jest.fn();
-    (<jest.Mock<{}>>generateGenericTemplate).mockReturnValueOnce(message);
+    (generateGenericTemplate as jest.Mock<{}>).mockReturnValueOnce(message);
 
     // test
     await MessengerReply.handler(reply, {}, callback);
@@ -156,13 +155,13 @@ describe('Messenger Reply Function', () => {
       shows.push(dummyCommonData.getTVShow());
     }
     const message = { payload: 'some-random-payload' };
-    const reply = <InternalTypes.IMyShowsReply>{
+    const reply = {
       kind: InternalTypes.ReplyKind.MyShows,
       metaData,
       shows,
-    };
+    } as InternalTypes.IMyShowsReply;
     const callback = jest.fn();
-    (<jest.Mock<{}>>generateGenericTemplate).mockReturnValueOnce(message);
+    (generateGenericTemplate as jest.Mock<{}>).mockReturnValueOnce(message);
 
     // test
     await MessengerReply.handler(reply, {}, callback);
@@ -175,14 +174,14 @@ describe('Messenger Reply Function', () => {
 
   it('catches MessengerAPI.sendMessage error', async () => {
     const title = 'The Flash';
-    const reply = <InternalTypes.ISubscribeReply>{
+    const reply = {
       kind: InternalTypes.ReplyKind.SubscribeResult,
       metaData,
       title,
-    };
+    } as InternalTypes.ISubscribeReply;
     const callback = jest.fn();
     const error = new Error('random error');
-    (<jest.Mock<{}>>MessengerAPI.sendMessage).mockImplementationOnce(() => {
+    (MessengerAPI.sendMessage as jest.Mock<{}>).mockImplementationOnce(() => {
       throw error;
     });
 

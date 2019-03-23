@@ -12,7 +12,7 @@ function requestInterceptor(config: AxiosRequestConfig) {
 }
 
 function responseInterceptor(response: AxiosResponse) {
-  const { startTime } = <any>response.config; // tslint:disable-line:no-any
+  const { startTime } = response.config as any; // tslint:disable-line:no-any
   const endTime = Date.now();
   timeLogger.log(`[TimeLogger]:: ${response.config.url} -> ${endTime - startTime}ms`);
   return response;

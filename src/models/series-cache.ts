@@ -30,5 +30,5 @@ export async function getCache(imdbId: string): Promise<InternalTypes.ITvShowMet
     Key: { imdbId },
   };
   const result = await dynamodb.get(params);
-  return <InternalTypes.ITvShowMetaData>result.Item;
+  return result.Item as InternalTypes.ITvShowMetaData;
 }

@@ -20,7 +20,7 @@ describe('Postback processer', () => {
   });
   beforeEach(() => {
     // clear mocks
-    (<jest.Mock<{}>>invokeProcessQuery).mockClear();
+    (invokeProcessQuery as jest.Mock<{}>).mockClear();
   });
 
   it('gets internal action [showTrending]', () => {
@@ -107,7 +107,7 @@ describe('Postback processer', () => {
     // prepare
     const payload = { action: MessengerActionTypes.showTrending.type };
     const payloadStr = JSON.stringify(payload);
-    (<jest.Mock<{}>>invokeProcessQuery).mockReturnValueOnce(Promise.resolve(payloadStr));
+    (invokeProcessQuery as jest.Mock<{}>).mockReturnValueOnce(Promise.resolve(payloadStr));
     const postbackMessagings = [
       {
         ...baseMessaging,
@@ -121,8 +121,8 @@ describe('Postback processer', () => {
     // test
     const result = await PostbackProcessor.process(postbackMessagings);
     expect(result).toEqual([payloadStr]);
-    expect((<jest.Mock<{}>>invokeProcessQuery).mock.calls.length).toBe(1);
-    const callArguments = (<jest.Mock<{}>>invokeProcessQuery).mock.calls[0];
+    expect((invokeProcessQuery as jest.Mock<{}>).mock.calls.length).toBe(1);
+    const callArguments = (invokeProcessQuery as jest.Mock<{}>).mock.calls[0];
     expect(callArguments).toEqual([internalMessage]);
   });
 

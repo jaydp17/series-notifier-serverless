@@ -2,12 +2,11 @@
  * A formatter that formats TV Shows in Facebook Messenger format
  */
 
-// types
 import * as InternalTypes from '../common/internal-message-types';
 import * as MessengerActionTypes from '../common/messenger-actions-types';
 import * as MessengerTypes from '../common/messenger-types';
 
-export function getSubscribeButton(show: InternalTypes.ITvShow): MessengerTypes.GenericTemplatePostBackButton {
+export function getSubscribeButton(show: InternalTypes.ITvShow): MessengerTypes.IGenericTemplatePostBackButton {
   const action = show.isSubscribed ? MessengerActionTypes.unSubscribe : MessengerActionTypes.subscribe;
   return {
     type: 'postback',
@@ -16,7 +15,7 @@ export function getSubscribeButton(show: InternalTypes.ITvShow): MessengerTypes.
   };
 }
 
-export function getNextEpisodeButton(show: InternalTypes.ITvShow): MessengerTypes.GenericTemplatePostBackButton {
+export function getNextEpisodeButton(show: InternalTypes.ITvShow): MessengerTypes.IGenericTemplatePostBackButton {
   const action = MessengerActionTypes.nextEpisode;
   return {
     type: 'postback',
@@ -28,7 +27,7 @@ export function getNextEpisodeButton(show: InternalTypes.ITvShow): MessengerType
 /**
  * Generates a single element in the generic template
  */
-export function getElement(show: InternalTypes.ITvShow): MessengerTypes.GenericTemplateElement {
+export function getElement(show: InternalTypes.ITvShow): MessengerTypes.IGenericTemplateElement {
   const buttons: MessengerTypes.GenericTemplateButton[] = [getSubscribeButton(show), getNextEpisodeButton(show)];
   return {
     title: show.title,
@@ -53,7 +52,7 @@ export function generateGenericTemplate(shows: InternalTypes.ITvShow[]): Messeng
   };
 }
 
-export function convertToTvShowPayload(show: InternalTypes.ITvShow, actionType: string): MessengerTypes.TvShowPayLoad {
+export function convertToTvShowPayload(show: InternalTypes.ITvShow, actionType: string): MessengerTypes.ITvShowPayLoad {
   return {
     action: actionType,
     tvdbId: show.tvdbId,

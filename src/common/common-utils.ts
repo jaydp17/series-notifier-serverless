@@ -19,7 +19,7 @@ export function prettyPrint(obj: {}): void {
  * This method gets the actual error out if it's an AxisoError
  */
 export function getError(error: Error | AxiosError): Error {
-  const response = (<AxiosError>error).response;
+  const response = (error as AxiosError).response;
   if (response) {
     return response.data;
   }

@@ -26,9 +26,9 @@ export async function main() {
     concurrency: 50,
   });
   logger.log('nextEpisodesPerImdbId: %O', nextEpisodesPerImdbId);
-  const nearbyEpisodes = <InternalTypes.ITvEpisode[]>nextEpisodesPerImdbId.filter(ep =>
+  const nearbyEpisodes = nextEpisodesPerImdbId.filter(ep =>
     keepOnlyNearByEpisodes(ep, now),
-  );
+  ) as InternalTypes.ITvEpisode[];
   logger.log('nearbyEpisodes', nearbyEpisodes);
 
   await Bluebird.map(nearbyEpisodes, processEachEpisode, { concurrency: 5 });
@@ -44,6 +44,7 @@ export async function processEachEpisode(episode: InternalTypes.ITvEpisode) {
     SearchController.searchByImdb(episode.imdbId, true),
   ]);
   if (!show || !show.title) {
+    // tslint:disable-next-line: no-console
     console.error(new Error(`${episode.imdbId} doesn't have a show or title`));
     return undefined;
   }
@@ -63,7 +64,7 @@ async function sendNotification(socialId: string, episode: InternalTypes.ITvEpis
       imdbId: episode.imdbId,
       title: show.title,
     },
-    metaData: <InternalTypes.IMetaData>{ fbMessenger: { sender: { id: senderId } } },
+    metaData: { fbMessenger: { sender: { id: senderId } } } as InternalTypes.IMetaData,
   };
   return LambdaUtils.invokeMessengerReply(event);
 }

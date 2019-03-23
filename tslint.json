@@ -1,27 +1,14 @@
 {
-  "extends": ["tslint-microsoft-contrib", "tslint-config-prettier"],
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "jsRules": {},
   "rules": {
-    "export-name": false,
-    "no-relative-imports": false,
-    "no-unsafe-any": false,
-    "strict-boolean-expressions": false,
-    "newline-before-return": false,
-    "typedef": [true, "parameter", "member-variable-declaration"],
-    "arrow-return-shorthand": [true],
-    "mocha-no-side-effect-code": [
-      true,
-      {
-        "ignore": "^deepFreeze\\(.*"
-      }
-    ],
-    "function-name": [
-      true,
-      {
-        "function-regex": "^[a-z_][\\w\\d]+$"
-      }
-    ],
-    "no-default-export": false,
-    "import-name": false,
+    "object-literal-sort-keys": false,
+    "no-parameter-reassignment": true,
     "curly": [true, "ignore-same-line"]
+  },
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": ["node_modules", "dist", ".webpack"]
   }
 }

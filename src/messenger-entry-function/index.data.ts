@@ -8,8 +8,8 @@ import * as MessengerTypes from '../common/messenger-types';
 export function getFacebookMessage({
   entries = 1,
   messagings = 1,
-}: { entries?: number; messagings?: number } = {}): MessengerTypes.FBWebHookMessage {
-  const entry: MessengerTypes.FBWebHookMessageEntry[] = [];
+}: { entries?: number; messagings?: number } = {}): MessengerTypes.IFBWebHookMessage {
+  const entry: MessengerTypes.IFBWebHookMessageEntry[] = [];
   for (let i = 0; i < entries; i += 1) {
     entry.push(_getEntryObject({ messagings }));
   }
@@ -47,7 +47,7 @@ export function _getMessageObject() {
   };
 }
 
-export function getMessageTexts(postBody: MessengerTypes.FBWebHookMessage): string[] {
+export function getMessageTexts(postBody: MessengerTypes.IFBWebHookMessage): string[] {
   const texts: string[] = [];
   for (const entry of postBody.entry) {
     for (const messaging of entry.messaging) {

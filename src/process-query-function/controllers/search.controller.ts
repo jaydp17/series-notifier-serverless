@@ -2,14 +2,12 @@
  * Everything related to searching series
  */
 
+import * as InternalTypes from '../../common/internal-message-types';
 import * as SeriesCacheModel from '../../models/series-cache';
 import * as SubscriptionModel from '../../models/subscription';
 import { capitalizeGeneres, convertToITvShow } from '../action-helper';
 import * as TheMovieDbAPI from '../apis/themoviedb.api';
 import * as TraktAPI from '../apis/trakt.api';
-
-// types
-import * as InternalTypes from '../../common/internal-message-types';
 import { ITraktShowFull } from '../apis/trakt.types';
 
 export const notRunningStatuses = ['canceled', 'ended', ''];

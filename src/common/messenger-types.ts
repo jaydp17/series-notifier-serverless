@@ -13,21 +13,21 @@ export interface IMessaging {
   sender: { id: string };
   recipient: { id: string };
   timestamp: number;
-  [key: string]: any; //tslint:disable-line:no-any
+  [key: string]: any; // tslint:disable-line:no-any
 }
 
-export type FBWebHookMessage = {
+export interface IFBWebHookMessage {
   object: 'page';
-  entry: FBWebHookMessageEntry[];
-};
-export type FBWebHookMessageEntry = {
+  entry: IFBWebHookMessageEntry[];
+}
+export interface IFBWebHookMessageEntry {
   messaging: AnyMessagingObject[];
-};
+}
 
-export type PostBackMessage = {
+export interface IPostBackMessage {
   object: string;
   entry: IPostBackMessaging[];
-};
+}
 
 export interface ITextMessageMessaging extends IMessaging {
   message: {
@@ -55,29 +55,29 @@ export interface ISendTextMessage {
   text: string;
 }
 
-export type GenericTemplateWebUrlButton = {
+export interface IGenericTemplateWebUrlButton {
   type: 'web_url';
   url: string;
   title: string;
-};
+}
 
-export type GenericTemplatePostBackButton = {
+export interface IGenericTemplatePostBackButton {
   type: 'postback';
   title: string;
   payload: string;
-};
+}
 
-export type GenericTemplateButton = GenericTemplateWebUrlButton | GenericTemplatePostBackButton;
+export type GenericTemplateButton = IGenericTemplateWebUrlButton | IGenericTemplatePostBackButton;
 
 /**
  * An element in the generic Template
  */
-export type GenericTemplateElement = {
+export interface IGenericTemplateElement {
   title: string;
   subtitle: string;
   image_url: string | null | undefined;
   buttons: GenericTemplateButton[];
-};
+}
 
 /**
  * Data that should be passed in the message key, when sending a generic template message
@@ -87,7 +87,7 @@ export interface ISendGenericTemplateMessage {
     type: 'template';
     payload: {
       template_type: 'generic';
-      elements: GenericTemplateElement[];
+      elements: IGenericTemplateElement[];
     };
   };
 }
@@ -97,12 +97,12 @@ export type AnyMessagingObject = ITextMessageMessaging | IDeliveryMessageMessagi
 /**
  * The data that will be send in the payload of a postback Button
  */
-export type TvShowPayLoad = {
+export interface ITvShowPayLoad {
   action: string;
   tvdbId: number;
   imdbId: string;
   title: string;
-};
+}
 
 /**
  * Generic send message type
@@ -111,9 +111,9 @@ export type AnySendMessage = ISendTextMessage | ISendGenericTemplateMessage;
 
 // Type Guards
 export function isTextMessagingObj(obj: AnyMessagingObject): obj is ITextMessageMessaging {
-  return (<ITextMessageMessaging>obj).message != null;
+  return (obj as ITextMessageMessaging).message != null;
 }
 
 export function isPostBackMessagingObj(obj: AnyMessagingObject): obj is IPostBackMessaging {
-  return (<IPostBackMessaging>obj).postback != null;
+  return (obj as IPostBackMessaging).postback != null;
 }

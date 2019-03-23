@@ -2,20 +2,20 @@
  * Figures out the next episode and it's air time
  */
 
-import { prettyPrint } from '../../common/common-utils';
-import * as NextEpisodeCacheModel from '../../models/next-episode-cache';
-import * as TraktAPI from '../apis/trakt.api';
-
-// types
 import { addMinutes, isPast } from 'date-fns';
 import { cronIntervalMins } from '../../common/environment';
 import * as InternalTypes from '../../common/internal-message-types';
+import * as NextEpisodeCacheModel from '../../models/next-episode-cache';
+import * as TraktAPI from '../apis/trakt.api';
 
-type GetNextEpisodeOptions = { skipCacheRead?: boolean; skipCacheWrite?: boolean };
+interface IGetNextEpisodeOptions {
+  skipCacheRead?: boolean;
+  skipCacheWrite?: boolean;
+}
 
 export async function getNextEpisode(
   imdbId: string,
-  { skipCacheRead = false, skipCacheWrite = false }: GetNextEpisodeOptions = {},
+  { skipCacheRead = false, skipCacheWrite = false }: IGetNextEpisodeOptions = {},
 ): Promise<InternalTypes.ITvEpisode> {
   if (!skipCacheRead) {
     const episodeCache = await NextEpisodeCacheModel.getCache(imdbId);

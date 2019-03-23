@@ -21,7 +21,7 @@ describe('User Model', () => {
 
   it('tests isValidSocialId', () => {
     // prepare
-    const cases: { input?: string | null; output: boolean }[] = [
+    const cases: Array<{ input?: string | null; output: boolean }> = [
       { input: undefined, output: false },
       { input: null, output: false },
       { input: '', output: false },
