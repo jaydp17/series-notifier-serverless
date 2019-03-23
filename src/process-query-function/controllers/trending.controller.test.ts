@@ -9,6 +9,7 @@ jest.mock('../../models/subscription');
 
 import deepFreeze from 'deep-freeze';
 import * as faker from 'faker';
+import { mocked } from 'ts-jest/utils';
 import { getTVShow } from '../../../test/test-data/common.data';
 import { getTraktSearchResult, getTraktShow } from '../../../test/test-data/trakt.data';
 import * as Subscription from '../../models/subscription';
@@ -22,22 +23,20 @@ describe('Trending Controller', () => {
   const dummyResults: ReadonlyArray<TraktType.ITraktTrendingResult> = deepFreeze([getDummyResult(), getDummyResult()]);
   beforeEach(() => {
     jest.resetAllMocks();
-    (TraktApi.showTrending as jest.Mock<{}>).mockReturnValueOnce(Promise.resolve(dummyResults));
-    (TraktApi.searchByImdbId as jest.Mock<{}>).mockImplementation(imdb =>
-      Promise.resolve(getTraktSearchResult({ imdb })),
-    );
-    (SearchController.searchByImdb as jest.Mock<{}>).mockImplementation(imdb =>
+    mocked(TraktApi.showTrending).mockReturnValueOnce(Promise.resolve(dummyResults));
+    mocked(TraktApi.searchByImdbId).mockImplementation(imdb => Promise.resolve(getTraktSearchResult({ imdb })));
+    mocked(SearchController.searchByImdb).mockImplementation(imdb =>
       Promise.resolve(getTVShow({ imdb, backDropUrl: faker.image.imageUrl() })),
     );
-    (_getBackDropUrls as jest.Mock<{}>).mockImplementationOnce(imdbIds => Promise.resolve(getDummyBackDropUrls(imdbIds)));
+    mocked(_getBackDropUrls).mockImplementationOnce(imdbIds => Promise.resolve(getDummyBackDropUrls(imdbIds)));
   });
   afterAll(() => jest.resetAllMocks());
 
   it('gets trending shows', async () => {
     const subscribedRecords = [{ imdbId: 'tt123' }, { imdbId: dummyResults[0].show.ids.imdb }];
     const socialId = 'random-social-id';
-    (Subscription.getSubscribedShows as jest.Mock<{}>).mockReturnValueOnce(Promise.resolve(subscribedRecords));
-    (SearchController.searchByImdb as jest.Mock<{}>).mockImplementationOnce(imdb =>
+    mocked(Subscription.getSubscribedShows).mockReturnValueOnce(Promise.resolve(subscribedRecords));
+    mocked(SearchController.searchByImdb).mockImplementationOnce(imdb =>
       Promise.resolve(getTVShow({ imdb, backDropUrl: faker.image.imageUrl(), isSubscribed: true })),
     );
 
@@ -53,12 +52,12 @@ describe('Trending Controller', () => {
     // prepare
     const subscribedRecords = [{ imdbId: 'tt123' }, { imdbId: dummyResults[0].show.ids.imdb }];
     const socialId = 'random-social-id';
-    (Subscription.getSubscribedShows as jest.Mock<{}>).mockReturnValueOnce(Promise.resolve(subscribedRecords));
-    (SearchController.searchByImdb as jest.Mock<{}>).mockReset();
-    (SearchController.searchByImdb as jest.Mock<{}>).mockImplementationOnce(imdb =>
+    mocked(Subscription.getSubscribedShows).mockReturnValueOnce(Promise.resolve(subscribedRecords));
+    mocked(SearchController.searchByImdb).mockReset();
+    mocked(SearchController.searchByImdb).mockImplementationOnce(imdb =>
       Promise.resolve(getTVShow({ imdb, backDropUrl: faker.image.imageUrl(), isSubscribed: true })),
     );
-    (SearchController.searchByImdb as jest.Mock<{}>).mockImplementationOnce(imdb =>
+    mocked(SearchController.searchByImdb).mockImplementationOnce(imdb =>
       Promise.resolve(getTVShow({ imdb, isSubscribed: true })),
     );
 

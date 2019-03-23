@@ -5,6 +5,7 @@
 jest.mock('../../common/lambda-utils');
 
 import deepFreeze from 'deep-freeze';
+import { mocked } from 'ts-jest/utils';
 import { platformNames } from '../../common/constants';
 import * as InternalTypes from '../../common/internal-message-types';
 import { invokeProcessQuery } from '../../common/lambda-utils';
@@ -20,7 +21,7 @@ describe('Postback processer', () => {
   });
   beforeEach(() => {
     // clear mocks
-    (invokeProcessQuery as jest.Mock<{}>).mockClear();
+    mocked(invokeProcessQuery).mockClear();
   });
 
   it('gets internal action [showTrending]', () => {
@@ -107,7 +108,7 @@ describe('Postback processer', () => {
     // prepare
     const payload = { action: MessengerActionTypes.showTrending.type };
     const payloadStr = JSON.stringify(payload);
-    (invokeProcessQuery as jest.Mock<{}>).mockReturnValueOnce(Promise.resolve(payloadStr));
+    mocked(invokeProcessQuery).mockReturnValueOnce(Promise.resolve(payloadStr));
     const postbackMessagings = [
       {
         ...baseMessaging,
@@ -121,8 +122,8 @@ describe('Postback processer', () => {
     // test
     const result = await PostbackProcessor.process(postbackMessagings);
     expect(result).toEqual([payloadStr]);
-    expect((invokeProcessQuery as jest.Mock<{}>).mock.calls.length).toBe(1);
-    const callArguments = (invokeProcessQuery as jest.Mock<{}>).mock.calls[0];
+    expect(mocked(invokeProcessQuery).mock.calls.length).toBe(1);
+    const callArguments = mocked(invokeProcessQuery).mock.calls[0];
     expect(callArguments).toEqual([internalMessage]);
   });
 

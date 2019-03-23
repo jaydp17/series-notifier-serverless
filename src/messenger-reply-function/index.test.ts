@@ -5,6 +5,7 @@
 jest.mock('../common/messenger.api');
 jest.mock('./messenger.formatter');
 
+import { mocked } from 'ts-jest/utils';
 import * as dummyCommonData from '../../test/test-data/common.data';
 import * as InternalTypes from '../common/internal-message-types';
 import * as MessengerTypes from '../common/messenger-types';
@@ -22,8 +23,8 @@ describe('Messenger Reply Function', () => {
 
   beforeEach(() => {
     // clear mocks
-    (MessengerAPI.sendMessage as jest.Mock<{}>).mockClear();
-    (generateGenericTemplate as jest.Mock<{}>).mockClear();
+    mocked(MessengerAPI.sendMessage).mockClear();
+    mocked(generateGenericTemplate).mockClear();
   });
 
   it('checks for metaData [no metaData]', async () => {
@@ -68,7 +69,7 @@ describe('Messenger Reply Function', () => {
     // test
     await MessengerReply.handler(reply, {}, callback);
     expect(callback).toHaveBeenCalledTimes(1);
-    const error = (callback as jest.Mock<{}>).mock.calls[0][0];
+    const error = mocked(callback).mock.calls[0][0];
     expect(error).toBeInstanceOf(Error);
     expect(error.message).toMatch(/No senderId in metaData:/);
   });
@@ -85,7 +86,7 @@ describe('Messenger Reply Function', () => {
     // test
     await MessengerReply.handler(reply, {}, callback);
     expect(MessengerAPI.sendMessage).toHaveBeenCalledTimes(1);
-    expect((MessengerAPI.sendMessage as jest.Mock<{}>).mock.calls[0]).toMatchSnapshot();
+    expect(mocked(MessengerAPI.sendMessage).mock.calls[0]).toMatchSnapshot();
     expect(callback).toHaveBeenCalledTimes(1);
     expect(callback).toHaveBeenCalledWith(null, { status: true });
   });
@@ -102,7 +103,7 @@ describe('Messenger Reply Function', () => {
     // test
     await MessengerReply.handler(reply, {}, callback);
     expect(MessengerAPI.sendMessage).toHaveBeenCalledTimes(1);
-    expect((MessengerAPI.sendMessage as jest.Mock<{}>).mock.calls[0]).toMatchSnapshot();
+    expect(mocked(MessengerAPI.sendMessage).mock.calls[0]).toMatchSnapshot();
     expect(callback).toHaveBeenCalledTimes(1);
     expect(callback).toHaveBeenCalledWith(null, { status: true });
   });
@@ -116,7 +117,7 @@ describe('Messenger Reply Function', () => {
       shows,
     } as InternalTypes.ISearchResultsReply;
     const callback = jest.fn();
-    (generateGenericTemplate as jest.Mock<{}>).mockReturnValueOnce(message);
+    mocked(generateGenericTemplate).mockReturnValueOnce(message);
 
     // test
     await MessengerReply.handler(reply, {}, callback);
@@ -137,7 +138,7 @@ describe('Messenger Reply Function', () => {
       shows,
     } as InternalTypes.ITrendingShowsReply;
     const callback = jest.fn();
-    (generateGenericTemplate as jest.Mock<{}>).mockReturnValueOnce(message);
+    mocked(generateGenericTemplate).mockReturnValueOnce(message);
 
     // test
     await MessengerReply.handler(reply, {}, callback);
@@ -161,7 +162,7 @@ describe('Messenger Reply Function', () => {
       shows,
     } as InternalTypes.IMyShowsReply;
     const callback = jest.fn();
-    (generateGenericTemplate as jest.Mock<{}>).mockReturnValueOnce(message);
+    mocked(generateGenericTemplate).mockReturnValueOnce(message);
 
     // test
     await MessengerReply.handler(reply, {}, callback);
@@ -181,7 +182,7 @@ describe('Messenger Reply Function', () => {
     } as InternalTypes.ISubscribeReply;
     const callback = jest.fn();
     const error = new Error('random error');
-    (MessengerAPI.sendMessage as jest.Mock<{}>).mockImplementationOnce(() => {
+    mocked(MessengerAPI.sendMessage).mockImplementationOnce(() => {
       throw error;
     });
 

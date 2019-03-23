@@ -1,5 +1,4 @@
 module.exports = {
-  testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$',
   globalSetup: '<rootDir>/test/test.setup.js',
 
   collectCoverageFrom: ['src/**/*.ts'],

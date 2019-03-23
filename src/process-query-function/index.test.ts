@@ -7,6 +7,7 @@ jest.mock('../common/lambda-utils');
 jest.mock('./controllers/trending.controller');
 jest.mock('../models/subscription');
 
+import { mocked } from 'ts-jest/utils';
 import { getTraktFullShow } from '../../test/test-data/trakt.data';
 import { platformNames } from '../common/constants';
 import * as InternalTypes from '../common/internal-message-types';
@@ -24,7 +25,7 @@ describe('Process Query Function', () => {
 
   beforeEach(() => {
     // clear mocks
-    (invokeMessengerReply as jest.Mock<{}>).mockClear();
+    mocked(invokeMessengerReply).mockClear();
   });
 
   it('handles search query', async () => {
@@ -36,7 +37,7 @@ describe('Process Query Function', () => {
     } as InternalTypes.ISearchAction;
     const callback = jest.fn();
     const shows = ['random', 'shows'];
-    (SearchController.search as jest.Mock<{}>).mockReturnValueOnce(Promise.resolve(shows));
+    mocked(SearchController.search).mockReturnValueOnce(Promise.resolve(shows));
 
     // test
     await ProcessQuery.handler(action, {}, callback);
@@ -61,7 +62,7 @@ describe('Process Query Function', () => {
     } as InternalTypes.ISearchAction;
     const callback = jest.fn();
     const expectedError = new Error('expected error');
-    (SearchController.search as jest.Mock<{}>).mockImplementationOnce(() => {
+    mocked(SearchController.search).mockImplementationOnce(() => {
       throw expectedError;
     });
 
@@ -79,7 +80,7 @@ describe('Process Query Function', () => {
     } as InternalTypes.IShowTrendingAction;
     const callback = jest.fn();
     const shows = ['random', 'shows'];
-    (TrendingController.getTrending as jest.Mock<{}>).mockReturnValueOnce(Promise.resolve(shows));
+    mocked(TrendingController.getTrending).mockReturnValueOnce(Promise.resolve(shows));
 
     // test
     await ProcessQuery.handler(action, {}, callback);
@@ -158,13 +159,9 @@ describe('Process Query Function', () => {
       { socialId, imdbId: 'tt123' },
       { socialId, imdbId: 'tt456' },
     ];
-    (Subscription.getSubscribedShows as jest.Mock<{}>).mockReturnValueOnce(Promise.resolve(subscriptionRows));
-    (SearchController.searchByImdb as jest.Mock<{}>).mockReturnValueOnce(
-      Promise.resolve(getTraktFullShow({ running: true })),
-    );
-    (SearchController.searchByImdb as jest.Mock<{}>).mockReturnValueOnce(
-      Promise.resolve(getTraktFullShow({ running: true })),
-    );
+    mocked(Subscription.getSubscribedShows).mockReturnValueOnce(Promise.resolve(subscriptionRows));
+    mocked(SearchController.searchByImdb).mockReturnValueOnce(Promise.resolve(getTraktFullShow({ running: true })));
+    mocked(SearchController.searchByImdb).mockReturnValueOnce(Promise.resolve(getTraktFullShow({ running: true })));
     const callback = jest.fn();
 
     // test

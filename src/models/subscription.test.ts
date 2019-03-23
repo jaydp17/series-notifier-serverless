@@ -4,12 +4,9 @@
 
 jest.mock('../common/dynamodb.ts');
 
-// mocks
-import dynamodb from '../common/dynamodb';
-
-// imports
+import { mocked } from 'ts-jest/utils';
 import { platformNames } from '../common/constants';
-import tables from '../common/tables';
+import dynamodb from '../common/dynamodb';
 import * as SubscriptionModel from './subscription';
 
 describe('Subscription Model', () => {
@@ -36,7 +33,7 @@ describe('Subscription Model', () => {
 
       // test
       expect(dynamodb.put).toHaveBeenCalledTimes(1);
-      expect((dynamodb.put as jest.Mock<{}>).mock.calls[0]).toMatchSnapshot();
+      expect(mocked(dynamodb.put).mock.calls[0]).toMatchSnapshot();
     });
   });
 
@@ -55,7 +52,7 @@ describe('Subscription Model', () => {
       // prepare
       const socialId = `${platformNames.FBMessenger}::123`;
       const expectedItems = [{ hello: 'world' }];
-      (dynamodb.query as jest.Mock<{}>).mockReturnValueOnce({ Items: expectedItems });
+      mocked(dynamodb.query).mockReturnValueOnce({ Items: expectedItems });
 
       // execute
       const items = await SubscriptionModel.getSubscribedShows(socialId);
@@ -63,7 +60,7 @@ describe('Subscription Model', () => {
       // test
       expect(items).toEqual(expectedItems);
       expect(dynamodb.query).toHaveBeenCalledTimes(1);
-      expect((dynamodb.query as jest.Mock<{}>).mock.calls[0]).toMatchSnapshot();
+      expect(mocked(dynamodb.query).mock.calls[0]).toMatchSnapshot();
     });
   });
 
@@ -71,7 +68,7 @@ describe('Subscription Model', () => {
     // prepare
     const imdbId = 't123123';
     const expectedItems = [{ hello: 'world' }];
-    (dynamodb.query as jest.Mock<{}>).mockReturnValueOnce({ Items: expectedItems });
+    mocked(dynamodb.query).mockReturnValueOnce({ Items: expectedItems });
 
     // execute
     const items = await SubscriptionModel.getUsersWhoSubscribed(imdbId);
@@ -79,7 +76,7 @@ describe('Subscription Model', () => {
     // test
     expect(items).toEqual(expectedItems);
     expect(dynamodb.query).toHaveBeenCalledTimes(1);
-    expect((dynamodb.query as jest.Mock<{}>).mock.calls[0]).toMatchSnapshot();
+    expect(mocked(dynamodb.query).mock.calls[0]).toMatchSnapshot();
   });
 
   it('deletes a subscription', async () => {
@@ -92,13 +89,13 @@ describe('Subscription Model', () => {
 
     // test
     expect(dynamodb.delete).toHaveBeenCalledTimes(1);
-    expect((dynamodb.delete as jest.Mock<{}>).mock.calls[0]).toMatchSnapshot();
+    expect(mocked(dynamodb.delete).mock.calls[0]).toMatchSnapshot();
   });
 
   it('get all uniq subscribed shows', async () => {
     // prepare
     const expectedImdbIds = ['tt2234222', 'tt4159076', 'tt0898266'];
-    (dynamodb.scan as jest.Mock<{}>).mockReturnValueOnce({
+    mocked(dynamodb.scan).mockReturnValueOnce({
       // this output contains duplicate imdb ids
       Items: [...expectedImdbIds, expectedImdbIds[0], expectedImdbIds[1]].map(imdbId => ({ imdbId })),
     });
@@ -109,6 +106,6 @@ describe('Subscription Model', () => {
     // test
     expect(imdbIdsResult).toEqual(expectedImdbIds);
     expect(dynamodb.scan).toHaveBeenCalledTimes(1);
-    expect((dynamodb.scan as jest.Mock<{}>).mock.calls[0]).toMatchSnapshot();
+    expect(mocked(dynamodb.scan).mock.calls[0]).toMatchSnapshot();
   });
 });

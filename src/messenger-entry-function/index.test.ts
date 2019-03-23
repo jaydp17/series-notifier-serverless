@@ -6,6 +6,7 @@ jest.mock('../common/lambda-utils');
 jest.mock('../common/messenger.api');
 
 import deepFreeze from 'deep-freeze';
+import { mocked } from 'ts-jest/utils';
 import { ILambdaEvent } from '../common/aws-lambda-types';
 import { platformNames } from '../common/constants';
 import * as InternalTypes from '../common/internal-message-types';
@@ -30,8 +31,8 @@ describe('Entry Function', () => {
 
   beforeEach(() => {
     // clear mocks
-    (invokeProcessQuery as jest.Mock<{}>).mockClear();
-    (messengerAuth as jest.Mock<{}>).mockClear();
+    mocked(invokeProcessQuery).mockClear();
+    mocked(messengerAuth).mockClear();
   });
 
   it('should call messengerAuth on GET request with queryStringParameters', () => {
@@ -60,8 +61,8 @@ describe('Entry Function', () => {
     // test
     expect(callback).toBeCalled();
     expect(callback.mock.calls[0]).toMatchSnapshot();
-    expect((messengerAuth as jest.Mock<{}>).mock.calls.length).toEqual(0);
-    expect((invokeProcessQuery as jest.Mock<{}>).mock.calls.length).toEqual(0);
+    expect(mocked(messengerAuth).mock.calls.length).toEqual(0);
+    expect(mocked(invokeProcessQuery).mock.calls.length).toEqual(0);
   });
 
   it('rejects non page Type events from FB Messenger', () => {
@@ -79,8 +80,8 @@ describe('Entry Function', () => {
     // test
     expect(callback).toBeCalled();
     expect(callback.mock.calls[0]).toMatchSnapshot();
-    expect((messengerAuth as jest.Mock<{}>).mock.calls.length).toEqual(0);
-    expect((invokeProcessQuery as jest.Mock<{}>).mock.calls.length).toEqual(0);
+    expect(mocked(messengerAuth).mock.calls.length).toEqual(0);
+    expect(mocked(invokeProcessQuery).mock.calls.length).toEqual(0);
   });
 
   it('returns 403 on non GET/POST requests', () => {
@@ -98,8 +99,8 @@ describe('Entry Function', () => {
     // test
     expect(callback).toBeCalled();
     expect(callback.mock.calls[0]).toMatchSnapshot();
-    expect((messengerAuth as jest.Mock<{}>).mock.calls.length).toEqual(0);
-    expect((invokeProcessQuery as jest.Mock<{}>).mock.calls.length).toEqual(0);
+    expect(mocked(messengerAuth).mock.calls.length).toEqual(0);
+    expect(mocked(invokeProcessQuery).mock.calls.length).toEqual(0);
   });
 
   it('filters text messages', () => {
@@ -134,7 +135,7 @@ describe('Entry Function', () => {
     indexFile.processPostBody(postBody);
 
     // test
-    const invokeProcessQueryCalls = (invokeProcessQuery as jest.Mock<{}>).mock.calls;
+    const invokeProcessQueryCalls = mocked(invokeProcessQuery).mock.calls;
     expect(invokeProcessQueryCalls.length).toEqual(texts.length);
     invokeProcessQueryCalls.forEach(([param], index) => validateParam(param, texts[index]));
   });
@@ -145,7 +146,7 @@ describe('Entry Function', () => {
     indexFile.processPostBody(postBody);
 
     // test
-    const invokeProcessQueryCalls = (invokeProcessQuery as jest.Mock<{}>).mock.calls;
+    const invokeProcessQueryCalls = mocked(invokeProcessQuery).mock.calls;
     expect(invokeProcessQueryCalls.length).toEqual(texts.length);
     invokeProcessQueryCalls.forEach(([param], index) => validateParam(param, texts[index]));
   });
@@ -156,7 +157,7 @@ describe('Entry Function', () => {
     indexFile.processPostBody(postBody);
 
     // test
-    const invokeProcessQueryCalls = (invokeProcessQuery as jest.Mock<{}>).mock.calls;
+    const invokeProcessQueryCalls = mocked(invokeProcessQuery).mock.calls;
     expect(invokeProcessQueryCalls.length).toEqual(texts.length);
     invokeProcessQueryCalls.forEach(([param], index) => validateParam(param, texts[index]));
   });
