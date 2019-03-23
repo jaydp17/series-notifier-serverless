@@ -1,5 +1,4 @@
 import axios from './axios';
-import { Callback } from './common-types';
 import { GRAPH_API_URL } from './constants';
 import { pageToken } from './environment';
 import { AnySendMessage } from './messenger-types';
@@ -12,13 +11,13 @@ interface IVerifyQueryParams {
 /**
  * Used to authenticate the webhook
  */
-export function messengerAuth(query: IVerifyQueryParams, verifyToken: string, callback: Callback) {
+export function messengerAuth(query: IVerifyQueryParams, verifyToken: string) {
   // Facebook app verification
   if (query['hub.verify_token'] === verifyToken && query['hub.challenge']) {
     const response = { statusCode: 200, body: query['hub.challenge'] };
-    callback(null, response);
+    return response;
   } else {
-    callback(new Error('Invalid token'));
+    return { statusCode: 401, body: 'invalid token' };
   }
 }
 

@@ -1,7 +1,7 @@
 /**
  * The main file that starts the function
  */
-import { ILambdaEvent, LambdaHttpCallback } from '../common/aws-lambda-types';
+import { ILambdaEvent } from '../common/aws-lambda-types';
 import { env, verifyToken } from '../common/environment';
 import * as MessengerTypes from '../common/messenger-types';
 import { messengerAuth } from '../common/messenger.api';
@@ -25,11 +25,7 @@ export function processPostBody(body: MessengerTypes.IFBWebHookMessage) {
   return Promise.all([processMessage(textMessaging), processPostBack(postBackMessaging)]);
 }
 
-export async function handler(
-  event: ILambdaEvent,
-  context: {},
-  callback: LambdaHttpCallback,
-): Promise<void> {
+export async function handler(event: ILambdaEvent): Promise<{ statusCode: number; body?: string }> {
   if (env !== 'test') {
     console.log('input', JSON.stringify(event)); // tslint:disable-line no-console
   }
@@ -37,9 +33,9 @@ export async function handler(
   // TOKEN verification
   if (event.httpMethod === 'GET') {
     if (!event.queryStringParameters) {
-      return callback(null, { statusCode: 200, body: 'ping' });
+      return { statusCode: 200, body: 'ping' };
     }
-    return messengerAuth(event.queryStringParameters as any, verifyToken, callback);
+    return messengerAuth(event.queryStringParameters as any, verifyToken);
   }
 
   // Actual Message
@@ -48,19 +44,14 @@ export async function handler(
 
     const { object: objectType } = body;
     if (objectType !== 'page') {
-      return callback(null, { statusCode: 403, body: 'Invalid Object Type' });
+      return { statusCode: 403, body: 'Invalid Object Type' };
     }
 
-    return (
-      processPostBody(body)
-        // send 200 OK, after delegating the tasks
-        .then(() => callback(null, { statusCode: 200 }))
-        // incase there's some error, return it back
-        .catch(callback)
-    );
+    await processPostBody(body);
+    return { statusCode: 200 };
   }
 
-  return callback(null, { statusCode: 403, body: `Invalid httpMethod: ${event.httpMethod}` });
+  return { statusCode: 403, body: `Invalid httpMethod: ${event.httpMethod}` };
 }
 
 export function filterTextMessages(messaging: MessengerTypes.AnyMessagingObject): boolean {
