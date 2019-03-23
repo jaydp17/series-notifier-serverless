@@ -1,8 +1,8 @@
 import { Platform } from './internal-message-types';
 /**
- * Contains constants used accross the app
+ * Contains constants used across the app
  */
-export const GRAPH_API_URL = 'https://graph.facebook.com/v2.6';
+export const GRAPH_API_URL = 'https://graph.facebook.com/v3.2';
 
 export const platformNames: { [K in Platform]: Platform } = {
   FBMessenger: 'FBMessenger',
