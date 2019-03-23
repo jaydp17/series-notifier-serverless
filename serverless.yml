@@ -94,6 +94,7 @@ functions:
 
 plugins:
   - serverless-webpack
+  - serverless-offline
 
 custom:
   stage: ${opt:stage, self:provider.stage}
@@ -101,3 +102,5 @@ custom:
     packager: 'yarn' # Defaults to npm
     keepOutputDirectory: true
     builtAssetIncludeGlob: '**/*.{js,json}'
+  serverless-offline:
+    location: ./.webpack/service
