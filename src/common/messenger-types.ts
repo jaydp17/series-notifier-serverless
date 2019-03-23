@@ -55,21 +55,19 @@ export interface ISendTextMessage {
   text: string;
 }
 
-export namespace GenericTemplate {
-  export type WebUrlButton = {
-    type: 'web_url';
-    url: string;
-    title: string;
-  };
+export type GenericTemplateWebUrlButton = {
+  type: 'web_url';
+  url: string;
+  title: string;
+};
 
-  export type PostBackButton = {
-    type: 'postback';
-    title: string;
-    payload: string;
-  };
+export type GenericTemplatePostBackButton = {
+  type: 'postback';
+  title: string;
+  payload: string;
+};
 
-  export type Button = WebUrlButton | PostBackButton;
-}
+export type GenericTemplateButton = GenericTemplateWebUrlButton | GenericTemplatePostBackButton;
 
 /**
  * An element in the generic Template
@@ -78,7 +76,7 @@ export type GenericTemplateElement = {
   title: string;
   subtitle: string;
   image_url: string | null | undefined;
-  buttons: GenericTemplate.Button[];
+  buttons: GenericTemplateButton[];
 };
 
 /**

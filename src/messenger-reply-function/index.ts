@@ -3,7 +3,6 @@
  * and sends it back to the source (in this case FB Messenger)
  */
 
-import 'babel-polyfill'; // tslint:disable-line:no-import-side-effect
 import { distanceInWords } from 'date-fns';
 import { chunk, get, isEmpty } from 'lodash';
 import { inspect } from 'util';
@@ -11,7 +10,7 @@ import { getError, prettyPrint } from '../common/common-utils';
 import { errorMessages } from '../common/constants';
 import { env } from '../common/environment';
 import * as MessengerAPI from '../common/messenger.api';
-import { GenericTemplate } from './messenger.formatter';
+import { generateGenericTemplate } from './messenger.formatter';
 
 // types
 import { LambdaCallback } from '../common/aws-lambda-types';
@@ -46,7 +45,7 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
     switch (reply.kind) {
       case ReplyKind.SearchResults:
       case ReplyKind.TrendingShows: {
-        const message = GenericTemplate.generate(reply.shows);
+        const message = generateGenericTemplate(reply.shows);
         await MessengerAPI.sendMessage(senderId, message);
         break;
       }
@@ -72,7 +71,7 @@ export async function handler(reply: InternalTypes.AnyReplyKind, context: {}, ca
           await MessengerAPI.sendMessage(senderId, msgObj);
         } else {
           const showChunks = chunk(reply.shows, 10);
-          const messages = showChunks.map(GenericTemplate.generate);
+          const messages = showChunks.map(generateGenericTemplate);
           for (const message of messages) {
             // serially send each message
             await MessengerAPI.sendMessage(senderId, message);

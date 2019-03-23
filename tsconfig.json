@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "module": "es2015",
-    "target": "ESNext",
+    "module": "esnext",
+    "target": "esnext",
     "moduleResolution": "node",
     "noImplicitAny": false,
-    "sourceMap": false,
-    "strictNullChecks": true,
-    "outDir": "build",
-    "types": ["node", "jest", "bluebird"],
+    "sourceMap": true,
+    "inlineSources": true,
+    "strict": true,
     "lib": ["esnext"]
   },
   "exclude": ["node_modules"]

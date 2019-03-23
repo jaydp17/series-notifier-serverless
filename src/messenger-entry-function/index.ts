@@ -1,7 +1,6 @@
 /**
  * The main file that starts the function
  */
-import 'babel-polyfill'; // tslint:disable-line:no-import-side-effect
 import { platformNames } from '../common/constants';
 import { env } from '../common/environment';
 import { verifyToken } from '../common/environment';

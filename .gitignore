@@ -2,6 +2,7 @@
 .vscode
 .idea
 .serverless
+.webpack
 build
 node_modules
 secret-dev.yml

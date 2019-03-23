@@ -5,15 +5,13 @@
 jest.mock('../common/messenger.api');
 jest.mock('./messenger.formatter');
 
-import * as deepFreeze from 'deep-freeze';
 import * as dummyCommonData from '../../test/test-data/common.data';
-import * as MessengerAPI from '../common/messenger.api';
-import * as MessengerReply from './index';
-import { GenericTemplate } from './messenger.formatter';
-
 // types
 import * as InternalTypes from '../common/internal-message-types';
 import * as MessengerTypes from '../common/messenger-types';
+import * as MessengerAPI from '../common/messenger.api';
+import * as MessengerReply from './index';
+import { generateGenericTemplate } from './messenger.formatter';
 
 describe('Messenger Reply Function', () => {
   const senderId = '2342388586';
@@ -26,7 +24,7 @@ describe('Messenger Reply Function', () => {
   beforeEach(() => {
     // clear mocks
     (<jest.Mock<{}>>MessengerAPI.sendMessage).mockClear();
-    (<jest.Mock<{}>>GenericTemplate.generate).mockClear();
+    (<jest.Mock<{}>>generateGenericTemplate).mockClear();
   });
 
   it('checks for metaData [no metaData]', async () => {
@@ -119,12 +117,12 @@ describe('Messenger Reply Function', () => {
       shows,
     };
     const callback = jest.fn();
-    (<jest.Mock<{}>>GenericTemplate.generate).mockReturnValueOnce(message);
+    (<jest.Mock<{}>>generateGenericTemplate).mockReturnValueOnce(message);
 
     // test
     await MessengerReply.handler(reply, {}, callback);
-    expect(GenericTemplate.generate).toHaveBeenCalledTimes(1);
-    expect(GenericTemplate.generate).toHaveBeenCalledWith(shows);
+    expect(generateGenericTemplate).toHaveBeenCalledTimes(1);
+    expect(generateGenericTemplate).toHaveBeenCalledWith(shows);
     expect(MessengerAPI.sendMessage).toHaveBeenCalledTimes(1);
     expect(MessengerAPI.sendMessage).toHaveBeenCalledWith(senderId, message);
     expect(callback).toHaveBeenCalledTimes(1);
@@ -140,12 +138,12 @@ describe('Messenger Reply Function', () => {
       shows,
     };
     const callback = jest.fn();
-    (<jest.Mock<{}>>GenericTemplate.generate).mockReturnValueOnce(message);
+    (<jest.Mock<{}>>generateGenericTemplate).mockReturnValueOnce(message);
 
     // test
     await MessengerReply.handler(reply, {}, callback);
-    expect(GenericTemplate.generate).toHaveBeenCalledTimes(1);
-    expect(GenericTemplate.generate).toHaveBeenCalledWith(shows);
+    expect(generateGenericTemplate).toHaveBeenCalledTimes(1);
+    expect(generateGenericTemplate).toHaveBeenCalledWith(shows);
     expect(MessengerAPI.sendMessage).toHaveBeenCalledTimes(1);
     expect(MessengerAPI.sendMessage).toHaveBeenCalledWith(senderId, message);
     expect(callback).toHaveBeenCalledTimes(1);
@@ -164,11 +162,11 @@ describe('Messenger Reply Function', () => {
       shows,
     };
     const callback = jest.fn();
-    (<jest.Mock<{}>>GenericTemplate.generate).mockReturnValueOnce(message);
+    (<jest.Mock<{}>>generateGenericTemplate).mockReturnValueOnce(message);
 
     // test
     await MessengerReply.handler(reply, {}, callback);
-    expect(GenericTemplate.generate).toHaveBeenCalledTimes(Math.ceil(shows.length / 10));
+    expect(generateGenericTemplate).toHaveBeenCalledTimes(Math.ceil(shows.length / 10));
     expect(MessengerAPI.sendMessage).toHaveBeenCalledTimes(Math.ceil(shows.length / 10));
     expect(MessengerAPI.sendMessage).toHaveBeenCalledWith(senderId, message);
     expect(callback).toHaveBeenCalledTimes(1);
