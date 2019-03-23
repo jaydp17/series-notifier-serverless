@@ -74,11 +74,19 @@ async function getReply(action: InternalTypes.AnyAction): Promise<InternalTypes.
   switch (action.type) {
     case ActionTypes.Search: {
       const shows = await SearchController.search(action.text, socialId);
-      return {
-        kind: ReplyKind.SearchResults,
-        shows,
-        metaData: action.metaData,
-      };
+      if (shows.length === 0) {
+        return {
+          kind: ReplyKind.Text,
+          text: "Sorry, I didn't find a TV Show with that name 🤕",
+          metaData: action.metaData,
+        };
+      } else {
+        return {
+          kind: ReplyKind.SearchResults,
+          shows,
+          metaData: action.metaData,
+        };
+      }
     }
     case ActionTypes.ShowTrending: {
       const shows = await TrendingController.getTrending(socialId);
